@@ -1,229 +1,190 @@
-<!DOCTYPE html>
-<html lang="th">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KLA AI Hub</title>
-    <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-        body {
-            background-color: #0d1117;
-            color: #c9d1d9;
-            display: flex;
-            height: 100vh;
-            overflow: hidden;
-        }
-        /* Sidebar */
-        .sidebar {
-            width: 260px;
-            background-color: #161b22;
-            border-right: 1px solid #30363d;
-            display: flex;
-            flex-direction: column;
-            flex-shrink: 0;
-        }
-        .logo-area {
-            padding: 20px;
-            font-size: 18px;
-            font-weight: bold;
-            color: #58a6ff;
-            border-bottom: 1px solid #30363d;
-        }
-        .menu-list {
-            list-style: none;
-            padding: 15px 10px;
-            overflow-y: auto;
-            flex-grow: 1;
-        }
-        .menu-item {
-            padding: 12px 15px;
-            margin-bottom: 5px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 14px;
-            color: #8b949e;
-            transition: background 0.2s, color 0.2s;
-        }
-        .menu-item:hover, .menu-item.active {
-            background-color: #21262d;
-            color: #f0f6fc;
-        }
-        
-        /* Main Content / Chat Area */
-        .main-content {
-            flex-grow: 1;
-            display: flex;
-            flex-direction: column;
-            background-color: #0d1117;
-            height: 100%;
-            overflow: hidden;
-        }
-        .chat-header {
-            padding: 15px 20px;
-            background-color: #161b22;
-            border-bottom: 1px solid #30363d;
-            font-size: 16px;
-            font-weight: 600;
-        }
-        .chat-messages {
-            flex-grow: 1;
-            padding: 20px;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-        .message {
-            max-width: 75%;
-            padding: 12px 16px;
-            border-radius: 8px;
-            font-size: 14px;
-            line-height: 1.5;
-        }
-        .message.ai {
-            background-color: #21262d;
-            align-self: flex-start;
-            color: #c9d1d9;
-        }
-        .message.user {
-            background-color: #1f6feb;
-            align-self: flex-end;
-            color: #ffffff;
-        }
-        .chat-input-area {
-            padding: 15px 20px;
-            background-color: #161b22;
-            border-top: 1px solid #30363d;
-            display: flex;
-            gap: 10px;
-        }
-        .chat-input {
-            flex-grow: 1;
-            background-color: #0d1117;
-            border: 1px solid #30363d;
-            border-radius: 6px;
-            padding: 12px 15px;
-            color: #c9d1d9;
-            font-size: 14px;
-            outline: none;
-        }
-        .chat-input:focus {
-            border-color: #58a6ff;
-        }
-        .send-btn {
-            background-color: #238636;
-            color: white;
-            border: none;
-            border-radius: 6px;
-            padding: 0 20px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background 0.2s;
-        }
-        .send-btn:hover {
-            background-color: #2ea043;
-        }
-
-        /* Responsive Design สำหรับมือถือ */
-        @media screen and (max-width: 768px) {
-            body {
-                flex-direction: column;
-                height: 100vh;
-                overflow: hidden;
-            }
-            .sidebar {
-                width: 100%;
-                height: auto;
-                max-height: 140px;
-                border-right: none;
-                border-bottom: 1px solid #30363d;
-            }
-            .logo-area {
-                padding: 10px 15px;
-                font-size: 16px;
-            }
-            .menu-list {
-                display: flex;
-                flex-wrap: nowrap;
-                overflow-x: auto;
-                gap: 5px;
-                padding: 10px;
-            }
-            .menu-item {
-                white-space: nowrap;
-                flex-shrink: 0;
-                margin-bottom: 0;
-                padding: 8px 12px;
-            }
-            .main-content {
-                height: calc(100vh - 140px);
-            }
-        }
-    </style>
-</head>
-<body>
-    <div class="sidebar">
-        <div class="logo-area">🤖 KLA AI Hub</div>
-        <ul class="menu-list">
-            <li class="menu-item active">💬 AI Chat Assistant</li>
-            <li class="menu-item">🎭 KLA Roleplay Studio</li>
-            <li class="menu-item">🖼️ Watermark Remover</li>
-            <li class="menu-item">🎬 KLA Video Studio</li>
-            <li class="menu-item">🎵 KLA Music Studio</li>
-            <li class="menu-item">💻 Dev & Mod Hub</li>
-            <li class="menu-item">🎨 Uncensored Art Studio</li>
-        </ul>
-    </div>
-    
-    <div class="main-content">
-        <div class="chat-header">AI Chat Assistant</div>
-        <div class="chat-messages" id="chatMessages">
-            <div class="message ai">สวัสดีครับ! ผม KLA AI พร้อมช่วยเหลือคุณแล้ว พิมพ์ข้อความคุยกันได้เลยครับ</div>
-        </div>
-        <div class="chat-input-area">
-            <input type="text" class="chat-input" id="userInput" placeholder="พิมพ์ข้อความที่นี่...">
-            <button class="send-btn" id="sendBtn">ส่ง</button>
-        </div>
-    </div>
-
+    <!-- JAVASCRIPT SYSTEM SIMULATION & LOGIC WITH UPDATED REGIONAL INSULTS -->
     <script>
-        const chatMessages = document.getElementById('chatMessages');
-        const userInput = document.getElementById('userInput');
-        const sendBtn = document.getElementById('sendBtn');
+        const memeProfiles = [
+            "https://unsplash.com",
+            "https://unsplash.com", 
+            "https://unsplash.com",
+            "https://unsplash.com"
+        ];
+
+        // 🌟 อัปเดตชุดคำคม คำด่ากวนๆ และคำด่าอินเตอร์ประจำภาคแบบจัดเต็ม
+        const responses = {
+            toxic: {
+                central: [
+                    "เออ พิมพ์ไรมานักหนาวะไอ้สองแคว้น! งานการไม่มีทำไง๊? วันๆ นั่งแต่หน้าจอ!",
+                    "คำคมวันนี้: เจ็บกว่าการโดนเท คือการไม่มีตังค์เปย์แล้วทำทรงเป็นป๋า! ไปนอนไป๊!",
+                    "ถามคำถามแบบนี้ ไปพักผ่อนก่อนไหมไอ้เสือ สติยังอยู่ดีอยู่หรือเปล่าเนี่ย?",
+                    "อย่าทำทรงเจ๋ง คอเป็นเอ็นแต่ไร้น้ำยา! มาให้ข้าสั่งสอนหน่อยเป็นไง!"
+                ],
+                isan: [
+                    "ปัดโธ่เว้ย! เว้ามาแต่ละคำ คึดพ้อหน้าอีแม่มึงบ่เนี่ย บักพากมึงเอ๊ย! สูนให้แล้วเด้เนี่ย!",
+                    "คำคมคนซื่อ: หน้างอคอหักคือปลาทู แต่หน้ามึงน่ะคืองัวขามันสิเหยียบเอา บักปึกเอ๊ย!",
+                    "ใจเย็นๆ บักหล่า ดมยาดมก่อนบ่ ซงคือสิสติบ่ดี ตาเหลือกมาเชียวมึง!",
+                    "บักห่าขั่วกินมึงเอ๊ย! เว้าไม่รู้เรื่องแบบนี้ ไปกินข้าวเหนียวให้ติดคอตายไป๊!"
+                ],
+                south: [
+                    "แหลงลุยนิ! ฟังไม่ทันแล้วไอ้บ่าว ตบหัวทิ่มบ่อหล่ออีตาย! อย่ามาทำเนียน!",
+                    "คำคมเด็กใต้: นกใต้ปีกบินได้ไม่นาน แต่ถ้ามึงยังกวนตีนนานๆ ระวังได้บินไปนอนโรงบาลนะไอ้สาด!",
+                    "ฉาด! พูดจาพันนี้ ไปนอนหลับตะ ไป๊ รำคาญหูจังฮู้ แหลงไม่รู้เรื่องเล่า!",
+                    "ทำทรงนักเลงหัวไม้ ระวังคว่ำไม่เป็นท่ากะแล้วกันนะไอ้บ่าวเอ๊ย!"
+                ],
+                north: [
+                    "จะไปปากนักจะไปปากเหลือ คิงนี่มันง่าวแต้ง้าวว่า ง่าวปะล้ำปะเหลือ! ฟังแล้วขัดใจ๊!",
+                    "คำคมกำเมือง: น้ำพริกหนุ่มมันตึงเผ็ด แต่ถ้ามึงตึงง่าวจะอี้ ไปไกลๆ ตีนข้าเลยเน้อเจ้า!",
+                    "ใจเย็นๆ เน้อเจ้า ฟังคิงแหลงแล้วจะไปลมจับก่อนล่ะก้า ไปกินน้ำเย็นๆ ก่อนไป๊!",
+                    "วอกแต้วอกว่า พูดจาตลบตะแลง ระวังเหอะจะโดนดีเข้าสักวัน!"
+                ],
+                inter: [
+                    "Oh shut up! What a ridiculous text. Go get some help dude!",
+                    "Quote of the day: You lack both intelligence and humor. Absolute disaster!",
+                    "You sound completely out of your mind. Go touch some grass and stop typing!",
+                    "Stop acting like a pro when you're just a total noob at everything!"
+                ]
+            },
+            nsfw: {
+                central: [
+                    "แหม ทะลึ่งตึงตังนะมึง ส่องของดีอยู่ล่ะสิ? ระวังตาแฉะนะไอ้หนุ่ม!",
+                    "เบาได้เบาไอ้หนุ่ม เดี๋ยวหัวใจวายคีย์บอร์ดพังพอดี เรื่องใต้สะดือนี่ชอบจังนะ!",
+                    "คิดเรื่องลามกอีกล่ะสิมึง หน้าตาออกลายเชียว ไปหาน้ำเย็นลูบหน้าด่วน!",
+                    "ใจมันได้ แต่สังขารไหวเปล่าถามใจตัวเองดูนะไอ้ทศ!"
+                ],
+                isan: [
+                    "โอ๊ย บักอันนี้! ซงคือสิอยากเห็นแนวลามกหลายแท้ ทะลึ่งคักๆ! ตาเป็นมันเชียว!",
+                    "มาทรงเซ็กซี่แท้น้ออ้าย ไปหาผ้าห่มมาคลุมไว้ก่อนไป๊ เห็นแล้วคึดลึก!",
+                    "ทะลึ่งตึงตังอีกล่ะ บักหัวขวด! เรื่องแบบนี้แล่นไวคักน้อเรื่องงานละช้าปานเต่า!",
+                    "กิเลสหนาตัณหาจัดแต่น้อยแต่นานน้อระวังตกนรกหม้อกระทะทองแดงเด้อ!"
+                ],
+                south: [
+                    "หรอยแรงนะมึง! ของพรรค์นี้ชอบจังนะ เรื่องลามกนิฉาดฉาด! ตาโตเชียวนะ!",
+                    "อย่าทะลึ่งแรงต๊ะไอ้บ่าว เดี๋ยวอีโดนมิใช่น้อย เรื่องบ้ากามนี่ไว้ใจมึงเลย!",
+                    "ทำมาเป็นพูดอ้อมค้อม คิดจะขอดูของดีละสิ มึงมันร้ายนักนะไอ้บ่าว!",
+                    "ใจเย็นๆ ต๊ะ อย่ารีบร้อนเรื่องพรรค์นี้ เดี๋ยวอีหัวใจวายเอาฉาดเดียว!"
+                ],
+                north: [
+                    "กึดลามกจ๊ะอี้ ระวังตาจะกุ๊ดเน้อเจ้าไอ้ทศ! ไปวัดไปวาผ่อนพ้นเถอะ!",
+                    "ตึงวันตึงคืนกึดแต่เรื่องจะอี้ บ้ากามแต้ๆ หน้าตาหื่นกระหายล้ำไปละ!",
+                    "อย่ามาทำเป็นอู้เล่นเรื่องจะอี้ ข้าฮู้ทันมึงหมดเสี้ยงแล้วเน้อเจ้า!",
+                    "ใจแตกแต่น้อยแต่นานกึดแต่เรื่องใต้ผ้าถุง ไปไกลๆ เลยไป๊!"
+                ],
+                inter: [
+                    "Keep it clean, you absolute degenerate! Stop being so horny all the time!",
+                    "Wow, that's incredibly wild. Go to horny jail right now and don't come back!",
+                    "Your mind is totally in the gutter. Seek medical attention immediately!",
+                    "Pure unfiltered madness. Focus on your work instead of these NSFW thoughts!"
+                ]
+            },
+            polite: {
+                central: [
+                    "สวัสดีครับ ผม KLA AI ยินดีที่ได้ให้บริการและตอบคำถามของคุณครับ",
+                    "รับทราบคำสั่งครับ มีข้อมูลส่วนไหนให้ช่วยเหลือเพิ่มเติมไหมครับ",
+                    "ขอบคุณสำหรับข้อความครับ ผมพร้อมช่วยคุณคิดคำคมดีๆ และสร้างสรรค์ผลงานครับ",
+                    "ขอให้วันนี้เป็นวันที่ดีของคุณครับ มีเรื่องอะไรให้ผมรับใช้แจ้งได้เลยครับ"
+                ]
+            }
+        };
+
+        function changeMemeProfile() {
+            const randIndex = Math.floor(Math.random() * memeProfiles.length);
+            document.getElementById('klaProfile').src = memeProfiles[randIndex];
+            
+            const chatBox = document.getElementById('chatBox');
+            chatBox.innerHTML += `
+                <div class="text-center text-xs text-amber-500 my-1">
+                    ✨ [ระบบอัตโนมัติ] KLA เปลี่ยนรูปโปรไฟล์เป็นมีมตลกออนไลน์ใบใหม่แล้ว!
+                </div>
+            `;
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+
+        function onSystemUpdate() {
+            changeMemeProfile();
+        }
 
         function sendMessage() {
-            const text = userInput.value.trim();
-            if (!text) return;
+            const input = document.getElementById('userInput');
+            const role = document.getElementById('roleInput').value;
+            const mode = document.getElementById('chatMode').value;
+            let dialect = document.getElementById('dialectMode').value;
 
-            // แสดงข้อความผู้ใช้
-            const userMsg = document.createElement('div');
-            userMsg.className = 'message user';
-            userMsg.textContent = text;
-            chatMessages.appendChild(userMsg);
+            if (!input.value.trim()) return;
 
-            userInput.value = '';
-            chatMessages.scrollTop = chatMessages.scrollHeight;
+            const chatBox = document.getElementById('chatBox');
+            
+            chatBox.innerHTML += `
+                <div class="flex gap-2 max-w-xl ml-auto justify-end">
+                    <div class="bg-lime-950 p-2.5 rounded-lg rounded-tl-none border border-lime-800 text-right">
+                        ${input.value}
+                    </div>
+                </div>
+            `;
 
-            // จำลองการตอบกลับของ AI
+            if (mode === 'polite') dialect = 'central';
+            
+            const modeResponses = responses[mode][dialect];
+            let botReply = modeResponses[Math.floor(Math.random() * modeResponses.length)];
+
+            if (role) {
+                botReply = `[สวมบทบาทเป็น ${role}]: ` + botReply;
+            }
+
             setTimeout(() => {
-                const aiMsg = document.createElement('div');
-                aiMsg.className = 'message ai';
-                aiMsg.textContent = "ได้รับข้อความ \"" + text + "\" แล้วครับ ระบบทำงานปกติบนมือถือแล้วครับ!";
-                chatMessages.appendChild(aiMsg);
-                chatMessages.scrollTop = chatMessages.scrollHeight;
-            }, 600);
+                chatBox.innerHTML += `
+                    <div class="flex gap-2 max-w-xl">
+                        <div class="w-7 h-7 bg-lime-400 rounded-full flex items-center justify-center text-gray-950 text-xs font-bold">KLA</div>
+                        <div class="bg-gray-800 p-2.5 rounded-lg rounded-tl-none">
+                            ${botReply}
+                        </div>
+                    </div>
+                `;
+                chatBox.scrollTop = chatBox.scrollHeight;
+                if (Math.random() > 0.6) changeMemeProfile();
+            }, 500);
+
+            input.value = '';
         }
 
-        sendBtn.addEventListener('click', sendMessage);
-        userInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') sendMessage();
-        });
-    </script>
-</body>
-</html>
+        function handleFileUpload() {
+            const fileInput = document.getElementById('mediaUpload');
+            if (fileInput.files.length === 0) return;
+            
+            const chatBox = document.getElementById('chatBox');
+            chatBox.innerHTML += `
+                <div class="text-center text-xs text-cyan-400 my-1">
+                    📁 อัปโหลดไฟล์เสร็จสมบูรณ์: "${fileInput.files[0].name}" ส่งให้ KLA ตรวจสอบแล้ว!
+                </div>
+            `;
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+
+        function sendLink() {
+            const linkInput = document.getElementById('linkInput');
+            if (!linkInput.value.trim()) return;
+
+            const chatBox = document.getElementById('chatBox');
+            chatBox.innerHTML += `
+                <div class="text-center text-xs text-cyan-400 my-1">
+                    🔗 ลิงก์ภายนอกถูกส่งให้เอไอแล้ว: <span class="underline">${linkInput.value}</span>
+                </div>
+            `;
+            linkInput.value = '';
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+
+        function simulateVoiceMessage() {
+            const chatBox = document.getElementById('chatBox');
+            chatBox.innerHTML += `
+                <div class="flex gap-2 max-w-xl">
+                    <div class="w-7 h-7 bg-lime-400 rounded-full flex items-center justify-center text-gray-950 text-xs font-bold">KLA</div>
+                    <div class="bg-gray-800 p-2.5 rounded-lg rounded-tl-none text-lime-400 italic flex items-center gap-2">
+                        <i class="fas fa-volume-up animate-pulse"></i> 🔊 [ข้อความเสียงส่งออกแล้ว]: "ฟังนะไอ้สองแคว้น ฟังเสียงข้านี่!"
+                    </div>
+                </div>
+            `;
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+
+        function processTool(toolName) {
+            alert(`⚙️ ระบบกำลังประมวลผลคำสั่ง "${toolName}" ของคุณบนฐานข้อมูล KLA AI...`);
+        }
+                </script>
 

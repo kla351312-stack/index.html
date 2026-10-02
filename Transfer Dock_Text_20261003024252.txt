@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KLA AI Hub - Ultimate Edition with TikTok Contact</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Alpine.js CDN -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        cyber: {
+                            dark: '#020617',
+                            card: '#090d16',
+                            border: '#1e293b',
+                            neonPink: '#ec4899',
+                            neonCyan: '#06b6d4',
+                            neonPurple: '#8b5cf6'
+                        }
+                    },
+                    boxShadow: {
+                        'neon-cyan': '0 0 20px rgba(6, 182, 212, 0.4)',
+                        'neon-pink': '0 0 20px rgba(236, 72, 153, 0.4)',
+                        'neon-purple': '0 0 20px rgba(139, 92, 246, 0.4)',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap');
+        body { font-family: 'Prompt', sans-serif; }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #020617; }
+        ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: #06b6d4; }
+    </style>
+</head>
+<body class="bg-cyber-dark text-slate-100 min-h-screen flex flex-col overflow-x-hidden" x-data="klaApp()">
+
+    <!-- 18+ DISCLAIMER MODAL -->
+    <div x-show="showAgeModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-md p-4" x-cloak>
+        <div class="bg-cyber-card border border-cyber-neonPink/60 p-6 rounded-2xl max-w-md w-full shadow-neon-pink text-center">
+            <div class="text-cyber-neonPink text-4xl mb-3"><i class="fa-solid fa-triangle-exclamation"></i></div>
+            <h2 class="text-xl font-bold mb-2">คำเตือนเนื้อหา 18+ (NSFW / Uncensored)</h2>
+            <p class="text-sm text-slate-400 mb-6">เนื้อหานี้มีข้อความหยาบคาย ภาษาเฉพาะกลุ่ม และคำด่าท้องถิ่นสำหรับผู้ที่มีอายุ 18 ปีขึ้นไปเท่านั้น คุณยืนยันว่าอายุถึงเกณฑ์หรือไม่?</p>
+            <div class="flex gap-3">
+                <button @click="showAgeModal = false; activeMode = '18+';" class="flex-1 py-2.5 bg-cyber-neonPink hover:bg-pink-600 text-white font-semibold rounded-xl shadow-neon-pink transition">ยอมรับ / เข้าสู่โหมด 18+</button>
+                <button @click="showAgeModal = false; activeMode = 'normal';" class="flex-1 py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl transition">ปฏิเสธ</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- VOICE CALL SIMULATION OVERLAY -->
+    <div x-show="isCalling" class="fixed inset-0 z-50 flex flex-col items-center justify-center bg-cyber-dark/95 backdrop-blur-xl p-6" x-cloak>
+        <div class="relative mb-8">
+            <img :src="currentAvatar" class="w-32 h-32 rounded-full border-4 border-cyber-neonCyan object-cover shadow-neon-cyan animate-pulse">
+            <div class="absolute inset-0 rounded-full border border-cyber-neonCyan animate-ping opacity-75"></div>
+        </div>
+        <h2 class="text-2xl font-bold mb-2 text-cyber-neonCyan">KLA AI Voice Call (<span x-text="currentRoleplay.name"></span>)</h2>
+        <p class="text-slate-400 mb-8 animate-pulse" x-text="callStatusText"></p>
+        <div class="flex gap-6">
+            <button @click="endCall()" class="w-16 h-16 rounded-full bg-red-600 hover:bg-red-500 flex items-center justify-center text-2xl shadow-lg transition">
+                <i class="fa-solid fa-phone-slash"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- PRIVATE GALLERY PASSWORD MODAL -->
+    <div x-show="showGalleryLock" class="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-md p-4" x-cloak>
+        <div class="bg-cyber-card border border-cyber-neonPurple/60 p-6 rounded-2xl max-w-sm w-full shadow-neon-purple text-center">
+            <div class="text-cyber-neonPurple text-3xl mb-3"><i class="fa-solid fa-lock"></i></div>
+            <h2 class="text-lg font-bold mb-2">Private Gallery Locked</h2>
+            <p class="text-xs text-slate-400 mb-4">กรุณากรอกรหัสผ่านเพื่อเข้าถึงคลังภาพ 18+</p>
+            <input type="password" x-model="galleryPasswordInput" placeholder="Enter Password..." class="w-full bg-slate-900 border border-slate-700 px-4 py-2.5 rounded-xl mb-4 text-center focus:outline-none focus:border-cyber-neonPurple text-sm">
+            <div class="flex gap-2">
+                <button @click="verifyGalleryPassword()" class="flex-1 py-2.5 bg-cyber-neonPurple hover:bg-purple-600 text-white font-semibold rounded-xl transition text-sm">ปลดล็อก</button>
+                <button @click="showGalleryLock = false; currentTab = 'chat'" class="px-4 py-2.5 bg-slate-800 hover:bg-slate-700 rounded-xl transition text-sm">ยกเลิก</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MAIN APP WRAPPER -->
+    <div class="flex h-screen overflow-hidden">
+        
+        <!-- SIDEBAR -->
+        <aside class="w-72 bg-cyber-card border-r border-cyber-border flex flex-col justify-between hidden md:flex">
+            <div>
+                <!-- Brand & Auto-rotating AI Avatar -->
+                <div class="p-5 border-b border-cyber-border flex items-center justify-between">
+                    <div class="flex items-center gap-3">
+                        <div class="relative">
+                            <img :src="currentAvatar" class="w-11 h-11 rounded-xl border border-cyber-neonCyan object-cover shadow-neon-cyan transition duration-500">
+                            <span class="absolute -bottom-1 -right-1 w-3.5 h-3.5 bg-green-500 border-2 border-cyber-card rounded-full"></span>
+                        </div>
+                        <div>
+                            <h1 class="font-bold text-base tracking-wider bg-gradient-to-r from-cyber-neonCyan to-cyber-neonPink bg-clip-text text-transparent">KLA AI Hub</h1>
+                            <p class="text-[10px] text-slate-400" x-text="'Role: ' + currentRoleplay.name"></p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Navigation Tabs -->
+                <div class="p-4 space-y-1 overflow-y-auto max-h-[calc(100vh-380px)]">
+                    <button @click="currentTab = 'chat'" :class="currentTab === 'chat' ? 'bg-cyan-500/10 text-cyber-neonCyan border-cyber-neonCyan/40 shadow-neon-cyan/20' : 'text-slate-400 hover:bg-slate-900'" class="w-full flex items-center gap-3 px-4 py-2.5 rounded-xl border border-transparent transition text-sm font-medium">
+                        <i class="fa-solid fa-comments w-5"></i> AI Chat Assistant
+                    </button>
+                    <button @click="currentTab = 'roleplay'" :class="currentTab === 'roleplay' ? 'bg-purple-500/10 text-cyber-neonPurple border-cyber-neonPurple/40 shadow-neon-purple/20' : 'text-slate-400 hover:bg-slate-900'" class="w-full flex items-center gap-3 px-4 py-2.5 rounded-xl border border-transparent transition text-sm font-medium">
+                        <i class="fa-solid fa-masks-theater w-5"></i> KLA Roleplay Studio
+                    </button>
+                    <button @click="currentTab = 'watermark'" :class="currentTab === 'watermark' ? 'bg-cyan-500/10 text-cyber-neonCyan border-cyber-neonCyan/40 shadow-neon-cyan/20' : 'text-slate-400 hover:bg-slate-900'" class="w-full flex items-center gap-3 px-4 py-2.5 rounded-xl border border-transparent transition text-sm font-medium">
+                        <i class="fa-solid fa-eraser w-5"></i> Watermark Remover
+                    </button>
+                    <button @click="currentTab = 'video'" :class="currentTab === 'video' ? 'bg-pink-500/10 text-cyber-neonPink border-cyber-neonPink/40 shadow-neon-pink/20' : 'text-slate-400 hover:bg-slate-900'" class="w-full flex items-center gap-3 px-4 py-2.5 rounded-xl border border-transparent transition text-sm font-medium">
+                        <i class="fa-solid fa-video w-5"></i> KLA Video Studio
+                    </button>
+                    <button @click="currentTab = 'music'" :class="currentTab === 'music' ? 'bg-purple-500/10 text-cyber-neonPurple border-cyber-neonPurple/40 shadow-neon-purple/20' : 'text-slate-400 hover:bg-slate-900'" class="w-full flex items-center gap-3 px-4 py-2.5 rounded-xl border border-transparent transition text-sm font-medium">
+                        <i class="fa-solid fa-music w-5"></i> KLA Music Studio
+                    </button>
+                    <button @click="currentTab = 'devhub'" :class="currentTab === 'devhub' ? 'bg-cyan-500/10 text-cyber-neonCyan border-cyber-neonCyan/40' : 'text-slate-400 hover:bg-slate-900'" class="w-full flex items-center gap-3 px-4 py-2.5 rounded-xl border border-transparent transition text-sm font-medium">
+                        <i class="fa-solid fa-code w-5"></i> Dev & Mod Hub
+                    </button>
+                    <button @click="checkGalleryAccess()" :class="currentTab === 'art' ? 'bg-pink-500/10 text-cyber-neonPink border-cyber-neonPink/40' : 'text-slate-400 hover:bg-slate-900'" class="w-full flex items-center gap-3 px-4 py-2.5 rounded-xl border border-transparent transition text-sm font-medium">
+                        <i class="fa-solid fa-wand-magic-sparkles w-5"></i> Uncensored Art Studio
+                    </button>
+                </div>
+
+                <!-- TikTok Contact Button -->
+                <div class="px-4 py-2 border-t border-cyber-border">
+                    <a href="https://www.tiktok.com/@user36265803092082?_r=1&_t=ZS-9AE9XOb9wME" target="_blank" class="w-full flex items-center gap-3 px-4 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-pink-400 border border-cyber-border transition text-xs font-semibold shadow-sm">
+                        <i class="fa-brands fa-tiktok w-5 text-pink-500 text-sm"></i> ติดต่อผ่าน TikTok
+                    </a>
+                </div>
+
+                <!-- Persona / Mode Selector -->
+                <div class="px-4 py-2 border-t border-cyber-border">
+                    <p class="text-[11px] font-semibold text-slate-500 uppercase tracking-wider mb-2 px-1">KLA Mode & Dialect</p>
+                    <div class="space-y-1.5">
+                        <button @click="activeMode = 'normal'" :class="activeMode === 'normal' ? 'bg-slate-800 text-slate-100 border-slate-600' : 'text-slate-400 hover:bg-slate-900/50'" class="w-full text-left px-3 py-2 rounded-lg border border-transparent text-xs flex items-center justify-between transition">
+                            <span>🟢 Normal / Polite</span>
+                            <span class="w-2 h-2 rounded-full" :class="activeMode === 'normal' ? 'bg-green-500' : 'bg-transparent'"></span>
+                        </button>
+                        <button @click="activeMode = 'toxic'" :class="activeMode === 'toxic' ? 'bg-yellow-500/10 text-yellow-400 border-yellow-500/40' : 'text-slate-400 hover:bg-slate-900/50'" class="w-full text-left px-3 py-2 rounded-lg border border-transparent text-xs flex items-center justify-between transition">
+                            <span>🔥 Toxic & Regional Roast (ด่าแซ่บ)</span>
+                            <span class="w-2 h-2 rounded-full" :class="activeMode === 'toxic' ? 'bg-yellow-500' : 'bg-transparent'"></span>
+                        </button>
+                        <button @click="handle18PlusSelect()" :class="activeMode === '18+' ? 'bg-pink-500/10 text-cyber-neonPink border-cyber-neonPink/40' : 'text-slate-400 hover:bg-slate-900/50'" class="w-full text-left px-3 py-2 rounded-lg border border-transparent text-xs flex items-center justify-between transition">
+                            <span>🔞 18+ Uncensored + Dialects</span>
+                            <span class="w-2 h-2 rounded-full" :class="activeMode === '18+' ? 'bg-cyber-neonPink' : 'bg-transparent'"></span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <div class="p-3 border-t border-cyber-border text-xs text-slate-500 flex items-center justify-between">
+                <span>Status: <strong class="text-green-400">Online</strong></span>
+                <i class="fa-solid fa-shield-halved text-cyber-neonCyan"></i>
+            </div>
+        </aside>
+
+        <!-- MAIN CONTENT AREA -->
+        <main class="flex-1 flex flex-col h-full overflow-hidden bg-cyber-dark">
+
+            <!-- TAB 1: AI CHAT ASSISTANT -->
+            <div x-show="currentTab === 'chat'" class="flex-1 flex flex-col h-full" x-cloak>
+                <!-- Chat Header -->
+                <div class="h-16 border-b border-cyber-border flex items-center justify-between px-6 bg-cyber-card/60 backdrop-blur-md">
+                    <div class="flex items-center gap-3">
+                        <img :src="currentAvatar" class="w-9 h-9 rounded-xl border border-cyber-neonCyan object-cover shadow-neon-cyan">
+                        <div>
+                            <h2 class="font-bold text-sm" x-text="currentRoleplay.name"></h2>
+                            <p class="text-[10px] text-slate-400">Mode: <span class="uppercase text-cyber-neonCyan font-semibold" x-text="activeMode"></span> | Dialect: <span class="text-pink-400 font-semibold uppercase" x-text="selectedDialect"></span></p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <!-- Dialect Selector Dropdown -->
+                        <select x-model="selectedDialect" class="bg-slate-900 border border-cyber-border text-xs text-slate-300 rounded-xl px-3 py-2 focus:outline-none focus:border-cyber-neonCyan">
+                            <option value="central">🇹🇭 ภาษากลาง (Standard)</option>
+                            <option value="isan">🌾 ภาษาอีสาน (Isan)</option>
+                            <option value="northern">🏔 ภาษาเหนือ (Northern)</option>
+                            <option value="southern">🌴 ภาษาใต้ (Southern)</option>
+                            <option value="english">🇺🇸 English (Global)</option>
+                            <option value="japanese">🇯🇵 日本語 (Japanese)</option>
+                        </select>
+                        <button @click="startCall()" class="bg-slate-800 hover:bg-slate-700 border border-cyber-border p-2.5 rounded-xl text-cyber-neonCyan shadow-neon-cyan transition flex items-center gap-2 text-xs font-medium">
+                            <i class="fa-solid fa-phone-volume"></i> <span class="hidden sm:inline">Voice Call</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Messages Window -->
+                <div class="flex-1 overflow-y-auto p-4 sm:p-6 space-y-4">
+                    <template x-for="msg in currentMessages" :key="msg.id">
+                        <div class="flex gap-3" :class="msg.sender === 'user' ? 'justify-end' : 'justify-start'">
+                            <div x-show="msg.sender === 'kla'" class="shrink-0">
+                                <img :src="currentAvatar" class="w-8 h-8 rounded-full border border-cyber-neonCyan object-cover shadow-neon-cyan">
+                            </div>
+                            <div class="max-w-[80%] sm:max-w-[70%] p-4 rounded-2xl text-sm leading-relaxed shadow-md relative group space-y-2"
+                                 :class="msg.sender === 'user' ? 'bg-cyber-neonCyan text-cyber-dark font-medium rounded-tr-none' : 'bg-cyber-card border border-cyber-border text-slate-200 rounded-tl-none'">
+                                
+                                <template x-if="msg.attachment">
+                                    <div class="rounded-xl overflow-hidden mb-2 border border-slate-700/50">
+                                        <template x-if="msg.attachment.type === 'image'">
+                                            <img :src="msg.attachment.url" class="max-h-48 w-full object-cover">
+                                        </template>
+                                        <template x-if="msg.attachment.type === 'video'">
+                                            <video :src="msg.attachment.url" controls class="max-h-48 w-full object-cover"></video>
+                                        </template>
+                                        <template x-if="msg.attachment.type === 'link'">
+                                            <a :href="msg.attachment.url" target="_blank" class="flex items-center gap-2 p-2.5 bg-slate-900 text-cyan-400 text-xs hover:underline truncate">
+                                                <i class="fa-solid fa-link"></i> <span x-text="msg.attachment.url"></span>
+                                            </a>
+                                        </template>
+                                    </div>
+                                </template>
+
+                                <p x-text="msg.text" class="whitespace-pre-wrap"></p>
+
+                                <button x-show="msg.sender === 'kla'" @click="speakText(msg.text)" class="absolute top-2 right-2 opacity-0 group-hover:opacity-100 text-xs text-cyber-neonCyan hover:text-white transition bg-slate-900/80 px-2 py-1 rounded-lg">
+                                    <i class="fa-solid fa-volume-high"></i> ฟังเสียง
+                                </button>
+                            </div>
+                            <div x-show="msg.sender === 'user'" class="w-8 h-8 rounded-full bg-pink-500/20 border border-cyber-neonPink flex items-center justify-center text-cyber-neonPink text-xs shrink-0">
+                                <i class="fa-solid fa-user"></i>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+
+                <!-- Chat Input Box -->
+                <div class="p-4 border-t border-cyber-border bg-cyber-card/60 backdrop-blur-md space-y-2">
+                    <template x-if="attachedMedia">
+                        <div class="flex items-center justify-between bg-slate-900 border border-cyan-500/40 px-3 py-2 rounded-xl max-w-4xl mx-auto text-xs">
+                            <div class="flex items-center gap-2 truncate">
+                                <i :class="attachedMediaType === 'video' ? 'fa-solid fa-video text-pink-400' : 'fa-solid fa-image text-cyan-400'"></i>
+                                <span class="text-slate-300 truncate" x-text="attachedMediaName"></span>
+                            </div>
+                            <button @click="removeAttachment()" class="text-red-400 hover:text-red-300"><i class="fa-solid fa-xmark"></i> ยกเลิก</button>
+                        </div>
+                    </template>
+
+                    <form @submit.prevent="sendMessage()" class="flex items-center gap-3 max-w-4xl mx-auto">
+                        <input type="file" x-ref="fileInput" @change="handleFileChange($event)" class="hidden" accept="image/*,video/*">
+
+                        <button type="button" @click="$refs.fileInput.click()" class="p-3.5 rounded-2xl bg-slate-900 text-cyber-neonCyan hover:bg-slate-800 border border-cyber-border transition flex items-center justify-center" title="แนบรูปภาพหรือวิดีโอ">
+                            <i class="fa-solid fa-paperclip"></i>
+                        </button>
+
+                        <button type="button" @cl

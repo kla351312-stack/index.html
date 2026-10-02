@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KLA AI Hub - Fully Responsive Cyberpunk Dashboard</title>
-    <!-- เปลี่ยนมาใช้ Tailwind CSS v3 เสถียรที่สุดสำหรับ GitHub Pages -->
+    <title>KLA AI Hub - Premium Cyberpunk Dashboard</title>
+    <!-- ใช้ระบบ Tailwind CSS v3 แบบเสถียรไร้รอยต่อ -->
     <script src="https://tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cloudflare.com">
     <link href="https://googleapis.com" rel="stylesheet">
@@ -20,8 +20,8 @@
 </head>
 <body class="cyber-bg text-gray-100 min-h-screen flex flex-col md:flex-row antialiased overflow-x-hidden">
 
-    <!-- MOBILE HEADER BAR (ส่วนหัวบนจอมือถือ) -->
-    <header class="w-full bg-gray-950 p-4 flex items-center justify-between border-b border-gray-900 md:hidden z-35 sticky top-0">
+    <!-- MOBILE HEADER BAR -->
+    <header class="w-full bg-gray-950 p-4 flex items-center justify-between border-b border-gray-900 md:hidden z-40 sticky top-0">
         <div class="flex items-center gap-2">
             <div class="w-8 h-8 rounded-lg bg-gradient-to-tr from-lime-400 to-cyan-500 p-[1px]">
                 <div class="w-full h-full bg-gray-950 rounded-[7px] flex items-center justify-center font-black text-lime-400 text-xs">KLA</div>
@@ -33,10 +33,9 @@
         </button>
     </header>
 
-    <!-- SIDEBAR NAVIGATION (เมนูด้านซ้าย) -->
+    <!-- SIDEBAR NAVIGATION -->
     <aside id="sidebar" class="fixed inset-y-0 left-0 transform -translate-x-full md:relative md:translate-x-0 w-72 bg-gray-950/95 md:bg-gray-950/80 border-r border-gray-900 flex flex-col justify-between p-5 shrink-0 z-30 transition-transform duration-300 ease-in-out h-full md:h-screen pt-20 md:pt-5">
         <div class="overflow-y-auto pr-1">
-            
             <div class="hidden md:flex items-center gap-3 pb-6 border-b border-gray-900">
                 <div class="relative w-12 h-12 rounded-2xl bg-gradient-to-tr from-lime-400 to-cyan-500 p-[2px] shadow-lg">
                     <div class="w-full h-full bg-gray-950 rounded-[14px] flex items-center justify-center font-black text-lime-400 tracking-wider text-sm">KLA</div>
@@ -48,7 +47,6 @@
                 </div>
             </div>
 
-            <!-- Main Navigation Links -->
             <nav class="mt-4 md:mt-6 space-y-1.5">
                 <p class="text-[10px] font-bold text-gray-600 uppercase tracking-widest pl-2 mb-2">Main Features</p>
                 <button onclick="switchTab('chat')" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold transition bg-gray-900 text-lime-400 border border-lime-500/20 shadow-sm" id="btn-chat">
@@ -74,7 +72,6 @@
                 </button>
             </nav>
 
-            <!-- Mode & Dialect Settings -->
             <div class="mt-6 pt-4 border-t border-gray-900 space-y-3">
                 <p class="text-[10px] font-bold text-gray-600 uppercase tracking-widest pl-2">KLA Mode & Dialect</p>
                 <div class="space-y-2.5 pl-2 text-xs font-medium">
@@ -94,7 +91,6 @@
             </div>
         </div>
 
-        <!-- Social Media Footer -->
         <div class="mt-6 pt-4 border-t border-gray-900">
             <a href="https://tiktok.com" target="_blank" class="w-full bg-gradient-to-r from-pink-600 to-cyan-600 hover:opacity-90 text-white text-xs font-bold py-2.5 px-4 rounded-xl flex items-center justify-center gap-2 shadow-md transition">
                 <i class="fab fa-tiktok"></i> @badashu TikTok
@@ -107,31 +103,37 @@
 
     <!-- MAIN DASHBOARD CONTENT AREA -->
     <main class="flex-1 flex flex-col p-4 md:p-6 overflow-y-auto md:h-screen">
-        
-        <!-- Tab Content Header -->
         <header class="flex justify-between items-center mb-5 mt-2 md:mt-0">
             <div>
                 <h2 class="text-xl md:text-2xl font-black text-white" id="currentTabTitle">AI Chat Assistant</h2>
                 <p class="text-xs text-gray-400 mt-1 font-medium" id="currentTabDesc">ระบบสนทนาอัจฉริยะ ปากจัด ปั่นประสาท พร้อมเซฟประวัติอัตโนมัติ</p>
             </div>
             <div class="flex items-center gap-3 shrink-0">
-                <button onclick="triggerVoiceCall()" class="w-10 h-10 rounded-xl bg-gray-900 border border-gray-800 flex items-center justify-center text-cyan-400 hover:bg-gray-800 transition shadow" title="Simulate Voice Call">
+                <button onclick="triggerVoiceCall()" class="w-10 h-10 rounded-xl bg-gray-900 border border-gray-800 flex items-center justify-center text-cyan-400 hover:bg-gray-800 transition shadow">
                     <i class="fas fa-phone-alt"></i>
                 </button>
             </div>
         </header>
 
-        <!-- PANEL CONTAINER -->
         <div class="flex-1 flex flex-col min-h-0">
-            
-            <!-- 1. CHAT TAB INTERFACE (แก้ไขบั๊กแท็กเบี้ยวเรียบร้อย) -->
+            <!-- CHAT INTERFACE PANEL -->
             <div id="panel-chat" class="flex-1 flex flex-col glass-panel border border-gray-900 rounded-2xl min-h-[420px] h-[calc(100vh-240px)] md:h-[65vh] overflow-hidden neon-glow-lime">
-                <!-- Chat Log Space -->
                 <div class="flex-1 p-4 overflow-y-auto space-y-4" id="chatContainer">
                     <div class="flex gap-3 max-w-2xl">
                         <div class="w-8 h-8 rounded-xl bg-lime-400 flex items-center justify-center font-black text-gray-950 text-xs shrink-0">KLA</div>
                         <div class="bg-gray-900 border border-gray-850 p-3 rounded-2xl rounded-tl-none text-sm text-gray-200 leading-relaxed">
-                            เออแก้ระบบแก้บั๊กให้เรียบร้อย! รอบนี้เปลี่ยนมาใช้ระบบโครงสร้างที่เสถียรขึ้น ปุ่มกดไม่มีทางเอ๋อแน่นอน มิติตัวหนังสือไม่ซ้อนแล้ว ลองพิมพ์มาด่ากันดูดิ๊!
+                            เออแก้บั๊กหน้าจอซ้อนและโค้ดหลุดให้แบบหมดจด 100% แล้ว! รอบนี้โครงสร้างเสถียร สัดส่วนเป๊ะทั้งคอมและมือถือ ลุยได้เลยไอ้เสือ!
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Chat Input Row -->
+                <div class="p-3 bg-gray-950/80 border-t border-gray-900 flex gap-2 items-center">
+                    <label class="cursor-pointer w-10 h-10 rounded-xl bg-gray-900 border border-gray-850 flex items-center justify-center text-gray-400 hover:text-gray-200 transition shrink-0">
+
+
+
+
 ส่ง
 
 
@@ -145,6 +147,8 @@ Preview Monitor
 แดชบอร์ดตรวจสอบไฟล์มัลติมีเดียและผลลัพธ์ของระบบ KLA
 
 No Output Data Active
+
+
 
 
 
@@ -230,9 +234,7 @@ function handleSendChat() {
 const input = document.getElementById('chatInput');
 if (!input.value.trim()) return;
 const container = document.getElementById('chatContainer');
-// User Text Message Display Template Bubble
 container.innerHTML += <div class="flex gap-3 max-w-xl ml-auto justify-end"> <div class="bg-blue-600 border border-blue-500 p-3 rounded-2xl rounded-tr-none text-sm text-gray-100"> ${input.value} </div> </div>;
-// KLA Bot Response Message Generation Simulator
 setTimeout(() => {
 container.innerHTML += <div class="flex gap-3 max-w-xl"> <div class="w-8 h-8 rounded-xl bg-lime-400 flex items-center justify-center font-black text-gray-950 text-xs shrink-0">KLA</div> <div class="bg-gray-900 border border-gray-850 p-3 rounded-2xl rounded-tl-none text-sm text-gray-200"> พิมพ์คำว่า "${input.value}" มาหาข้าเรอะ! ระบบ Auto-Save บันทึกเรียบร้อย หน้าต่างแชทพรีเมียมเรืองแสงสไตล์มืดคมชัดถูกใจมึงยังไอ้เสือ! </div> </div>;
 container.scrollTop = container.scrollHeight;

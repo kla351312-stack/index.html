@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KLA AI Hub</title>
+    <title>KLA AI Hub - Cyberpunk Dashboard</title>
     <style>
         * {
             box-sizing: border-box;
@@ -12,14 +12,14 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
         body {
-            background-color: #0b0f19;
-            color: #c9d1d9;
+            background-color: #030712;
+            color: #f3f4f6;
             display: flex;
             height: 100vh;
             overflow: hidden;
         }
 
-        /* Mobile Header Bar (แสดงเฉพาะบนมือถือ) */
+        /* Mobile Header */
         .mobile-header {
             display: none;
             position: fixed;
@@ -27,112 +27,133 @@
             left: 0;
             width: 100%;
             height: 60px;
-            background-color: #111622;
+            background-color: #0b0f19;
             border-bottom: 1px solid #1f293d;
-            padding: 0 20px;
+            padding: 0 16px;
             align-items: center;
             justify-content: space-between;
             z-index: 100;
         }
-        .mobile-header h2 {
+        .mobile-header .logo {
             font-size: 16px;
-            color: #58a6ff;
+            font-weight: 800;
+            color: #a3e635;
         }
-        .menu-toggle-btn {
-            background: none;
-            border: 1px solid #30363d;
-            color: #c9d1d9;
-            padding: 6px 12px;
-            border-radius: 6px;
+        .menu-btn {
+            background: #111827;
+            border: 1px solid #374151;
+            color: #f3f4f6;
+            padding: 8px 14px;
+            border-radius: 8px;
             cursor: pointer;
-            font-size: 16px;
+            font-size: 14px;
+            font-weight: 600;
         }
 
-        /* Sidebar (แถบเมนูด้านซ้าย) */
+        /* Sidebar */
         .sidebar {
             width: 280px;
-            background-color: #0d1117;
+            background-color: #0b0f19;
             border-right: 1px solid #1f293d;
             display: flex;
             flex-direction: column;
-            flex-shrink: 0;
             height: 100%;
-            overflow-y: auto;
-            transition: transform 0.3s ease;
+            flex-shrink: 0;
             z-index: 99;
+            transition: transform 0.3s ease;
         }
-        .logo-area {
+        .sidebar-brand {
             padding: 20px;
-            font-size: 16px;
-            font-weight: bold;
-            color: #58a6ff;
             border-bottom: 1px solid #1f293d;
-            display: flex;
-            align-items: center;
-            gap: 10px;
         }
-        .menu-list {
-            list-style: none;
-            padding: 15px 10px;
+        .sidebar-brand h1 {
+            font-size: 18px;
+            font-weight: 800;
+            color: #a3e635;
         }
-        .menu-item {
-            padding: 10px 12px;
-            margin-bottom: 4px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 13px;
-            color: #8b949e;
-            transition: background 0.2s, color 0.2s;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        .menu-item:hover, .menu-item.active {
-            background-color: #161b22;
-            color: #f0f6fc;
-        }
-        
-        .tiktok-btn {
-            margin: 10px 15px;
-            background-color: #161b22;
-            border: 1px solid #30363d;
-            color: #f0f6fc;
-            padding: 10px 12px;
-            border-radius: 8px;
-            text-decoration: none;
-            font-size: 13px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            transition: background 0.2s;
-        }
-        .tiktok-btn:hover {
-            background-color: #21262d;
+        .sidebar-brand p {
+            font-size: 10px;
+            color: #9ca3af;
+            letter-spacing: 1px;
+            margin-top: 2px;
         }
 
-        .mode-section {
+        .menu-nav {
+            padding: 15px 10px;
+            overflow-y: auto;
+            flex-grow: 1;
+        }
+        .menu-title {
+            font-size: 10px;
+            font-weight: 700;
+            color: #6b7280;
+            text-transform: uppercase;
+            padding-left: 10px;
+            margin-bottom: 8px;
+            letter-spacing: 1px;
+        }
+        .menu-item {
+            width: 100%;
+            background: transparent;
+            border: none;
+            text-align: left;
+            padding: 12px 14px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 600;
+            color: #9ca3af;
+            margin-bottom: 4px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.2s;
+        }
+        .menu-item:hover, .menu-item.active {
+            background-color: #111827;
+            color: #a3e635;
+            box-shadow: 0 0 15px rgba(163, 230, 53, 0.1);
+        }
+
+        .tiktok-link {
+            margin: 10px 15px;
+            background: linear-gradient(135deg, #db2777, #06b6d4);
+            color: #ffffff;
+            padding: 12px;
+            border-radius: 10px;
+            text-decoration: none;
+            font-size: 12px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+
+        .mode-box {
             padding: 15px 20px;
             border-top: 1px solid #1f293d;
-            margin-top: auto;
+            background: #060913;
         }
-        .mode-title {
-            font-size: 11px;
-            font-weight: bold;
-            color: #6e7681;
+        .mode-box .title {
+            font-size: 10px;
+            font-weight: 700;
+            color: #6b7280;
             margin-bottom: 10px;
-            letter-spacing: 0.5px;
+            letter-spacing: 1px;
         }
-        .mode-option {
+        .mode-label {
             display: flex;
             align-items: center;
             gap: 8px;
             font-size: 12px;
-            color: #8b949e;
-            margin-bottom: 8px;
+            color: #9ca3af;
+            margin-bottom: 6px;
             cursor: pointer;
         }
 
-        /* Backdrop สำหรับมือถือเวลาเปิดเมนู */
+        /* Backdrop */
         .backdrop {
             display: none;
             position: fixed;
@@ -140,28 +161,36 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0,0,0,0.6);
+            background: rgba(0,0,0,0.7);
             z-index: 98;
         }
 
-        /* Main Content / Chat Area (พื้นที่แชทด้านขวา) */
+        /* Main Content */
         .main-content {
             flex-grow: 1;
             display: flex;
             flex-direction: column;
-            background-color: #0b0f19;
+            background-color: #030712;
             height: 100%;
             overflow: hidden;
         }
-        .chat-header {
-            padding: 15px 20px;
-            background-color: #0d1117;
+        .main-header {
+            padding: 20px;
+            background-color: #0b0f19;
             border-bottom: 1px solid #1f293d;
-            font-size: 15px;
-            font-weight: 600;
-            color: #f0f6fc;
         }
-        .chat-messages {
+        .main-header h2 {
+            font-size: 18px;
+            font-weight: 800;
+            color: #ffffff;
+        }
+        .main-header p {
+            font-size: 12px;
+            color: #9ca3af;
+            margin-top: 2px;
+        }
+
+        .chat-container {
             flex-grow: 1;
             padding: 20px;
             overflow-y: auto;
@@ -169,63 +198,65 @@
             flex-direction: column;
             gap: 15px;
         }
-        .message {
-            max-width: 75%;
-            padding: 12px 16px;
-            border-radius: 10px;
+        .msg {
+            max-width: 80%;
+            padding: 14px 18px;
+            border-radius: 14px;
             font-size: 14px;
             line-height: 1.5;
         }
-        .message.ai {
-            background-color: #161b22;
+        .msg.ai {
+            background-color: #111827;
+            border: 1px solid #1f293d;
             align-self: flex-start;
-            color: #c9d1d9;
-            border: 1px solid #30363d;
+            color: #e5e7eb;
         }
-        .message.user {
-            background-color: #1f6feb;
+        .msg.user {
+            background-color: #2563eb;
             align-self: flex-end;
             color: #ffffff;
         }
-        .chat-input-area {
+
+        .chat-footer {
             padding: 15px 20px;
-            background-color: #0d1117;
+            background-color: #0b0f19;
             border-top: 1px solid #1f293d;
             display: flex;
             gap: 10px;
         }
         .chat-input {
             flex-grow: 1;
-            background-color: #0b0f19;
-            border: 1px solid #30363d;
-            border-radius: 8px;
-            padding: 12px 15px;
-            color: #c9d1d9;
+            background-color: #030712;
+            border: 1px solid #374151;
+            border-radius: 10px;
+            padding: 12px 16px;
+            color: #ffffff;
             font-size: 14px;
             outline: none;
         }
         .chat-input:focus {
-            border-color: #58a6ff;
+            border-color: #a3e635;
+            box-shadow: 0 0 10px rgba(163, 230, 53, 0.2);
         }
         .send-btn {
-            background-color: #238636;
-            color: white;
+            background-color: #16a34a;
+            color: #ffffff;
             border: none;
-            border-radius: 8px;
-            padding: 0 20px;
-            font-weight: 600;
+            border-radius: 10px;
+            padding: 0 24px;
+            font-weight: 700;
             cursor: pointer;
             transition: background 0.2s;
         }
         .send-btn:hover {
-            background-color: #2ea043;
+            background-color: #15803d;
         }
 
-        /* Responsive Design สำหรับมือถือ */
+        /* Responsive Media Query สำหรับมือถือ */
         @media screen and (max-width: 768px) {
             body {
                 flex-direction: column;
-                padding-top: 60px; /* เว้นที่ให้แถบหัวข้อด้านบนมือถือ */
+                padding-top: 60px;
             }
             .mobile-header {
                 display: flex;
@@ -252,111 +283,98 @@
 </head>
 <body>
 
-    <!-- แถบด้านบนสำหรับมือถือ -->
+    <!-- Mobile Header Bar -->
     <div class="mobile-header">
-        <h2>🤖 KLA AI Hub</h2>
-        <button class="menu-toggle-btn" onclick="toggleMenu()">☰ เมนู</button>
+        <div class="logo">⚡ KLA AI Hub</div>
+        <button class="menu-btn" onclick="toggleSidebar()">☰ เมนู</button>
     </div>
 
-    <!-- ฉากหลังมืดเวลาเปิดเมนูด้านข้างบนมือถือ -->
-    <div class="backdrop" id="backdrop" onclick="toggleMenu()"></div>
+    <!-- Backdrop -->
+    <div class="backdrop" id="backdrop" onclick="toggleSidebar()"></div>
 
-    <!-- แถบเมนูด้านซ้าย (Sidebar) -->
+    <!-- Sidebar -->
     <div class="sidebar" id="sidebar">
-        <div class="logo-area">
-            <span>⬛</span> KLA AI Hub
+        <div class="sidebar-brand">
+            <h1>⚡ KLA AI Hub</h1>
+            <p>CYBERPUNK AI SYSTEM</p>
         </div>
-        <ul class="menu-list">
-            <li class="menu-item active" onclick="selectMenu(this, 'AI Chat Assistant')">💬 AI Chat Assistant</li>
-            <li class="menu-item" onclick="selectMenu(this, 'KLA Roleplay Studio')">🎭 KLA Roleplay Studio</li>
-            <li class="menu-item" onclick="selectMenu(this, 'Watermark Remover')">💧 Watermark Remover</li>
-            <li class="menu-item" onclick="selectMenu(this, 'KLA Video Studio')">🎬 KLA Video Studio</li>
-            <li class="menu-item" onclick="selectMenu(this, 'KLA Music Studio')">🎵 KLA Music Studio</li>
-            <li class="menu-item" onclick="selectMenu(this, 'Dev & Mod Hub')">💻 Dev & Mod Hub</li>
-            <li class="menu-item" onclick="selectMenu(this, 'Uncensored Art Studio')">🎨 Uncensored Art Studio</li>
-        </ul>
+        <div class="menu-nav">
+            <div class="menu-title">Main Features</div>
+            <button class="menu-item active" onclick="switchTab(this, 'AI Chat Assistant', 'ระบบสนทนาอัจฉริยะ ปากจัด ปั่นประสาท พร้อมเซฟประวัติอัตโนมัติ')">💬 AI Chat Assistant</button>
+            <button class="menu-item" onclick="switchTab(this, 'KLA Roleplay Studio', 'โหมดสวมบทบาทคาแรกเตอร์บุคคล สั่งด่า สั่งสอน สวมวิญญาณคนดัง')">🎭 KLA Roleplay Studio</button>
+            <button class="menu-item" onclick="switchTab(this, 'Watermark Remover', 'ลบลายน้ำจากแพลตฟอร์มวิดีโอสั้นและรูปภาพทั้งหมด')">💧 Watermark Remover</button>
+            <button class="menu-item" onclick="switchTab(this, 'KLA Video Studio', 'เจนวิดีโอ AI อนิเมชันสั้น หรือป้อนบทเพื่อบันทึกไฟล์ MP4')">🎬 KLA Video Studio</button>
+            <button class="menu-item" onclick="switchTab(this, 'KLA Music Studio', 'แต่งเพลง AI ทำนองเพลงแร็พด่ากวนๆ หรือเพลงมีมตลก')">🎵 KLA Music Studio</button>
+            <button class="menu-item" onclick="switchTab(this, 'Dev & Mod Hub', 'เครื่องมือสร้างโค้ดอัตโนมัติ ทั้งสคริปต์เกมและเว็บสูตรโกง')">💻 Dev & Mod Hub</button>
+            <button class="menu-item" onclick="switchTab(this, 'Uncensored Art Studio', 'ห้องทดลองสร้างงานศิลปะ AI ไร้ตัวกรอง 18+')">🎨 Uncensored Art Studio</button>
+        </div>
 
-        <a href="https://www.tiktok.com/@user36265803092082?_r=1&_t=ZS-9AE9XOb9wME" target="_blank" class="tiktok-btn">
-            🎵 ติดตาม TikTok
+        <a href="https://www.tiktok.com/@user36265803092082?_r=1&_t=ZS-9AE9XOb9wME" target="_blank" class="tiktok-link">
+            🎵 ติดตาม TikTok @badashu
         </a>
 
-        <div class="mode-section">
-            <div class="mode-title">KLA MODE & DIALECT</div>
-            <label class="mode-option">
-                <input type="radio" name="kla_mode" checked> 🟢 Normal / Polite
-            </label>
-            <label class="mode-option">
-                <input type="radio" name="kla_mode"> 🔥 Toxic & Regional Roast (dialects)
-            </label>
-            <label class="mode-option">
-                <input type="radio" name="kla_mode"> 🔞 18+ Uncensored • Dialects
-            </label>
+        <div class="mode-box">
+            <div class="title">KLA MODE & DIALECT</div>
+            <label class="mode-label"><input type="radio" name="mode"> 🟢 Normal / Polite</label>
+            <label class="mode-label"><input type="radio" name="mode" checked> 🔥 Toxic & Regional Roast</label>
+            <label class="mode-label"><input type="radio" name="mode"> 🔞 18+ Uncensored</label>
         </div>
     </div>
-    
-    <!-- พื้นที่หน้าจอหลัก / ช่องแชทด้านขวา -->
+
+    <!-- Main Content -->
     <div class="main-content">
-        <div class="chat-header" id="headerTitle">AI Chat Assistant</div>
-        <div class="chat-messages" id="chatMessages">
-            <div class="message ai">สวัสดีครับ! KLA AI พร้อมใช้งานแล้ว พิมพ์ข้อความคุยกันได้เลยครับ</div>
+        <div class="main-header">
+            <h2 id="tabTitle">AI Chat Assistant</h2>
+            <p id="tabDesc">ระบบสนทนาอัจฉริยะ ปากจัด ปั่นประสาท พร้อมเซฟประวัติอัตโนมัติ</p>
         </div>
-        <div class="chat-input-area">
-            <input type="text" class="chat-input" id="userInput" placeholder="พิมพ์ข้อความที่นี่...">
-            <button class="send-btn" id="sendBtn">ส่ง</button>
+        <div class="chat-container" id="chatContainer">
+            <div class="msg ai">ระบบปรับปรุงดีไซน์ใหม่ให้สมบูรณ์แล้วครับ! หน้าจอไม่พังแน่นอน พิมพ์ข้อความคุยกันได้เลย</div>
+        </div>
+        <div class="chat-footer">
+            <input type="text" class="chat-input" id="chatInput" placeholder="พิมพ์ข้อความที่นี่..." onkeypress="if(event.key==='Enter') sendMessage()">
+            <button class="send-btn" onclick="sendMessage()">ส่ง</button>
         </div>
     </div>
 
     <script>
-        // ฟังก์ชันเปิด-ปิดเมนูด้านข้างบนมือถือ
-        function toggleMenu() {
-            const sidebar = document.getElementById('sidebar');
-            const backdrop = document.getElementById('backdrop');
-            sidebar.classList.toggle('open');
-            backdrop.classList.toggle('open');
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('open');
+            document.getElementById('backdrop').classList.toggle('open');
         }
 
-        // ฟังก์ชันเปลี่ยนชื่อหัวข้อเมื่อคลิกเมนู
-        function selectMenu(element, titleName) {
-            document.querySelectorAll('.menu-item').forEach(item => item.classList.remove('active'));
-            element.classList.add('active');
-            document.getElementById('headerTitle').textContent = titleName;
-            
-            // ถ้าอยู่บนมือถือ ให้ปิดเมนูอัตโนมัติหลังคลิกเลือก
+        function switchTab(btn, title, desc) {
+            document.querySelectorAll('.menu-item').forEach(el => el.classList.remove('active'));
+            btn.classList.add('active');
+            document.getElementById('tabTitle').textContent = title;
+            document.getElementById('tabDesc').textContent = desc;
             if (window.innerWidth <= 768) {
-                toggleMenu();
+                toggleSidebar();
             }
         }
 
-        // ระบบส่งข้อความแชทจำลอง
-        const chatMessages = document.getElementById('chatMessages');
-        const userInput = document.getElementById('userInput');
-        const sendBtn = document.getElementById('sendBtn');
-
         function sendMessage() {
-            const text = userInput.value.trim();
+            const input = document.getElementById('chatInput');
+            const text = input.value.trim();
             if (!text) return;
 
+            const container = document.getElementById('chatContainer');
+            
             const userMsg = document.createElement('div');
-            userMsg.className = 'message user';
+            userMsg.className = 'msg user';
             userMsg.textContent = text;
-            chatMessages.appendChild(userMsg);
-
-            userInput.value = '';
-            chatMessages.scrollTop = chatMessages.scrollHeight;
+            container.appendChild(userMsg);
+            
+            input.value = '';
+            container.scrollTop = container.scrollHeight;
 
             setTimeout(() => {
                 const aiMsg = document.createElement('div');
-                aiMsg.className = 'message ai';
-                aiMsg.textContent = "ได้รับข้อความ \"" + text + "\" แล้วครับ ระบบทำงานปกติทั้งบนมือถือและคอมพิวเตอร์!";
-                chatMessages.appendChild(aiMsg);
-                chatMessages.scrollTop = chatMessages.scrollHeight;
+                aiMsg.className = 'msg ai';
+                aiMsg.textContent = `ได้รับข้อความ "${text}" เรียบร้อย ระบบทำงานลื่นไหลสมบูรณ์แบบบนมือถือและคอมพิวเตอร์ครับ!`;
+                container.appendChild(aiMsg);
+                container.scrollTop = container.scrollHeight;
             }, 500);
         }
-
-        sendBtn.addEventListener('click', sendMessage);
-        userInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') sendMessage();
-        });
     </script>
 </body>
 </html>

@@ -15,7 +15,7 @@
             background-color: #030712;
             color: #f3f4f6;
             display: flex;
-            min-height: 100vh;
+            min-height: 100dvh;
             overflow-x: hidden;
         }
 
@@ -57,13 +57,12 @@
             border-right: 1px solid #1f293d;
             display: flex;
             flex-direction: column;
-            height: 100vh;
+            min-height: 100dvh;
             position: sticky;
             top: 0;
             flex-shrink: 0;
             z-index: 99;
             transition: transform 0.3s ease;
-            overflow-y: auto;
         }
         .sidebar-brand {
             padding: 20px;
@@ -173,7 +172,7 @@
             display: flex;
             flex-direction: column;
             background-color: #030712;
-            min-height: 100vh;
+            min-height: 100dvh;
         }
         .main-header {
             padding: 20px;
@@ -194,7 +193,6 @@
         .chat-container {
             flex-grow: 1;
             padding: 20px;
-            max-height: calc(100vh - 160px);
             overflow-y: auto;
             display: flex;
             flex-direction: column;
@@ -225,6 +223,8 @@
             border-top: 1px solid #1f293d;
             display: flex;
             gap: 10px;
+            position: sticky;
+            bottom: 0;
         }
         .chat-input {
             flex-grow: 1;
@@ -267,8 +267,9 @@
                 position: fixed;
                 top: 60px;
                 left: 0;
-                height: calc(100vh - 60px);
+                height: calc(100dvh - 60px);
                 transform: translateX(-100%);
+                overflow-y: auto;
             }
             .sidebar.open {
                 transform: translateX(0);
@@ -278,10 +279,7 @@
             }
             .main-content {
                 width: 100%;
-                min-height: calc(100vh - 60px);
-            }
-            .chat-container {
-                max-height: calc(100vh - 180px);
+                min-height: calc(100dvh - 60px);
             }
         }
     </style>
@@ -333,7 +331,7 @@
             <p id="tabDesc">ระบบสนทนาอัจฉริยะ ปากจัด ปั่นประสาท พร้อมเซฟประวัติอัตโนมัติ</p>
         </div>
         <div class="chat-container" id="chatContainer">
-            <div class="msg ai">ระบบปรับปรุงให้สามารถเลื่อนหน้าจอ (Scroll) ได้อย่างลื่นไหลแล้วครับ! ทดลองพิมพ์คุยหรือเลื่อนดูได้เลย</div>
+            <div class="msg ai">ระบบปรับปรุงแก้ปัญหาระบบเลื่อนหน้าจอ (Scroll) บนมือถือเรียบร้อยแล้วครับ ลองเลื่อนหน้าจอขึ้นลงดูได้เลย!</div>
         </div>
         <div class="chat-footer">
             <input type="text" class="chat-input" id="chatInput" placeholder="พิมพ์ข้อความที่นี่..." onkeypress="if(event.key==='Enter') sendMessage()">
@@ -375,7 +373,7 @@
             setTimeout(() => {
                 const aiMsg = document.createElement('div');
                 aiMsg.className = 'msg ai';
-                aiMsg.textContent = `ได้รับข้อความ "${text}" เรียบร้อย ระบบเลื่อนหน้าจอทำงานปกติแล้วครับ!`;
+                aiMsg.textContent = `ได้รับข้อความ "${text}" เรียบร้อย ระบบเลื่อนหน้าจอทำงานสมบูรณ์แล้วครับ!`;
                 container.appendChild(aiMsg);
                 container.scrollTop = container.scrollHeight;
             }, 500);

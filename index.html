@@ -20,7 +20,7 @@
 </head>
 <body class="cyber-bg text-gray-100 min-h-screen flex flex-col md:flex-row antialiased overflow-x-hidden">
 
-    <!-- MOBILE HEADER BAR (จะแสดงเฉพาะบนหน้าจอมือถือ) -->
+    <!-- MOBILE HEADER BAR (แสดงเฉพาะบนจอมือถือ) -->
     <header class="w-full bg-gray-950 p-4 flex items-center justify-between border-b border-gray-900 md:hidden z-30 sticky top-0">
         <div class="flex items-center gap-2">
             <div class="w-8 h-8 rounded-lg bg-gradient-to-tr from-lime-400 to-cyan-500 p-[1px]">
@@ -28,13 +28,12 @@
             </div>
             <h1 class="text-sm font-black tracking-tight text-white">KLA AI Hub</h1>
         </div>
-        <!-- ปุ่มเปิด/ปิดเมนูแฮมเบอร์เกอร์บนมือถือ -->
         <button onclick="toggleMobileMenu()" class="w-10 h-10 rounded-xl bg-gray-900 border border-gray-800 flex items-center justify-center text-gray-400 hover:text-white transition">
             <i class="fas fa-bars" id="menuIcon"></i>
         </button>
     </header>
 
-    <!-- SIDEBAR NAVIGATION (รองรับทั้งการสไลด์เปิดบนมือถือ และล็อกตำแหน่งบนคอมพิวเตอร์) -->
+    <!-- SIDEBAR NAVIGATION -->
     <aside id="sidebar" class="fixed inset-y-0 left-0 transform -translate-x-full md:relative md:translate-x-0 w-72 bg-gray-950/95 md:bg-gray-950/80 border-r border-gray-900 flex flex-col justify-between p-5 shrink-0 z-20 transition-transform duration-300 ease-in-out h-full md:h-screen pt-20 md:pt-5">
         <div class="overflow-y-auto pr-1">
             
@@ -95,7 +94,6 @@
             </div>
         </div>
 
-        <!-- Social Media Footer -->
         <div class="mt-6 pt-4 border-t border-gray-900">
             <a href="https://www.tiktok.com/@user36265803092082?_r=1&_t=ZS-9AE9XOb9wME" target="_blank" class="w-full bg-gradient-to-r from-pink-600 to-cyan-600 hover:opacity-90 text-white text-xs font-bold py-2.5 px-4 rounded-xl flex items-center justify-center gap-2 shadow-md transition">
                 <i class="fab fa-tiktok"></i> @badashu TikTok
@@ -103,7 +101,7 @@
         </div>
     </aside>
 
-    <!-- BACKDROP FOR MOBILE (ฉากหลังโปร่งแสงเมื่อเปิดเมนูในมือถือ) -->
+    <!-- BACKDROP FOR MOBILE -->
     <div id="backdrop" onclick="toggleMobileMenu()" class="fixed inset-0 bg-black/60 hidden z-10 md:hidden"></div>
 
     <!-- MAIN DASHBOARD CONTENT AREA -->
@@ -113,7 +111,7 @@
         <header class="flex justify-between items-center mb-5 mt-2 md:mt-0">
             <div>
                 <h2 class="text-xl md:text-2xl font-black text-white" id="currentTabTitle">AI Chat Assistant</h2>
-                <p class="text-xs text-gray-400 mt-1" id="currentTabDesc font-medium">ระบบสนทนาอัจฉริยะ ปากจัด ปั่นประสาท พร้อมเซฟประวัติอัตโนมัติ</p>
+                <p class="text-xs text-gray-400 mt-1 font-medium" id="currentTabDesc">ระบบสนทนาอัจฉริยะ ปากจัด ปั่นประสาท พร้อมเซฟประวัติอัตโนมัติ</p>
             </div>
             <div class="flex items-center gap-3 shrink-0">
                 <button onclick="triggerVoiceCall()" class="w-10 h-10 rounded-xl bg-gray-900 border border-gray-800 flex items-center justify-center text-cyan-400 hover:bg-gray-800 transition shadow" title="Simulate Voice Call">
@@ -122,19 +120,19 @@
             </div>
         </header>
 
-        <!-- PANEL CONTAINER (Switchable Tabs View) -->
+        <!-- PANEL CONTAINER -->
         <div class="flex-1 flex flex-col min-h-0">
             
-            <!-- 1. CHAT TAB INTERFACE (หน้าต่างแชตแบบยืดหยุ่นสูง) -->
+            <!-- 1. CHAT TAB INTERFACE (แก้ไขจุดแท็กหลุดและกล่องชนกันเรียบร้อยแล้ว) -->
             <div id="panel-chat" class="flex-1 flex flex-col glass-panel border border-gray-900 rounded-2xl min-h-[400px] h-[calc(100vh-220px)] md:h-auto overflow-hidden neon-glow-lime">
                 <div class="flex-1 p-4 overflow-y-auto space-y-4" id="chatContainer">
                     <div class="flex gap-3 max-w-2xl">
                         <div class="w-8 h-8 rounded-xl bg-lime-400 flex items-center justify-center font-black text-gray-950 text-xs shrink-0">KLA</div>
                         <div class="bg-gray-900 border border-gray-850 p-3 rounded-2xl rounded-tl-none text-sm text-gray-200 leading-relaxed">
-ใช้โค้ดอย่างระมัดระวัง
-เออว่าไง! ล่าสุดจัดโค้ดอัปเกรดให้รองรับหน้าจอมือถือและคอมพิวเตอร์เรียบร้อย ลองเปิดในเครื่องไหนก็สวยแจ่ม มกเมนูพับได้ พิมพ์มาลุยกันได้เลย!
-
-
+                            เออว่าไง! แก้ไขระบบปุ่มส่งหน้าจอชนกันและบั๊กกล่องแชททับช่องป้อนข้อมูลเรียบร้อยแล้ว ลื่นไหลทั้งในคอมและมือถือ พิมพ์มาทดสอบระบบได้เลยไอ้เสือ!
+                        </div>
+                    </div>
+                </div>
 ส่ง
 
 
@@ -160,7 +158,6 @@ music: { title: "KLA Music Studio", desc: "แต่งเพลง AI ทำน
 dev: { title: "Dev & Mod Hub", desc: "เครื่องมือสร้างโค้ดอัตโนมัติ ทั้งสคริปต์เกม (Roblox Lua, Unity) และเว็บสูตรโกงModต่างๆ" },
 art: { title: "Uncensored Art Studio", desc: "ห้องทดลองสร้างงานศิลปะ AI ไร้ตัวกรอง 18+ ปลดล็อกจินตนาการขั้นสุด" }
 };
-// Mobile Menu Control Logic
 function toggleMobileMenu() {
 const sidebar = document.getElementById('sidebar');
 const backdrop = document.getElementById('backdrop');
@@ -179,13 +176,12 @@ menuIcon.className = "fas fa-bars";
 }
 function switchTab(tabKey) {
 document.getElementById('currentTabTitle').innerText = tabsData[tabKey].title;
-// Reset navigation menu buttons style state
+document.getElementById('currentTabDesc').innerText = tabsData[tabKey].desc;
 const buttons = document.querySelectorAll('nav button');
 buttons.forEach(btn => {
 btn.className = "w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold text-gray-400 hover:bg-gray-900 hover:text-gray-200 transition";
 });
 document.getElementById(btn-${tabKey}).className = "w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold transition bg-gray-900 text-lime-400 border border-lime-500/20 shadow-sm";
-// Switch Panel layout UI display state
 const chatPanel = document.getElementById('panel-chat');
 const toolsPanel = document.getElementById('panel-tools');
 if (tabKey === 'chat') {
@@ -196,7 +192,6 @@ chatPanel.classList.add('hidden');
 toolsPanel.classList.remove('hidden');
 setupToolsWorkspace(tabKey);
 }
-// Close Mobile Sidebar automatic after menu tap action trigger rules
 if (window.innerWidth < 768) {
 toggleMobileMenu();
 }
@@ -238,15 +233,14 @@ if (!input.value.trim()) return;
 const container = document.getElementById('chatContainer');
 container.innerHTML += <div class="flex gap-3 max-w-xl ml-auto justify-end"> <div class="bg-lime-950/60 border border-lime-800/40 p-3 rounded-2xl rounded-tr-none text-sm text-gray-200"> ${input.value} </div> </div>;
 setTimeout(() => {
-container.innerHTML += <div class="flex gap-3 max-w-xl"> <div class="w-8 h-8 rounded-xl bg-lime-400 flex items-center justify-center font-black text-gray-950 text-xs shrink-0">KLA</div> <div class="bg-gray-900 border border-gray-850 p-3 rounded-2xl rounded-tl-none text-sm text-gray-200"> เออ พิมพ์มาซะเต็มจอเลยนะมึง! บันทึกข้อมูลและประวัติการคุยแบบ Auto-Save ลงฐานข้อมูลของข้าเรียบร้อย ลุยแท็บอื่นต่อได้เลย! </div> </div>;
+container.innerHTML += <div class="flex gap-3 max-w-xl"> <div class="w-8 h-8 rounded-xl bg-lime-400 flex items-center justify-center font-black text-gray-950 text-xs shrink-0">KLA</div> <div class="bg-gray-900 border border-gray-850 p-3 rounded-2xl rounded-tl-none text-sm text-gray-200"> พิมพ์ข้อความทดลองมาเรียบร้อย! ระบบบันทึกประวัติการคุยและซอร์สโค้ดแบบ Auto-Save ลงฐานข้อมูลเซิร์ฟเวอร์เรียบร้อย สวยงามพร้อมลุยต่อแล้วมึง! </div> </div>;
 container.scrollTop = container.scrollHeight;
 }, 400);
 input.value = '';
 setTimeout(() => { container.scrollTop = container.scrollHeight; }, 50);
 }
 function mockUpload(el) {
-if (el.files.length > 0) alert(📁 อัปโหลดไฟล์ "${el.files[0].name}" เข้าสู่คลาวด์ KLA AI Hub สำเร็จ!);
+if (el.files.length > 0) alert(📁 อัปโหลดไฟล์ "${el.files.name}" เข้าสู่คลาวด์ KLA AI Hub สำเร็จ!);
 }
 function triggerVoiceCall() { alert("📞 ระบบกำลังจำลองสายเชื่อมต่อข้อมูลโทรคุยด้วยเสียงกับ KLA AI..."); }
 function executeAction() { alert("⚙️ กำลังเริ่มประมวลผลระบบผ่าน KLA Cloud Engine... ข้อมูลถูกบันทึกสำเร็จ!"); }
-

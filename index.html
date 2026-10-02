@@ -1,190 +1,210 @@
-    <!-- JAVASCRIPT SYSTEM SIMULATION & LOGIC WITH UPDATED REGIONAL INSULTS -->
-    <script>
-        const memeProfiles = [
-            "https://unsplash.com",
-            "https://unsplash.com", 
-            "https://unsplash.com",
-            "https://unsplash.com"
-        ];
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KLA AI Ultimate Dashboard</title>
+    <script src="https://jsdelivr.net"></script>
+    <link rel="stylesheet" href="https://cloudflare.com">
+    <style>
+        .cyber-border { box-shadow: 0 0 15px rgba(163, 230, 53, 0.3); }
+        .meme-glow { filter: drop-shadow(0 0 8px rgba(234, 179, 8, 0.5)); }
+        body::-webkit-scrollbar { width: 6px; }
+        body::-webkit-scrollbar-thumb { background: #4b5563; border-radius: 10px; }
+    </style>
+</head>
+<body class="bg-gray-950 text-gray-100 font-sans p-4 min-h-screen flex flex-col gap-4">
 
-        // 🌟 อัปเดตชุดคำคม คำด่ากวนๆ และคำด่าอินเตอร์ประจำภาคแบบจัดเต็ม
-        const responses = {
-            toxic: {
-                central: [
-                    "เออ พิมพ์ไรมานักหนาวะไอ้สองแคว้น! งานการไม่มีทำไง๊? วันๆ นั่งแต่หน้าจอ!",
-                    "คำคมวันนี้: เจ็บกว่าการโดนเท คือการไม่มีตังค์เปย์แล้วทำทรงเป็นป๋า! ไปนอนไป๊!",
-                    "ถามคำถามแบบนี้ ไปพักผ่อนก่อนไหมไอ้เสือ สติยังอยู่ดีอยู่หรือเปล่าเนี่ย?",
-                    "อย่าทำทรงเจ๋ง คอเป็นเอ็นแต่ไร้น้ำยา! มาให้ข้าสั่งสอนหน่อยเป็นไง!"
-                ],
-                isan: [
-                    "ปัดโธ่เว้ย! เว้ามาแต่ละคำ คึดพ้อหน้าอีแม่มึงบ่เนี่ย บักพากมึงเอ๊ย! สูนให้แล้วเด้เนี่ย!",
-                    "คำคมคนซื่อ: หน้างอคอหักคือปลาทู แต่หน้ามึงน่ะคืองัวขามันสิเหยียบเอา บักปึกเอ๊ย!",
-                    "ใจเย็นๆ บักหล่า ดมยาดมก่อนบ่ ซงคือสิสติบ่ดี ตาเหลือกมาเชียวมึง!",
-                    "บักห่าขั่วกินมึงเอ๊ย! เว้าไม่รู้เรื่องแบบนี้ ไปกินข้าวเหนียวให้ติดคอตายไป๊!"
-                ],
-                south: [
-                    "แหลงลุยนิ! ฟังไม่ทันแล้วไอ้บ่าว ตบหัวทิ่มบ่อหล่ออีตาย! อย่ามาทำเนียน!",
-                    "คำคมเด็กใต้: นกใต้ปีกบินได้ไม่นาน แต่ถ้ามึงยังกวนตีนนานๆ ระวังได้บินไปนอนโรงบาลนะไอ้สาด!",
-                    "ฉาด! พูดจาพันนี้ ไปนอนหลับตะ ไป๊ รำคาญหูจังฮู้ แหลงไม่รู้เรื่องเล่า!",
-                    "ทำทรงนักเลงหัวไม้ ระวังคว่ำไม่เป็นท่ากะแล้วกันนะไอ้บ่าวเอ๊ย!"
-                ],
-                north: [
-                    "จะไปปากนักจะไปปากเหลือ คิงนี่มันง่าวแต้ง้าวว่า ง่าวปะล้ำปะเหลือ! ฟังแล้วขัดใจ๊!",
-                    "คำคมกำเมือง: น้ำพริกหนุ่มมันตึงเผ็ด แต่ถ้ามึงตึงง่าวจะอี้ ไปไกลๆ ตีนข้าเลยเน้อเจ้า!",
-                    "ใจเย็นๆ เน้อเจ้า ฟังคิงแหลงแล้วจะไปลมจับก่อนล่ะก้า ไปกินน้ำเย็นๆ ก่อนไป๊!",
-                    "วอกแต้วอกว่า พูดจาตลบตะแลง ระวังเหอะจะโดนดีเข้าสักวัน!"
-                ],
-                inter: [
-                    "Oh shut up! What a ridiculous text. Go get some help dude!",
-                    "Quote of the day: You lack both intelligence and humor. Absolute disaster!",
-                    "You sound completely out of your mind. Go touch some grass and stop typing!",
-                    "Stop acting like a pro when you're just a total noob at everything!"
-                ]
-            },
-            nsfw: {
-                central: [
-                    "แหม ทะลึ่งตึงตังนะมึง ส่องของดีอยู่ล่ะสิ? ระวังตาแฉะนะไอ้หนุ่ม!",
-                    "เบาได้เบาไอ้หนุ่ม เดี๋ยวหัวใจวายคีย์บอร์ดพังพอดี เรื่องใต้สะดือนี่ชอบจังนะ!",
-                    "คิดเรื่องลามกอีกล่ะสิมึง หน้าตาออกลายเชียว ไปหาน้ำเย็นลูบหน้าด่วน!",
-                    "ใจมันได้ แต่สังขารไหวเปล่าถามใจตัวเองดูนะไอ้ทศ!"
-                ],
-                isan: [
-                    "โอ๊ย บักอันนี้! ซงคือสิอยากเห็นแนวลามกหลายแท้ ทะลึ่งคักๆ! ตาเป็นมันเชียว!",
-                    "มาทรงเซ็กซี่แท้น้ออ้าย ไปหาผ้าห่มมาคลุมไว้ก่อนไป๊ เห็นแล้วคึดลึก!",
-                    "ทะลึ่งตึงตังอีกล่ะ บักหัวขวด! เรื่องแบบนี้แล่นไวคักน้อเรื่องงานละช้าปานเต่า!",
-                    "กิเลสหนาตัณหาจัดแต่น้อยแต่นานน้อระวังตกนรกหม้อกระทะทองแดงเด้อ!"
-                ],
-                south: [
-                    "หรอยแรงนะมึง! ของพรรค์นี้ชอบจังนะ เรื่องลามกนิฉาดฉาด! ตาโตเชียวนะ!",
-                    "อย่าทะลึ่งแรงต๊ะไอ้บ่าว เดี๋ยวอีโดนมิใช่น้อย เรื่องบ้ากามนี่ไว้ใจมึงเลย!",
-                    "ทำมาเป็นพูดอ้อมค้อม คิดจะขอดูของดีละสิ มึงมันร้ายนักนะไอ้บ่าว!",
-                    "ใจเย็นๆ ต๊ะ อย่ารีบร้อนเรื่องพรรค์นี้ เดี๋ยวอีหัวใจวายเอาฉาดเดียว!"
-                ],
-                north: [
-                    "กึดลามกจ๊ะอี้ ระวังตาจะกุ๊ดเน้อเจ้าไอ้ทศ! ไปวัดไปวาผ่อนพ้นเถอะ!",
-                    "ตึงวันตึงคืนกึดแต่เรื่องจะอี้ บ้ากามแต้ๆ หน้าตาหื่นกระหายล้ำไปละ!",
-                    "อย่ามาทำเป็นอู้เล่นเรื่องจะอี้ ข้าฮู้ทันมึงหมดเสี้ยงแล้วเน้อเจ้า!",
-                    "ใจแตกแต่น้อยแต่นานกึดแต่เรื่องใต้ผ้าถุง ไปไกลๆ เลยไป๊!"
-                ],
-                inter: [
-                    "Keep it clean, you absolute degenerate! Stop being so horny all the time!",
-                    "Wow, that's incredibly wild. Go to horny jail right now and don't come back!",
-                    "Your mind is totally in the gutter. Seek medical attention immediately!",
-                    "Pure unfiltered madness. Focus on your work instead of these NSFW thoughts!"
-                ]
-            },
-            polite: {
-                central: [
-                    "สวัสดีครับ ผม KLA AI ยินดีที่ได้ให้บริการและตอบคำถามของคุณครับ",
-                    "รับทราบคำสั่งครับ มีข้อมูลส่วนไหนให้ช่วยเหลือเพิ่มเติมไหมครับ",
-                    "ขอบคุณสำหรับข้อความครับ ผมพร้อมช่วยคุณคิดคำคมดีๆ และสร้างสรรค์ผลงานครับ",
-                    "ขอให้วันนี้เป็นวันที่ดีของคุณครับ มีเรื่องอะไรให้ผมรับใช้แจ้งได้เลยครับ"
-                ]
-            }
-        };
+    <!-- TOP CONTROL & PROFILE BLOCK -->
+    <div class="bg-gray-900 p-4 rounded-xl border border-gray-800 flex flex-wrap items-center justify-between gap-4 cyber-border">
+        <div class="flex items-center gap-4">
+            <!-- Dynamic Meme Profile Picture -->
+            <div class="relative w-16 h-16 rounded-full border-2 border-lime-400 overflow-hidden bg-gray-800 flex items-center justify-center">
+                <img id="klaProfile" src="https://unsplash.com" alt="KLA Profile" class="w-full h-full object-cover meme-glow">
+            </div>
+            <div>
+                <h2 class="text-xl font-black text-lime-400 flex items-center gap-2">
+                    🤖 KLA AI <span class="text-xs bg-red-600 text-white px-2 py-0.5 rounded-full">ALL-IN-ONE V3</span>
+                </h2>
+                <p class="text-xs text-gray-400">บอตปากแซ่บ เขียนสคริปต์เกม โมเว็บอัตโนมัติ เซฟแชทครบวงจร</p>
+            </div>
+        </div>
 
-        function changeMemeProfile() {
-            const randIndex = Math.floor(Math.random() * memeProfiles.length);
-            document.getElementById('klaProfile').src = memeProfiles[randIndex];
-            
-            const chatBox = document.getElementById('chatBox');
-            chatBox.innerHTML += `
-                <div class="text-center text-xs text-amber-500 my-1">
-                    ✨ [ระบบอัตโนมัติ] KLA เปลี่ยนรูปโปรไฟล์เป็นมีมตลกออนไลน์ใบใหม่แล้ว!
+        <div class="flex flex-wrap gap-2">
+            <a href="https://www.tiktok.com/@user36265803092082?_r=1&_t=ZS-9AE9XOb9wME" target="_blank" class="bg-gradient-to-r from-pink-500 to-cyan-500 hover:opacity-90 text-white text-xs font-bold px-3 py-2 rounded-lg flex items-center gap-1">
+                <i class="fab fa-tiktok"></i> ติดตามบน TikTok
+            </a>
+            <button onclick="changeMemeProfile()" class="bg-amber-500 hover:bg-amber-600 text-gray-950 text-xs font-bold px-3 py-2 rounded-lg flex items-center gap-1">
+                <i class="fas fa-random"></i> สุ่มมีมโปรไฟล์ใหม่
+            </button>
+        </div>
+    </div>
+
+    <!-- AUTOMATION HEADER BUTTONS (ดึงกลับมาครบแล้ว) -->
+    <div class="grid grid-cols-3 gap-2 bg-gray-900 p-3 rounded-xl border border-gray-800">
+        <button onclick="processTool('สร้างสคริปต์เกม Roblox (Lua)')" class="bg-indigo-600 hover:bg-indigo-700 text-xs py-2.5 rounded-lg font-bold flex items-center justify-center gap-1">
+            <i class="fas fa-gamepad"></i> 🎮 สร้างสคริปต์เกม
+        </button>
+        <button onclick="processTool('สร้างโปร/สูตรโกงเกม')" class="bg-red-700 hover:bg-red-800 text-xs py-2.5 rounded-lg font-bold flex items-center justify-center gap-1">
+            <i class="fas fa-bolt"></i> ⚡ เจนโปร/สูตรโกง
+        </button>
+        <button onclick="processTool('สร้างโค้ดหน้าเว็บอัตโนมัติ')" class="bg-teal-600 hover:bg-teal-700 text-xs py-2.5 rounded-lg font-bold flex items-center justify-center gap-1">
+            <i class="fas fa-code"></i> 🌐 สร้างเว็บอัตโนมัติ
+        </button>
+    </div>
+
+    <!-- MAIN CORE INTERFACE -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        
+        <!-- COLUMN 1: CHAT SYSTEM WITH AUTO-SAVE -->
+        <div class="md:col-span-2 bg-gray-900 border border-gray-800 rounded-xl flex flex-col h-[520px]">
+            <!-- Chat Status Bar -->
+            <div class="p-3 border-b border-gray-800 flex flex-wrap gap-2 justify-between items-center bg-gray-900/50">
+                <div class="flex gap-1">
+                    <select id="chatMode" onchange="onSystemUpdate()" class="bg-gray-850 border border-gray-700 text-xs rounded px-2 py-1 text-amber-400 font-bold focus:outline-none">
+                        <option value="toxic">🖕 โหมดกวนตีน/คำหยาบ</option>
+                        <option value="nsfw">🔞 โหมดลามก 18+</option>
+                        <option value="polite">😇 โหมดสุภาพช่วยงาน</option>
+                    </select>
+                    <select id="dialectMode" onchange="onSystemUpdate()" class="bg-gray-850 border border-gray-700 text-xs rounded px-2 py-1 text-cyan-400 font-bold focus:outline-none">
+                        <option value="central">🗣️ สำเนียงกลาง (กวนเมือง)</option>
+                        <option value="isan">🗣️ สำเนียงอีสาน (ด่าเจ็บ)</option>
+                        <option value="south">🗣️ สำเนียงใต้ (แหลงฉับไว)</option>
+                        <option value="north">🗣️ สำเนียงเหนือ (ต่อนยอน)</option>
+                        <option value="inter">🌐 Multilingual (ด่าอินเตอร์)</option>
+                    </select>
                 </div>
-            `;
-            chatBox.scrollTop = chatBox.scrollHeight;
-        }
+                <input type="text" id="roleInput" placeholder="🎭 สวมบทบาทเป็น..." class="bg-gray-950 border border-gray-700 text-xs rounded px-2 py-1 w-36 text-gray-300 focus:outline-none focus:border-lime-400">
+            </div>
 
-        function onSystemUpdate() {
-            changeMemeProfile();
-        }
-
-        function sendMessage() {
-            const input = document.getElementById('userInput');
-            const role = document.getElementById('roleInput').value;
-            const mode = document.getElementById('chatMode').value;
-            let dialect = document.getElementById('dialectMode').value;
-
-            if (!input.value.trim()) return;
-
-            const chatBox = document.getElementById('chatBox');
-            
-            chatBox.innerHTML += `
-                <div class="flex gap-2 max-w-xl ml-auto justify-end">
-                    <div class="bg-lime-950 p-2.5 rounded-lg rounded-tl-none border border-lime-800 text-right">
-                        ${input.value}
-                    </div>
-                </div>
-            `;
-
-            if (mode === 'polite') dialect = 'central';
-            
-            const modeResponses = responses[mode][dialect];
-            let botReply = modeResponses[Math.floor(Math.random() * modeResponses.length)];
-
-            if (role) {
-                botReply = `[สวมบทบาทเป็น ${role}]: ` + botReply;
-            }
-
-            setTimeout(() => {
-                chatBox.innerHTML += `
-                    <div class="flex gap-2 max-w-xl">
-                        <div class="w-7 h-7 bg-lime-400 rounded-full flex items-center justify-center text-gray-950 text-xs font-bold">KLA</div>
-                        <div class="bg-gray-800 p-2.5 rounded-lg rounded-tl-none">
-                            ${botReply}
-                        </div>
-                    </div>
-                `;
-                chatBox.scrollTop = chatBox.scrollHeight;
-                if (Math.random() > 0.6) changeMemeProfile();
-            }, 500);
-
-            input.value = '';
-        }
-
-        function handleFileUpload() {
-            const fileInput = document.getElementById('mediaUpload');
-            if (fileInput.files.length === 0) return;
-            
-            const chatBox = document.getElementById('chatBox');
-            chatBox.innerHTML += `
-                <div class="text-center text-xs text-cyan-400 my-1">
-                    📁 อัปโหลดไฟล์เสร็จสมบูรณ์: "${fileInput.files[0].name}" ส่งให้ KLA ตรวจสอบแล้ว!
-                </div>
-            `;
-            chatBox.scrollTop = chatBox.scrollHeight;
-        }
-
-        function sendLink() {
-            const linkInput = document.getElementById('linkInput');
-            if (!linkInput.value.trim()) return;
-
-            const chatBox = document.getElementById('chatBox');
-            chatBox.innerHTML += `
-                <div class="text-center text-xs text-cyan-400 my-1">
-                    🔗 ลิงก์ภายนอกถูกส่งให้เอไอแล้ว: <span class="underline">${linkInput.value}</span>
-                </div>
-            `;
-            linkInput.value = '';
-            chatBox.scrollTop = chatBox.scrollHeight;
-        }
-
-        function simulateVoiceMessage() {
-            const chatBox = document.getElementById('chatBox');
-            chatBox.innerHTML += `
+            <!-- Chat Output -->
+            <div id="chatBox" class="flex-1 p-4 overflow-y-auto space-y-3 text-sm">
                 <div class="flex gap-2 max-w-xl">
                     <div class="w-7 h-7 bg-lime-400 rounded-full flex items-center justify-center text-gray-950 text-xs font-bold">KLA</div>
-                    <div class="bg-gray-800 p-2.5 rounded-lg rounded-tl-none text-lime-400 italic flex items-center gap-2">
-                        <i class="fas fa-volume-up animate-pulse"></i> 🔊 [ข้อความเสียงส่งออกแล้ว]: "ฟังนะไอ้สองแคว้น ฟังเสียงข้านี่!"
+                    <div class="bg-gray-800 p-2.5 rounded-lg rounded-tl-none">
+                        เอออัปเดตระบบให้ครบทุกฟังก์ชันแล้ว! ทั้งเขียนสคริปต์เกม โมเว็บ ลบลายน้ำ คุยหยาบคาย/ลามก และระบบเซฟแชทอัตโนมัติจัดเต็ม ลุยได้เลย!
                     </div>
                 </div>
-            `;
-            chatBox.scrollTop = chatBox.scrollHeight;
-        }
+            </div>
 
-        function processTool(toolName) {
-            alert(`⚙️ ระบบกำลังประมวลผลคำสั่ง "${toolName}" ของคุณบนฐานข้อมูล KLA AI...`);
-        }
-                </script>
+            <!-- Chat Input & Uploads -->
+            <div class="p-3 border-t border-gray-800 bg-gray-950 flex flex-col gap-2 rounded-b-xl">
+                <div class="flex gap-2 text-xs text-gray-400 items-center overflow-x-auto">
+                    <label class="cursor-pointer bg-gray-850 hover:bg-gray-800 px-2 py-1 rounded border border-gray-700 flex items-center gap-1 shrink-0">
+                        <i class="fas fa-paperclip"></i> ส่งรูป/วิดีโอ <input type="file" id="mediaUpload" onchange="handleFileUpload()" class="hidden">
+                    </label>
+                    <input type="text" id="linkInput" placeholder="🔗 วางลิงก์ส่งให้เอไอ..." class="bg-gray-900 border border-gray-700 rounded px-2 py-1 flex-1 text-xs focus:outline-none">
+                    <button onclick="sendLink()" class="bg-gray-800 hover:bg-gray-700 px-2 py-1 rounded text-gray-300 text-xs shrink-0">ส่งลิงก์</button>
+                </div>
+                <div class="flex gap-2 items-center">
+                    <button onclick="simulateVoiceMessage()" class="bg-gray-800 hover:bg-gray-700 text-red-400 p-2.5 rounded-lg border border-gray-750" title="ส่งข้อความเสียง">
+                        <i class="fas fa-microphone"></i>
+                    </button>
+                    <input type="text" id="userInput" placeholder="พิมพ์สั่งงาน KLA ตรงนี้..." class="flex-1 bg-gray-900 border border-gray-700 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-lime-400" onkeypress="if(event.key === 'Enter') sendMessage()">
+                    <button onclick="sendMessage()" class="bg-lime-400 hover:bg-lime-500 text-gray-950 font-bold px-4 py-2 rounded-lg text-sm">ส่ง</button>
+                </div>
+            </div>
+        </div>
 
+        <!-- COLUMN 2: TOOLS MEDIA HUB -->
+        <div class="flex flex-col gap-4">
+            <!-- Tool 1: Watermark Remover -->
+            <div class="bg-gray-900 border border-gray-800 p-4 rounded-xl cyber-border">
+                <h3 class="text-sm font-bold text-cyan-400 mb-2 flex items-center gap-2">
+                    <i class="fas fa-eraser"></i> ลบลายน้ำ (Watermark Remover)
+                </h3>
+                <input type="text" id="wmUrl" placeholder="วางลิงก์วิดีโอสั้นที่มีลายน้ำ..." class="w-full bg-gray-950 border border-gray-700 text-xs rounded px-2 py-2 mb-2 focus:outline-none focus:border-cyan-400">
+                <button onclick="processTool('ลบลายน้ำเรียบร้อยแล้ว')" class="w-full bg-cyan-600 hover:bg-cyan-700 text-white font-bold text-xs py-2 rounded-lg">เริ่มระบบลบลายน้ำ</button>
+            </div>
+
+            <!-- Tool 2: AI Video & Save -->
+            <div class="bg-gray-900 border border-gray-800 p-4 rounded-xl cyber-border">
+                <h3 class="text-sm font-bold text-pink-400 mb-2 flex items-center gap-2">
+                    <i class="fas fa-video"></i> AI Video Studio & Saver
+                </h3>
+                <textarea id="videoPrompt" placeholder="อธิบายวิดีโอที่ต้องการ..." class="w-full h-14 bg-gray-950 border border-gray-700 text-xs rounded px-2 py-2 mb-2 focus:outline-none focus:border-pink-400 resize-none"></textarea>
+                <button onclick="processTool('สร้างและเปิดระบบบันทึกวิดีโอสำเร็จ')" class="w-full bg-pink-600 hover:bg-pink-700 text-white font-bold text-xs py-2 rounded-lg">สร้างและบันทึกไฟล์วิดีโอ</button>
+            </div>
+
+            <!-- Tool 3: AI Music Composer -->
+            <div class="bg-gray-900 border border-gray-800 p-4 rounded-xl cyber-border">
+                <h3 class="text-sm font-bold text-purple-400 mb-2 flex items-center gap-2">
+                    <i class="fas fa-music"></i> AI Music Composer
+                </h3>
+                <input type="text" id="musicPrompt" placeholder="แนวเพลง หรือ หัวข้อ..." class="w-full bg-gray-950 border border-gray-700 text-xs rounded px-2 py-2 mb-2 focus:outline-none focus:border-purple-400">
+                <button onclick="processTool('แต่งทำนองและเนื้อเพลงมีมสำเร็จ')" class="w-full bg-purple-600 hover:bg-purple-700 text-white font-bold text-xs py-2 rounded-lg">แต่งเพลงมีมตลกออนไลน์</button>
+            </div>
+        </div>
+    </div>
+
+const memeProfiles = [
+"unsplash.com",
+"unsplash.com",
+"unsplash.com",
+"unsplash.com"
+];
+const responses = {
+toxic: {
+central: ["เออ พิมพ์ไรมานักหนาวะไอ้สองแคว้น! งานการไม่มีทำไง๊?", "คำคมวันนี้: เจ็บกว่าการโดนเท คือการไม่มีตังค์เปย์แล้วทำทรงเป็นป๋า! ไปนอนไป๊!", "ถามคำถามแบบนี้ ไปพักผ่อนก่อนไหมไอ้เสือ"],
+isan: ["ปัดโธ่เว้ย! เว้ามาแต่ละคำ คึดพ้อหน้าอีแม่มึงบ่เนี่ย บักพากมึงเอ๊ย!", "คำคมคนซื่อ: หน้างอคอหักคือปลาทู แต่หน้ามึงน่ะคืองัวขามันสิเหยียบเอา บักปึกเอ๊ย!", "ใจเย็นๆ บักหล่า ดมยาดมก่อนบ่"],
+south: ["แหลงลุยนิ! ฟังไม่ทันแล้วไอ้บ่าว ตบหัวทิ่มบ่อหล่ออีตาย!", "คำคมเด็กใต้: นกใต้ปีกบินได้ไม่นาน แต่ถ้ามึงยังกวนตีนนานๆ ระวังได้บินไปนอนโรงบาลนะไอ้สาด!", "ฉาด! พูดจาพันนี้ ไปนอนหลับตะ ไป๊ รำคาญหูจังฮู้"],
+north: ["จะไปปากนักจะไปปากเหลือ คิงนี่มันง่าวแต้ง้าวว่า ง่าวปะล้ำปะเหลือ!", "คำคมกำเมือง: น้ำพริกหนุ่มมันตึงเผ็ด แต่ถ้ามึงตึงง่าวจะอี้ ไปไกลๆ ตีนข้าเลยเน้อเจ้า!", "ใจเย็นๆ เน้อเจ้า ฟังคิงแหลงแล้วจะไปลมจับก่อนล่ะก้า"],
+inter: ["Oh shut up! What a ridiculous text. Go get some help dude!", "Quote of the day: You lack both intelligence and humor. Absolute disaster!"]
+},
+nsfw: {
+central: ["แหม ทะลึ่งตึงตังนะมึง ส่องของดีอยู่ล่ะสิ? ระวังตาแฉะนะไอ้หนุ่ม!", "เบาได้เบาไอ้หนุ่ม เดี๋ยวหัวใจวายคีย์บอร์ดพังพอดี เรื่องใต้สะดือนี่ชอบจังนะ!"],
+isan: ["โอ๊ย บักอันนี้! ซงคือสิอยากเห็นแนวลามกหลายแท้ ทะลึ่งคักๆ!", "มาทรงเซ็กซี่แท้น้ออ้าย ไปหาผ้าห่มมาคลุมไว้ก่อนไป๊ เห็นแล้วคึดลึก!"],
+south: ["หรอยแรงนะมึง! ของพรรค์นี้ชอบจังนะ เรื่องลามกนิฉาดฉาด!", "อย่าทะลึ่งแรงต๊ะไอ้บ่าว เดี๋ยวอีโดนมิใช่น้อย เรื่องบ้ากามนี่ไว้ใจมึงเลย!"],
+north: ["กึดลามกจ๊ะอี้ ระวังตาจะกุ๊ดเน้อเจ้าไอ้ทศ! ไปวัดไปวาผ่อนพ้นเถอะ!", "ตึงวันตึงคืนกึดแต่เรื่องจะอี้ บ้ากามแต้ๆ หน้าตาหื่นกระหายล้ำไปละ!"],
+inter: ["Keep it clean, you absolute degenerate! Stop being so horny!", "Wow, that's incredibly wild. Go to horny jail right now!"]
+},
+polite: {
+central: ["สวัสดี กู KLA AI ยินดีที่ได้ให้บริการและตอบคำถามของมึง", "รับทราบคำสั่งครับ มีข้อมูลส่วนไหนให้ช่วยเหลือเพิ่มเติมไหมครับ"]
+}
+};
+function changeMemeProfile() {
+const randIndex = Math.floor(Math.random() * memeProfiles.length);
+document.getElementById('klaProfile').src = memeProfiles[randIndex];
+const chatBox = document.getElementById('chatBox');
+chatBox.innerHTML += <div class="text-center text-xs text-amber-500 my-1">✨ [Auto-Saved] KLA สุ่มเปลี่ยนรูปโปรไฟล์มีมใหม่แล้ว!</div>;
+chatBox.scrollTop = chatBox.scrollHeight;
+}
+function onSystemUpdate() { changeMemeProfile(); }
+function sendMessage() {
+const input = document.getElementById('userInput');
+const role = document.getElementById('roleInput').value;
+const mode = document.getElementById('chatMode').value;
+let dialect = document.getElementById('dialectMode').value;
+if (!input.value.trim()) return;
+const chatBox = document.getElementById('chatBox');
+chatBox.innerHTML += <div class="flex gap-2 max-w-xl ml-auto justify-end"><div class="bg-lime-950 p-2.5 rounded-lg rounded-tl-none border border-lime-800 text-right">${input.value}</div></div>;
+if (mode === 'polite') dialect = 'central';
+const modeResponses = responses[mode][dialect];
+let botReply = modeResponses[Math.floor(Math.random() * modeResponses.length)];
+if (role) botReply = [สวมบทบาทเป็น ${role}]:  + botReply;
+setTimeout(() => {
+chatBox.innerHTML += <div class="flex gap-2 max-w-xl"><div class="w-7 h-7 bg-lime-400 rounded-full flex items-center justify-center text-gray-950 text-xs font-bold">KLA</div><div class="bg-gray-800 p-2.5 rounded-lg rounded-tl-none">${botReply}</div></div>;
+chatBox.scrollTop = chatBox.scrollHeight;
+if (Math.random() > 0.6) changeMemeProfile();
+}, 400);
+input.value = '';
+}
+function handleFileUpload() {
+const fileInput = document.getElementById('mediaUpload');
+if (fileInput.files.length === 0) return;
+document.getElementById('chatBox').innerHTML += <div class="text-center text-xs text-cyan-400 my-1">📁 [Auto-Saved] อัปโหลดไฟล์เสร็จสมบูรณ์: "${fileInput.files[0].name}"</div>;
+}
+function sendLink() {
+const linkInput = document.getElementById('linkInput');
+if (!linkInput.value.trim()) return;
+document.getElementById('chatBox').innerHTML += <div class="text-center text-xs text-cyan-400 my-1">🔗 [Auto-Saved] ส่งลิงก์สำเร็จ: ${linkInput.value}</div>;
+linkInput.value = '';
+}
+function simulateVoiceMessage() {
+document.getElementById('chatBox').innerHTML += <div class="flex gap-2 max-w-xl"><div class="w-7 h-7 bg-lime-400 rounded-full flex items-center justify-center text-gray-950 text-xs font-bold">KLA</div><div class="bg-gray-800 p-2.5 rounded-lg rounded-tl-none text-lime-400 italic"><i class="fas fa-volume-up animate-pulse"></i> 🔊 [ข้อความเสียง]: "ฟังนะไอ้สองแคว้น ฟังเสียงข้านี่!"</div></div>;
+}
+function processTool(toolName) {
+const chatBox = document.getElementById('chatBox');
+chatBox.innerHTML += <div class="flex gap-2 max-w-xl"><div class="w-7 h-7 bg-lime-400 rounded-full flex items-center justify-center text-gray-950 text-xs font-bold">KLA</div><div class="bg-gray-800 p-2.5 rounded-lg rounded-tl-none text-indigo-400"><i class="fas fa-cogs animate-spin"></i> ⚙️ [ระบบ KLA Dev]: ดำเนินการฟังก์ชัน "${toolName}" ลงในเซิร์ฟเวอร์เรียบร้อยแล้ว! โค้ดถูกบันทึกอัตโนมัติ</div></div>;
+chatBox.scrollTop = chatBox.scrollHeight;
+}

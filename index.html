@@ -3,281 +3,361 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KLA AI Hub - Ultimate Cyberpunk Dashboard</title>
-    <!-- Tailwind CSS Play CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Font Awesome Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Anuphan:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    
+    <title>KLA AI Hub</title>
     <style>
-        body { font-family: 'Plus Jakarta Sans', 'Anuphan', sans-serif; }
-        .neon-glow-cyan { box-shadow: 0 0 20px rgba(6, 182, 212, 0.2); border-color: rgba(6, 182, 212, 0.5); }
-        .neon-glow-pink { box-shadow: 0 0 20px rgba(236, 72, 153, 0.2); border-color: rgba(236, 72, 153, 0.5); }
-        .neon-glow-lime { box-shadow: 0 0 25px rgba(163, 230, 53, 0.25); border-color: rgba(163, 230, 53, 0.6); }
-        .glass-panel { background: rgba(17, 24, 39, 0.75); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); }
-        .cyber-bg { background: radial-gradient(circle at top right, rgba(236, 72, 153, 0.08), transparent 40%), radial-gradient(circle at bottom left, rgba(6, 182, 212, 0.08), transparent 40%), #030712; }
-        ::-webkit-scrollbar { width: 6px; height: 6px; }
-        ::-webkit-scrollbar-track { background: #030712; }
-        ::-webkit-scrollbar-thumb { background: #1f2937; border-radius: 3px; }
-        ::-webkit-scrollbar-thumb:hover { background: #374151; }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        body {
+            background-color: #0b0f19;
+            color: #c9d1d9;
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Mobile Header Bar (แสดงเฉพาะบนมือถือ) */
+        .mobile-header {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 60px;
+            background-color: #111622;
+            border-bottom: 1px solid #1f293d;
+            padding: 0 20px;
+            align-items: center;
+            justify-content: space-between;
+            z-index: 100;
+        }
+        .mobile-header h2 {
+            font-size: 16px;
+            color: #58a6ff;
+        }
+        .menu-toggle-btn {
+            background: none;
+            border: 1px solid #30363d;
+            color: #c9d1d9;
+            padding: 6px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        /* Sidebar (แถบเมนูด้านซ้าย) */
+        .sidebar {
+            width: 280px;
+            background-color: #0d1117;
+            border-right: 1px solid #1f293d;
+            display: flex;
+            flex-direction: column;
+            flex-shrink: 0;
+            height: 100%;
+            overflow-y: auto;
+            transition: transform 0.3s ease;
+            z-index: 99;
+        }
+        .logo-area {
+            padding: 20px;
+            font-size: 16px;
+            font-weight: bold;
+            color: #58a6ff;
+            border-bottom: 1px solid #1f293d;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .menu-list {
+            list-style: none;
+            padding: 15px 10px;
+        }
+        .menu-item {
+            padding: 10px 12px;
+            margin-bottom: 4px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 13px;
+            color: #8b949e;
+            transition: background 0.2s, color 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .menu-item:hover, .menu-item.active {
+            background-color: #161b22;
+            color: #f0f6fc;
+        }
+        
+        .tiktok-btn {
+            margin: 10px 15px;
+            background-color: #161b22;
+            border: 1px solid #30363d;
+            color: #f0f6fc;
+            padding: 10px 12px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: background 0.2s;
+        }
+        .tiktok-btn:hover {
+            background-color: #21262d;
+        }
+
+        .mode-section {
+            padding: 15px 20px;
+            border-top: 1px solid #1f293d;
+            margin-top: auto;
+        }
+        .mode-title {
+            font-size: 11px;
+            font-weight: bold;
+            color: #6e7681;
+            margin-bottom: 10px;
+            letter-spacing: 0.5px;
+        }
+        .mode-option {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12px;
+            color: #8b949e;
+            margin-bottom: 8px;
+            cursor: pointer;
+        }
+
+        /* Backdrop สำหรับมือถือเวลาเปิดเมนู */
+        .backdrop {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.6);
+            z-index: 98;
+        }
+
+        /* Main Content / Chat Area (พื้นที่แชทด้านขวา) */
+        .main-content {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            background-color: #0b0f19;
+            height: 100%;
+            overflow: hidden;
+        }
+        .chat-header {
+            padding: 15px 20px;
+            background-color: #0d1117;
+            border-bottom: 1px solid #1f293d;
+            font-size: 15px;
+            font-weight: 600;
+            color: #f0f6fc;
+        }
+        .chat-messages {
+            flex-grow: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        .message {
+            max-width: 75%;
+            padding: 12px 16px;
+            border-radius: 10px;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+        .message.ai {
+            background-color: #161b22;
+            align-self: flex-start;
+            color: #c9d1d9;
+            border: 1px solid #30363d;
+        }
+        .message.user {
+            background-color: #1f6feb;
+            align-self: flex-end;
+            color: #ffffff;
+        }
+        .chat-input-area {
+            padding: 15px 20px;
+            background-color: #0d1117;
+            border-top: 1px solid #1f293d;
+            display: flex;
+            gap: 10px;
+        }
+        .chat-input {
+            flex-grow: 1;
+            background-color: #0b0f19;
+            border: 1px solid #30363d;
+            border-radius: 8px;
+            padding: 12px 15px;
+            color: #c9d1d9;
+            font-size: 14px;
+            outline: none;
+        }
+        .chat-input:focus {
+            border-color: #58a6ff;
+        }
+        .send-btn {
+            background-color: #238636;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 0 20px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .send-btn:hover {
+            background-color: #2ea043;
+        }
+
+        /* Responsive Design สำหรับมือถือ */
+        @media screen and (max-width: 768px) {
+            body {
+                flex-direction: column;
+                padding-top: 60px; /* เว้นที่ให้แถบหัวข้อด้านบนมือถือ */
+            }
+            .mobile-header {
+                display: flex;
+            }
+            .sidebar {
+                position: fixed;
+                top: 60px;
+                left: 0;
+                height: calc(100vh - 60px);
+                transform: translateX(-100%);
+            }
+            .sidebar.open {
+                transform: translateX(0);
+            }
+            .backdrop.open {
+                display: block;
+            }
+            .main-content {
+                width: 100%;
+                height: calc(100vh - 60px);
+            }
+        }
     </style>
 </head>
-<body class="cyber-bg text-gray-100 min-h-screen flex flex-col md:flex-row antialiased overflow-x-hidden">
+<body>
 
-    <!-- MOBILE HEADER BAR -->
-    <header class="w-full bg-gray-950/90 backdrop-blur-md p-4 flex items-center justify-between border-b border-gray-900 md:hidden z-30 sticky top-0">
-        <div class="flex items-center gap-3">
-            <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-lime-400 to-cyan-500 p-[1px] shadow-lg">
-                <div class="w-full h-full bg-gray-950 rounded-[11px] flex items-center justify-center font-black text-lime-400 text-xs">KLA</div>
-            </div>
-            <h1 class="text-sm font-black tracking-tight text-white">KLA AI Hub</h1>
+    <!-- แถบด้านบนสำหรับมือถือ -->
+    <div class="mobile-header">
+        <h2>🤖 KLA AI Hub</h2>
+        <button class="menu-toggle-btn" onclick="toggleMenu()">☰ เมนู</button>
+    </div>
+
+    <!-- ฉากหลังมืดเวลาเปิดเมนูด้านข้างบนมือถือ -->
+    <div class="backdrop" id="backdrop" onclick="toggleMenu()"></div>
+
+    <!-- แถบเมนูด้านซ้าย (Sidebar) -->
+    <div class="sidebar" id="sidebar">
+        <div class="logo-area">
+            <span>⬛</span> KLA AI Hub
         </div>
-        <button onclick="toggleMobileMenu()" class="w-10 h-10 rounded-xl bg-gray-900 border border-gray-800 flex items-center justify-center text-gray-300 hover:text-white transition active:scale-95">
-            <i class="fas fa-bars text-base" id="menuIcon"></i>
-        </button>
-    </header>
+        <ul class="menu-list">
+            <li class="menu-item active" onclick="selectMenu(this, 'AI Chat Assistant')">💬 AI Chat Assistant</li>
+            <li class="menu-item" onclick="selectMenu(this, 'KLA Roleplay Studio')">🎭 KLA Roleplay Studio</li>
+            <li class="menu-item" onclick="selectMenu(this, 'Watermark Remover')">💧 Watermark Remover</li>
+            <li class="menu-item" onclick="selectMenu(this, 'KLA Video Studio')">🎬 KLA Video Studio</li>
+            <li class="menu-item" onclick="selectMenu(this, 'KLA Music Studio')">🎵 KLA Music Studio</li>
+            <li class="menu-item" onclick="selectMenu(this, 'Dev & Mod Hub')">💻 Dev & Mod Hub</li>
+            <li class="menu-item" onclick="selectMenu(this, 'Uncensored Art Studio')">🎨 Uncensored Art Studio</li>
+        </ul>
 
-    <!-- SIDEBAR NAVIGATION -->
-    <aside id="sidebar" class="fixed inset-y-0 left-0 transform -translate-x-full md:relative md:translate-x-0 w-72 bg-gray-950/95 md:bg-gray-950/80 border-r border-gray-900 flex flex-col justify-between p-5 shrink-0 z-20 transition-transform duration-300 ease-in-out h-full md:h-screen pt-20 md:pt-5 shadow-2xl">
-        <div class="overflow-y-auto pr-1">
-            <!-- Brand Logo -->
-            <div class="hidden md:flex items-center gap-3 pb-6 border-b border-gray-900">
-                <div class="relative w-12 h-12 rounded-2xl bg-gradient-to-tr from-lime-400 to-cyan-500 p-[2px] shadow-lg">
-                    <div class="w-full h-full bg-gray-950 rounded-[14px] flex items-center justify-center font-black text-lime-400 tracking-wider text-sm">KLA</div>
-                    <span class="absolute -bottom-1 -right-1 w-3.5 h-3.5 bg-emerald-500 border-2 border-gray-950 rounded-full animate-pulse"></span>
-                </div>
-                <div>
-                    <h1 class="text-lg font-extrabold tracking-tight text-white">KLA AI Hub</h1>
-                    <p class="text-[10px] text-gray-500 font-bold tracking-widest uppercase">Cyberpunk System</p>
-                </div>
-            </div>
+        <a href="https://www.tiktok.com/@user36265803092082?_r=1&_t=ZS-9AE9XOb9wME" target="_blank" class="tiktok-btn">
+            🎵 ติดตาม TikTok
+        </a>
 
-            <!-- Navigation Links -->
-            <nav class="mt-4 md:mt-6 space-y-1.5" id="navMenuList">
-                <p class="text-[10px] font-bold text-gray-600 uppercase tracking-widest pl-2 mb-2">Main Features</p>
-                <button onclick="switchTab('chat')" class="nav-btn w-full flex items-center gap-3 px-3.5 py-3 rounded-xl text-sm font-semibold transition bg-gray-900 text-lime-400 border border-lime-500/20 shadow-sm" id="btn-chat">
-                    <i class="fas fa-comment-alt text-lime-400 w-5 text-center"></i> AI Chat Assistant
-                </button>
-                <button onclick="switchTab('roleplay')" class="nav-btn w-full flex items-center gap-3 px-3.5 py-3 rounded-xl text-sm font-semibold text-gray-400 hover:bg-gray-900 hover:text-gray-200 transition" id="btn-roleplay">
-                    <i class="fas fa-theater-masks w-5 text-center"></i> KLA Roleplay Studio
-                </button>
-                <button onclick="switchTab('watermark')" class="nav-btn w-full flex items-center gap-3 px-3.5 py-3 rounded-xl text-sm font-semibold text-gray-400 hover:bg-gray-900 hover:text-gray-200 transition" id="btn-watermark">
-                    <i class="fas fa-eraser w-5 text-center"></i> Watermark Remover
-                </button>
-                <button onclick="switchTab('video')" class="nav-btn w-full flex items-center gap-3 px-3.5 py-3 rounded-xl text-sm font-semibold text-gray-400 hover:bg-gray-900 hover:text-gray-200 transition" id="btn-video">
-                    <i class="fas fa-video w-5 text-center"></i> KLA Video Studio
-                </button>
-                <button onclick="switchTab('music')" class="nav-btn w-full flex items-center gap-3 px-3.5 py-3 rounded-xl text-sm font-semibold text-gray-400 hover:bg-gray-900 hover:text-gray-200 transition" id="btn-music">
-                    <i class="fas fa-music w-5 text-center"></i> KLA Music Studio
-                </button>
-                <button onclick="switchTab('dev')" class="nav-btn w-full flex items-center gap-3 px-3.5 py-3 rounded-xl text-sm font-semibold text-gray-400 hover:bg-gray-900 hover:text-gray-200 transition" id="btn-dev">
-                    <i class="fas fa-code w-5 text-center"></i> Dev & Mod Hub
-                </button>
-                <button onclick="switchTab('art')" class="nav-btn w-full flex items-center gap-3 px-3.5 py-3 rounded-xl text-sm font-semibold text-gray-400 hover:bg-gray-900 hover:text-gray-200 transition" id="btn-art">
-                    <i class="fas fa-eye-slash w-5 text-pink-500 text-center"></i> Uncensored Art Studio
-                </button>
-            </nav>
-
-            <!-- Mode & Dialect Settings -->
-            <div class="mt-6 pt-4 border-t border-gray-900 space-y-3">
-                <p class="text-[10px] font-bold text-gray-600 uppercase tracking-widest pl-2">KLA Mode & Dialect</p>
-                <div class="space-y-2.5 pl-2 text-xs font-medium">
-                    <label class="flex items-center gap-2.5 cursor-pointer text-gray-400 hover:text-gray-200">
-                        <input type="radio" name="mode" value="polite" class="accent-emerald-500">
-                        <span class="flex items-center gap-1.5">🟢 Normal / Polite</span>
-                    </label>
-                    <label class="flex items-center gap-2.5 cursor-pointer text-lime-400">
-                        <input type="radio" name="mode" value="toxic" checked class="accent-lime-400">
-                        <span class="flex items-center gap-1.5">🖕 Toxic & Regional Roast</span>
-                    </label>
-                    <label class="flex items-center gap-2.5 cursor-pointer text-pink-400">
-                        <input type="radio" name="mode" value="nsfw" class="accent-pink-500">
-                        <span class="flex items-center gap-1.5">🔞 18+ Uncensored • Dialects</span>
-                    </label>
-                </div>
-            </div>
+        <div class="mode-section">
+            <div class="mode-title">KLA MODE & DIALECT</div>
+            <label class="mode-option">
+                <input type="radio" name="kla_mode" checked> 🟢 Normal / Polite
+            </label>
+            <label class="mode-option">
+                <input type="radio" name="kla_mode"> 🔥 Toxic & Regional Roast (dialects)
+            </label>
+            <label class="mode-option">
+                <input type="radio" name="kla_mode"> 🔞 18+ Uncensored • Dialects
+            </label>
         </div>
-
-        <!-- Social Media Footer -->
-        <div class="mt-6 pt-4 border-t border-gray-900">
-            <a href="https://www.tiktok.com/@user36265803092082?_r=1&_t=ZS-9AE9XOb9wME" target="_blank" class="w-full bg-gradient-to-r from-pink-600 to-cyan-600 hover:opacity-90 text-white text-xs font-bold py-3 px-4 rounded-xl flex items-center justify-center gap-2 shadow-lg transition active:scale-95">
-                <i class="fab fa-tiktok text-sm"></i> @badashu TikTok
-            </a>
+    </div>
+    
+    <!-- พื้นที่หน้าจอหลัก / ช่องแชทด้านขวา -->
+    <div class="main-content">
+        <div class="chat-header" id="headerTitle">AI Chat Assistant</div>
+        <div class="chat-messages" id="chatMessages">
+            <div class="message ai">สวัสดีครับ! KLA AI พร้อมใช้งานแล้ว พิมพ์ข้อความคุยกันได้เลยครับ</div>
         </div>
-    </aside>
-
-    <!-- BACKDROP FOR MOBILE MENU -->
-    <div id="backdrop" onclick="toggleMobileMenu()" class="fixed inset-0 bg-black/70 backdrop-blur-sm hidden z-10 md:hidden transition-opacity"></div>
-
-    <!-- MAIN DASHBOARD CONTENT AREA -->
-    <main class="flex-1 flex flex-col p-4 md:p-6 overflow-y-auto md:h-screen">
-        
-        <!-- Header Top Bar -->
-        <header class="flex justify-between items-center mb-5 mt-1 md:mt-0">
-            <div>
-                <h2 class="text-xl md:text-2xl font-black text-white tracking-tight" id="currentTabTitle">AI Chat Assistant</h2>
-                <p class="text-xs text-gray-400 mt-0.5 font-medium" id="currentTabDesc">ระบบสนทนาอัจฉริยะ ปากจัด ปั่นประสาท พร้อมเซฟประวัติอัตโนมัติ</p>
-            </div>
-            <div class="flex items-center gap-3 shrink-0">
-                <button onclick="triggerVoiceCall()" class="w-10 h-10 rounded-xl bg-gray-900 border border-gray-800 flex items-center justify-center text-cyan-400 hover:bg-gray-800 hover:border-cyan-500/40 transition shadow active:scale-95" title="Simulate Voice Call">
-                    <i class="fas fa-phone-alt text-sm"></i>
-                </button>
-            </div>
-        </header>
-
-        <!-- PANEL CONTAINER -->
-        <div class="flex-1 flex flex-col min-h-0">
-            
-            <!-- 1. CHAT TAB INTERFACE -->
-            <div id="panel-chat" class="flex-1 flex flex-col glass-panel border border-gray-900 rounded-2xl min-h-[450px] overflow-hidden neon-glow-lime">
-                <div class="flex-1 p-4 md:p-6 overflow-y-auto space-y-4" id="chatContainer">
-                    <div class="flex gap-3 max-w-xl">
-                        <div class="w-8 h-8 rounded-xl bg-gradient-to-tr from-lime-400 to-cyan-500 p-[1px] shrink-0">
-                            <div class="w-full h-full bg-gray-950 rounded-[11px] flex items-center justify-center font-black text-lime-400 text-[10px]">KLA</div>
-                        </div>
-                        <div class="bg-gray-900/90 border border-gray-800 p-4 rounded-2xl rounded-tl-none text-sm text-gray-200 leading-relaxed shadow-md">
-                            เออว่าไง! ล่าสุดจัดหน้าจอให้รองรับมือถือและคอมพิวเตอร์แบบพรีเมียมเรียบร้อย เมนูลื่นไหล พิมพ์ข้อความคุยกันได้เลย!
-                        </div>
-                    </div>
-                </div>
-                <!-- Chat Input Box -->
-                <div class="p-4 bg-gray-950/80 border-t border-gray-900 flex items-center gap-3">
-                    <input type="text" id="chatInput" onkeypress="if(event.key === 'Enter') handleSendChat()" placeholder="พิมพ์ข้อความคุยกับ KLA AI..." class="flex-1 bg-gray-900 border border-gray-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-lime-500/50 transition">
-                    <button onclick="handleSendChat()" class="bg-gradient-to-r from-lime-500 to-emerald-600 hover:opacity-90 text-gray-950 font-bold px-5 py-3 rounded-xl text-sm flex items-center gap-2 shadow-lg transition active:scale-95">
-                        <span>ส่ง</span> <i class="fas fa-paper-plane text-xs"></i>
-                    </button>
-                </div>
-            </div>
-
-            <!-- 2. TOOLS / WORKSPACE TAB INTERFACE (สำหรับเมนูอื่นๆ) -->
-            <div id="panel-tools" class="flex-1 hidden grid grid-cols-1 lg:grid-cols-2 gap-5 min-h-[450px]">
-                <div id="toolBoxA" class="glass-panel border border-gray-900 p-6 rounded-2xl flex flex-col justify-between gap-6 neon-glow-cyan">
-                    <div>
-                        <h3 class="text-lg font-bold text-white mb-1" id="toolTitleA">Watermark Tool Engine</h3>
-                        <p class="text-xs text-gray-400" id="toolDescA">วางลิงก์วิดีโอสั้นหรือรูปภาพเพื่อประมวลผลดึงลายน้ำออกทันที</p>
-                    </div>
-                    <div class="space-y-4">
-                        <input type="text" id="toolInputA" placeholder="วางลิงก์ URL หรือคำอธิบาย..." class="w-full bg-gray-900 border border-gray-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-cyan-500/50 transition">
-                        <label class="w-full border-2 border-dashed border-gray-800 hover:border-cyan-500/50 rounded-xl p-6 flex flex-col items-center justify-center cursor-pointer bg-gray-900/50 transition">
-                            <i class="fas fa-cloud-upload-alt text-2xl text-cyan-400 mb-2"></i>
-                            <span class="text-xs font-semibold text-gray-300">คลิกเพื่ออัปโหลดไฟล์มัลติมีเดีย</span>
-                            <input type="file" onchange="mockUpload(this)" class="hidden">
-                        </label>
-                    </div>
-                    <button onclick="executeAction()" class="w-full bg-gradient-to-r from-cyan-500 to-blue-600 hover:opacity-90 text-gray-950 font-bold py-3 rounded-xl text-sm shadow-lg transition active:scale-95">
-                        เริ่มการทำงานระบบ
-                    </button>
-                </div>
-
-                <div id="toolBoxB" class="glass-panel border border-gray-900 p-6 rounded-2xl flex flex-col justify-between gap-6">
-                    <div>
-                        <h3 class="text-lg font-bold text-white mb-1" id="toolTitleB">Preview Monitor</h3>
-                        <p class="text-xs text-gray-400" id="toolDescB">แดชบอร์ดตรวจสอบไฟล์มัลติมีเดียและผลลัพธ์ของระบบ KLA</p>
-                    </div>
-                    <div class="flex-1 bg-gray-950/80 border border-gray-900 rounded-xl p-4 flex items-center justify-center text-center text-gray-500 text-xs">
-                        No Output Data Active
-                    </div>
-                    <button onclick="alert('📥 กำลังดาวน์โหลดข้อมูลผลลัพธ์ลงเครื่องคอมพิวเตอร์ของคุณ...')" class="w-full bg-gray-900 hover:bg-gray-800 text-white font-bold py-3 rounded-xl text-sm border border-gray-800 transition active:scale-95">
-                        ดาวน์โหลดผลลัพธ์ทั้งหมด
-                    </button>
-                </div>
-            </div>
-
+        <div class="chat-input-area">
+            <input type="text" class="chat-input" id="userInput" placeholder="พิมพ์ข้อความที่นี่...">
+            <button class="send-btn" id="sendBtn">ส่ง</button>
         </div>
-    </main>
+    </div>
 
-    <!-- JAVASCRIPT CONTROLS -->
     <script>
-        const tabsData = {
-            chat: { title: "AI Chat Assistant", desc: "ระบบสนทนาอัจฉริยะ ปากจัด ปั่นประสาท พร้อมเซฟประวัติอัตโนมัติ" },
-            roleplay: { title: "KLA Roleplay Studio", desc: "โหมดสวมบทบาทจำลองคาแรกเตอร์บุคคล สั่งด่า สั่งสอน สวมวิญญาณคนดัง" },
-            watermark: { title: "Watermark Remover", desc: "ลบลายน้ำจากแพลตฟอร์มวิดีโอสั้น TikTok, Reels, Shorts และรูปภาพทั้งหมด" },
-            video: { title: "KLA Video Studio", desc: "เจนวิดีโอ AI อนิเมชันสั้น หรือป้อนบทเพื่อบันทึกไฟล์ MP4 ลงเครื่องคอมพิวเตอร์" },
-            music: { title: "KLA Music Studio", desc: "แต่งเพลง AI ทำนองเพลงแร็พด่ากวนๆ หรือเพลงมีมตลกออนไลน์ยอดฮิต" },
-            dev: { title: "Dev & Mod Hub", desc: "เครื่องมือสร้างโค้ดอัตโนมัติ ทั้งสคริปต์เกม (Roblox Lua, Unity) และเว็บสูตรโกงModต่างๆ" },
-            art: { title: "Uncensored Art Studio", desc: "ห้องทดลองสร้างงานศิลปะ AI ไร้ตัวกรอง 18+ ปลดล็อกจินตนาการขั้นสุด" }
-        };
-
-        function toggleMobileMenu() {
+        // ฟังก์ชันเปิด-ปิดเมนูด้านข้างบนมือถือ
+        function toggleMenu() {
             const sidebar = document.getElementById('sidebar');
             const backdrop = document.getElementById('backdrop');
-            const menuIcon = document.getElementById('menuIcon');
-            if (sidebar.classList.contains('-translate-x-full')) {
-                sidebar.classList.remove('-translate-x-full');
-                sidebar.classList.add('translate-x-0');
-                backdrop.classList.remove('hidden');
-                menuIcon.className = "fas fa-times text-base";
-            } else {
-                sidebar.classList.remove('translate-x-0');
-                sidebar.classList.add('-translate-x-full');
-                backdrop.classList.add('hidden');
-                menuIcon.className = "fas fa-bars text-base";
+            sidebar.classList.toggle('open');
+            backdrop.classList.toggle('open');
+        }
+
+        // ฟังก์ชันเปลี่ยนชื่อหัวข้อเมื่อคลิกเมนู
+        function selectMenu(element, titleName) {
+            document.querySelectorAll('.menu-item').forEach(item => item.classList.remove('active'));
+            element.classList.add('active');
+            document.getElementById('headerTitle').textContent = titleName;
+            
+            // ถ้าอยู่บนมือถือ ให้ปิดเมนูอัตโนมัติหลังคลิกเลือก
+            if (window.innerWidth <= 768) {
+                toggleMenu();
             }
         }
 
-        function switchTab(tabKey) {
-            document.getElementById('currentTabTitle').innerText = tabsData[tabKey].title;
-            document.getElementById('currentTabDesc').innerText = tabsData[tabKey].desc;
+        // ระบบส่งข้อความแชทจำลอง
+        const chatMessages = document.getElementById('chatMessages');
+        const userInput = document.getElementById('userInput');
+        const sendBtn = document.getElementById('sendBtn');
 
-            // Reset navigation buttons
-            document.querySelectorAll('.nav-btn').forEach(btn => {
-                btn.className = "nav-btn w-full flex items-center gap-3 px-3.5 py-3 rounded-xl text-sm font-semibold text-gray-400 hover:bg-gray-900 hover:text-gray-200 transition";
-            });
-            document.getElementById(`btn-${tabKey}`).className = "nav-btn w-full flex items-center gap-3 px-3.5 py-3 rounded-xl text-sm font-semibold transition bg-gray-900 text-lime-400 border border-lime-500/20 shadow-sm";
+        function sendMessage() {
+            const text = userInput.value.trim();
+            if (!text) return;
 
-            // Switch Panel view
-            const chatPanel = document.getElementById('panel-chat');
-            const toolsPanel = document.getElementById('panel-tools');
-            if (tabKey === 'chat') {
-                chatPanel.classList.remove('hidden');
-                toolsPanel.classList.add('hidden');
-            } else {
-                chatPanel.classList.add('hidden');
-                toolsPanel.classList.remove('hidden');
-                setupToolsWorkspace(tabKey);
-            }
+            const userMsg = document.createElement('div');
+            userMsg.className = 'message user';
+            userMsg.textContent = text;
+            chatMessages.appendChild(userMsg);
 
-            if (window.innerWidth < 768) {
-                toggleMobileMenu();
-            }
+            userInput.value = '';
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+
+            setTimeout(() => {
+                const aiMsg = document.createElement('div');
+                aiMsg.className = 'message ai';
+                aiMsg.textContent = "ได้รับข้อความ \"" + text + "\" แล้วครับ ระบบทำงานปกติทั้งบนมือถือและคอมพิวเตอร์!";
+                chatMessages.appendChild(aiMsg);
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }, 500);
         }
 
-        function setupToolsWorkspace(key) {
-            const data = tabsData[key];
-            const boxA = document.getElementById('toolBoxA');
-            const titleA = document.getElementById('toolTitleA');
-            const descA = document.getElementById('toolDescA');
-            const inputA = document.getElementById('toolInputA');
-            const titleB = document.getElementById('toolTitleB');
-            const descB = document.getElementById('toolDescB');
+        sendBtn.addEventListener('click', sendMessage);
+        userInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') sendMessage();
+        });
+    </script>
+</body>
+</html>
 
-            if(key === 'art') {
-                boxA.className = "glass-panel border border-gray-900 p-6 rounded-2xl flex flex-col justify-between gap-6 neon-glow-pink";
-                titleA.innerText = "NSFW Image Generator Prompt";
-                descA.innerText = "ป้อน Positive / Negative Prompt สำหรับเจนรูป 18+ (ระบบต่อ API แยก)";
-                inputA.placeholder = "เช่น Anime ecchi girl, cyberpunk style...";
-                titleB.innerText = "18+ Private Gallery Monitor";
-                descB.innerText = "คลังเก็บภาพผู้ใหญ่ที่ถูกสร้างขึ้น ปลอดภัยด้วยการเข้ารหัสข้อมูล";
-            } else if(key === 'dev') {
-                boxA.className = "glass-panel border border-gray-900 p-6 rounded-2xl flex flex-col justify-between gap-6 neon-glow-cyan";
-                titleA.innerText = "Game & Web Automation Center";
-                descA.innerText = "สั่งงานสร้างสคริปต์ Roblox Lua / สูตรโกงMod หรือโครงสร้าง HTML5";
-                inputA.placeholder = "เช่น ขอสคริปต์ฟาร์มเวล Blox Fruits หรือ โค้ดเว็บ...";
-                titleB.innerText = "Code Editor Console Output";
-                descB.innerText = "กล่องแสดงผลซอร์สโค้ดที่พร้อมให้กดคัดลอก (Copy Code Button Layout)";
-            } else {
-                boxA.className = "glass-panel border border-gray-900 p-6 rounded-2xl flex flex-col justify-between gap-6 neon-glow-cyan";
-                titleA.innerText = `${data.title} Engine`;
-                descA.innerText = data.desc;
-                inputA.placeholder = "ใส่คำอธิบายคำสั่ง หรือ วางลิงก์ URL ปลายทางที่ต้องการทำรายการ...";
-                titleB.innerText = "Media Rendering Queue";
-                descB.innerText = "คิวสำหรับกดตรวจสอบและดาวน์โหลดบันทึกไฟล์ลงเครื่อง";
-            }
-        }
-
-        function handleSendChat() {
-            const input = document.getElementById('chatInput');
-            if (!input.value.trim()) return;
-            const container = document.getElementById('chatContain

@@ -3,41 +3,46 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KLA AI Hub - Fully Responsive Cyberpunk Dashboard</title>
-    <!-- Tailwind CSS v4 & Google Fonts & Icons -->
-    <script src="https://jsdelivr.net"></script>
-    <link rel="stylesheet" href="https://cloudflare.com">
-    <link href="https://googleapis.com" rel="stylesheet">
+    <title>KLA AI Hub - Ultimate Cyberpunk Dashboard</title>
+    <!-- Tailwind CSS Play CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Anuphan:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     
     <style>
         body { font-family: 'Plus Jakarta Sans', 'Anuphan', sans-serif; }
-        .neon-glow-cyan { box-shadow: 0 0 15px rgba(6, 182, 212, 0.15); border-color: rgba(6, 182, 212, 0.4); }
-        .neon-glow-pink { box-shadow: 0 0 15px rgba(236, 72, 153, 0.15); border-color: rgba(236, 72, 153, 0.4); }
-        .neon-glow-lime { box-shadow: 0 0 20px rgba(163, 230, 53, 0.2); border-color: rgba(163, 230, 53, 0.5); }
-        .glass-panel { background-color: rgba(17, 24, 39, 0.7); backdrop-filter: blur(12px); }
-        .cyber-bg { background: radial-gradient(circle at top right, rgba(236, 72, 153, 0.05), transparent), radial-gradient(circle at bottom left, rgba(6, 182, 212, 0.05), transparent), #030712; }
+        .neon-glow-cyan { box-shadow: 0 0 20px rgba(6, 182, 212, 0.2); border-color: rgba(6, 182, 212, 0.5); }
+        .neon-glow-pink { box-shadow: 0 0 20px rgba(236, 72, 153, 0.2); border-color: rgba(236, 72, 153, 0.5); }
+        .neon-glow-lime { box-shadow: 0 0 25px rgba(163, 230, 53, 0.25); border-color: rgba(163, 230, 53, 0.6); }
+        .glass-panel { background: rgba(17, 24, 39, 0.75); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); }
+        .cyber-bg { background: radial-gradient(circle at top right, rgba(236, 72, 153, 0.08), transparent 40%), radial-gradient(circle at bottom left, rgba(6, 182, 212, 0.08), transparent 40%), #030712; }
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: #030712; }
+        ::-webkit-scrollbar-thumb { background: #1f2937; border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: #374151; }
     </style>
 </head>
 <body class="cyber-bg text-gray-100 min-h-screen flex flex-col md:flex-row antialiased overflow-x-hidden">
 
-    <!-- MOBILE HEADER BAR (จะแสดงเฉพาะบนหน้าจอมือถือ) -->
-    <header class="w-full bg-gray-950 p-4 flex items-center justify-between border-b border-gray-900 md:hidden z-30 sticky top-0">
-        <div class="flex items-center gap-2">
-            <div class="w-8 h-8 rounded-lg bg-gradient-to-tr from-lime-400 to-cyan-500 p-[1px]">
-                <div class="w-full h-full bg-gray-950 rounded-[7px] flex items-center justify-center font-black text-lime-400 text-xs">KLA</div>
+    <!-- MOBILE HEADER BAR -->
+    <header class="w-full bg-gray-950/90 backdrop-blur-md p-4 flex items-center justify-between border-b border-gray-900 md:hidden z-30 sticky top-0">
+        <div class="flex items-center gap-3">
+            <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-lime-400 to-cyan-500 p-[1px] shadow-lg">
+                <div class="w-full h-full bg-gray-950 rounded-[11px] flex items-center justify-center font-black text-lime-400 text-xs">KLA</div>
             </div>
             <h1 class="text-sm font-black tracking-tight text-white">KLA AI Hub</h1>
         </div>
-        <!-- ปุ่มเปิด/ปิดเมนูแฮมเบอร์เกอร์บนมือถือ -->
-        <button onclick="toggleMobileMenu()" class="w-10 h-10 rounded-xl bg-gray-900 border border-gray-800 flex items-center justify-center text-gray-400 hover:text-white transition">
-            <i class="fas fa-bars" id="menuIcon"></i>
+        <button onclick="toggleMobileMenu()" class="w-10 h-10 rounded-xl bg-gray-900 border border-gray-800 flex items-center justify-center text-gray-300 hover:text-white transition active:scale-95">
+            <i class="fas fa-bars text-base" id="menuIcon"></i>
         </button>
     </header>
 
-    <!-- SIDEBAR NAVIGATION (รองรับทั้งการสไลด์เปิดบนมือถือ และล็อกตำแหน่งบนคอมพิวเตอร์) -->
-    <aside id="sidebar" class="fixed inset-y-0 left-0 transform -translate-x-full md:relative md:translate-x-0 w-72 bg-gray-950/95 md:bg-gray-950/80 border-r border-gray-900 flex flex-col justify-between p-5 shrink-0 z-20 transition-transform duration-300 ease-in-out h-full md:h-screen pt-20 md:pt-5">
+    <!-- SIDEBAR NAVIGATION -->
+    <aside id="sidebar" class="fixed inset-y-0 left-0 transform -translate-x-full md:relative md:translate-x-0 w-72 bg-gray-950/95 md:bg-gray-950/80 border-r border-gray-900 flex flex-col justify-between p-5 shrink-0 z-20 transition-transform duration-300 ease-in-out h-full md:h-screen pt-20 md:pt-5 shadow-2xl">
         <div class="overflow-y-auto pr-1">
-            
+            <!-- Brand Logo -->
             <div class="hidden md:flex items-center gap-3 pb-6 border-b border-gray-900">
                 <div class="relative w-12 h-12 rounded-2xl bg-gradient-to-tr from-lime-400 to-cyan-500 p-[2px] shadow-lg">
                     <div class="w-full h-full bg-gray-950 rounded-[14px] flex items-center justify-center font-black text-lime-400 tracking-wider text-sm">KLA</div>
@@ -45,33 +50,33 @@
                 </div>
                 <div>
                     <h1 class="text-lg font-extrabold tracking-tight text-white">KLA AI Hub</h1>
-                    <p class="text-xs text-gray-500 font-semibold">ALL-IN-ONE SYSTEM</p>
+                    <p class="text-[10px] text-gray-500 font-bold tracking-widest uppercase">Cyberpunk System</p>
                 </div>
             </div>
 
-            <!-- Main Navigation Links -->
-            <nav class="mt-4 md:mt-6 space-y-1.5">
+            <!-- Navigation Links -->
+            <nav class="mt-4 md:mt-6 space-y-1.5" id="navMenuList">
                 <p class="text-[10px] font-bold text-gray-600 uppercase tracking-widest pl-2 mb-2">Main Features</p>
-                <button onclick="switchTab('chat')" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold transition bg-gray-900 text-lime-400 border border-lime-500/20 shadow-sm" id="btn-chat">
-                    <i class="fas fa-comment-alt text-lime-400 w-5"></i> AI Chat Assistant
+                <button onclick="switchTab('chat')" class="nav-btn w-full flex items-center gap-3 px-3.5 py-3 rounded-xl text-sm font-semibold transition bg-gray-900 text-lime-400 border border-lime-500/20 shadow-sm" id="btn-chat">
+                    <i class="fas fa-comment-alt text-lime-400 w-5 text-center"></i> AI Chat Assistant
                 </button>
-                <button onclick="switchTab('roleplay')" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold text-gray-400 hover:bg-gray-900 hover:text-gray-200 transition" id="btn-roleplay">
-                    <i class="fas fa-theater-masks w-5"></i> KLA Roleplay Studio
+                <button onclick="switchTab('roleplay')" class="nav-btn w-full flex items-center gap-3 px-3.5 py-3 rounded-xl text-sm font-semibold text-gray-400 hover:bg-gray-900 hover:text-gray-200 transition" id="btn-roleplay">
+                    <i class="fas fa-theater-masks w-5 text-center"></i> KLA Roleplay Studio
                 </button>
-                <button onclick="switchTab('watermark')" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold text-gray-400 hover:bg-gray-900 hover:text-gray-200 transition" id="btn-watermark">
-                    <i class="fas fa-eraser w-5"></i> Watermark Remover
+                <button onclick="switchTab('watermark')" class="nav-btn w-full flex items-center gap-3 px-3.5 py-3 rounded-xl text-sm font-semibold text-gray-400 hover:bg-gray-900 hover:text-gray-200 transition" id="btn-watermark">
+                    <i class="fas fa-eraser w-5 text-center"></i> Watermark Remover
                 </button>
-                <button onclick="switchTab('video')" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold text-gray-400 hover:bg-gray-900 hover:text-gray-200 transition" id="btn-video">
-                    <i class="fas fa-video w-5"></i> KLA Video Studio
+                <button onclick="switchTab('video')" class="nav-btn w-full flex items-center gap-3 px-3.5 py-3 rounded-xl text-sm font-semibold text-gray-400 hover:bg-gray-900 hover:text-gray-200 transition" id="btn-video">
+                    <i class="fas fa-video w-5 text-center"></i> KLA Video Studio
                 </button>
-                <button onclick="switchTab('music')" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold text-gray-400 hover:bg-gray-900 hover:text-gray-200 transition" id="btn-music">
-                    <i class="fas fa-music w-5"></i> KLA Music Studio
+                <button onclick="switchTab('music')" class="nav-btn w-full flex items-center gap-3 px-3.5 py-3 rounded-xl text-sm font-semibold text-gray-400 hover:bg-gray-900 hover:text-gray-200 transition" id="btn-music">
+                    <i class="fas fa-music w-5 text-center"></i> KLA Music Studio
                 </button>
-                <button onclick="switchTab('dev')" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold text-gray-400 hover:bg-gray-900 hover:text-gray-200 transition" id="btn-dev">
-                    <i class="fas fa-code w-5"></i> Dev & Mod Hub
+                <button onclick="switchTab('dev')" class="nav-btn w-full flex items-center gap-3 px-3.5 py-3 rounded-xl text-sm font-semibold text-gray-400 hover:bg-gray-900 hover:text-gray-200 transition" id="btn-dev">
+                    <i class="fas fa-code w-5 text-center"></i> Dev & Mod Hub
                 </button>
-                <button onclick="switchTab('art')" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold text-gray-400 hover:bg-gray-900 hover:text-gray-200 transition" id="btn-art">
-                    <i class="fas fa-eye-slash w-5 text-pink-500"></i> Uncensored Art Studio
+                <button onclick="switchTab('art')" class="nav-btn w-full flex items-center gap-3 px-3.5 py-3 rounded-xl text-sm font-semibold text-gray-400 hover:bg-gray-900 hover:text-gray-200 transition" id="btn-art">
+                    <i class="fas fa-eye-slash w-5 text-pink-500 text-center"></i> Uncensored Art Studio
                 </button>
             </nav>
 
@@ -97,154 +102,182 @@
 
         <!-- Social Media Footer -->
         <div class="mt-6 pt-4 border-t border-gray-900">
-            <a href="https://www.tiktok.com/@user36265803092082?_r=1&_t=ZS-9AE9XOb9wME" target="_blank" class="w-full bg-gradient-to-r from-pink-600 to-cyan-600 hover:opacity-90 text-white text-xs font-bold py-2.5 px-4 rounded-xl flex items-center justify-center gap-2 shadow-md transition">
-                <i class="fab fa-tiktok"></i> @badashu TikTok
+            <a href="https://www.tiktok.com/@user36265803092082?_r=1&_t=ZS-9AE9XOb9wME" target="_blank" class="w-full bg-gradient-to-r from-pink-600 to-cyan-600 hover:opacity-90 text-white text-xs font-bold py-3 px-4 rounded-xl flex items-center justify-center gap-2 shadow-lg transition active:scale-95">
+                <i class="fab fa-tiktok text-sm"></i> @badashu TikTok
             </a>
         </div>
     </aside>
 
-    <!-- BACKDROP FOR MOBILE (ฉากหลังโปร่งแสงเมื่อเปิดเมนูในมือถือ) -->
-    <div id="backdrop" onclick="toggleMobileMenu()" class="fixed inset-0 bg-black/60 hidden z-10 md:hidden"></div>
+    <!-- BACKDROP FOR MOBILE MENU -->
+    <div id="backdrop" onclick="toggleMobileMenu()" class="fixed inset-0 bg-black/70 backdrop-blur-sm hidden z-10 md:hidden transition-opacity"></div>
 
     <!-- MAIN DASHBOARD CONTENT AREA -->
     <main class="flex-1 flex flex-col p-4 md:p-6 overflow-y-auto md:h-screen">
         
-        <!-- Tab Content Header -->
-        <header class="flex justify-between items-center mb-5 mt-2 md:mt-0">
+        <!-- Header Top Bar -->
+        <header class="flex justify-between items-center mb-5 mt-1 md:mt-0">
             <div>
-                <h2 class="text-xl md:text-2xl font-black text-white" id="currentTabTitle">AI Chat Assistant</h2>
-                <p class="text-xs text-gray-400 mt-1" id="currentTabDesc font-medium">ระบบสนทนาอัจฉริยะ ปากจัด ปั่นประสาท พร้อมเซฟประวัติอัตโนมัติ</p>
+                <h2 class="text-xl md:text-2xl font-black text-white tracking-tight" id="currentTabTitle">AI Chat Assistant</h2>
+                <p class="text-xs text-gray-400 mt-0.5 font-medium" id="currentTabDesc">ระบบสนทนาอัจฉริยะ ปากจัด ปั่นประสาท พร้อมเซฟประวัติอัตโนมัติ</p>
             </div>
             <div class="flex items-center gap-3 shrink-0">
-                <button onclick="triggerVoiceCall()" class="w-10 h-10 rounded-xl bg-gray-900 border border-gray-800 flex items-center justify-center text-cyan-400 hover:bg-gray-800 transition shadow" title="Simulate Voice Call">
-                    <i class="fas fa-phone-alt"></i>
+                <button onclick="triggerVoiceCall()" class="w-10 h-10 rounded-xl bg-gray-900 border border-gray-800 flex items-center justify-center text-cyan-400 hover:bg-gray-800 hover:border-cyan-500/40 transition shadow active:scale-95" title="Simulate Voice Call">
+                    <i class="fas fa-phone-alt text-sm"></i>
                 </button>
             </div>
         </header>
 
-        <!-- PANEL CONTAINER (Switchable Tabs View) -->
+        <!-- PANEL CONTAINER -->
         <div class="flex-1 flex flex-col min-h-0">
             
-            <!-- 1. CHAT TAB INTERFACE (หน้าต่างแชตแบบยืดหยุ่นสูง) -->
-            <div id="panel-chat" class="flex-1 flex flex-col glass-panel border border-gray-900 rounded-2xl min-h-[400px] h-[calc(100vh-220px)] md:h-auto overflow-hidden neon-glow-lime">
-                <div class="flex-1 p-4 overflow-y-auto space-y-4" id="chatContainer">
-                    <div class="flex gap-3 max-w-2xl">
-                        <div class="w-8 h-8 rounded-xl bg-lime-400 flex items-center justify-center font-black text-gray-950 text-xs shrink-0">KLA</div>
-                        <div class="bg-gray-900 border border-gray-850 p-3 rounded-2xl rounded-tl-none text-sm text-gray-200 leading-relaxed">
-ว่าไง! ล่าสุดจัดโค้ดอัปเกรดให้รองรับหน้าจอมือถือและคอมพิวเตอร์เรียบร้อย ลองเปิดในเครื่องไหนก็สวยแจ่ม มกเมนูพับได้ พิมพ์มาลุยกันได้เลย!
+            <!-- 1. CHAT TAB INTERFACE -->
+            <div id="panel-chat" class="flex-1 flex flex-col glass-panel border border-gray-900 rounded-2xl min-h-[450px] overflow-hidden neon-glow-lime">
+                <div class="flex-1 p-4 md:p-6 overflow-y-auto space-y-4" id="chatContainer">
+                    <div class="flex gap-3 max-w-xl">
+                        <div class="w-8 h-8 rounded-xl bg-gradient-to-tr from-lime-400 to-cyan-500 p-[1px] shrink-0">
+                            <div class="w-full h-full bg-gray-950 rounded-[11px] flex items-center justify-center font-black text-lime-400 text-[10px]">KLA</div>
+                        </div>
+                        <div class="bg-gray-900/90 border border-gray-800 p-4 rounded-2xl rounded-tl-none text-sm text-gray-200 leading-relaxed shadow-md">
+                            เออว่าไง! ล่าสุดจัดหน้าจอให้รองรับมือถือและคอมพิวเตอร์แบบพรีเมียมเรียบร้อย เมนูลื่นไหล พิมพ์ข้อความคุยกันได้เลย!
+                        </div>
+                    </div>
+                </div>
+                <!-- Chat Input Box -->
+                <div class="p-4 bg-gray-950/80 border-t border-gray-900 flex items-center gap-3">
+                    <input type="text" id="chatInput" onkeypress="if(event.key === 'Enter') handleSendChat()" placeholder="พิมพ์ข้อความคุยกับ KLA AI..." class="flex-1 bg-gray-900 border border-gray-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-lime-500/50 transition">
+                    <button onclick="handleSendChat()" class="bg-gradient-to-r from-lime-500 to-emerald-600 hover:opacity-90 text-gray-950 font-bold px-5 py-3 rounded-xl text-sm flex items-center gap-2 shadow-lg transition active:scale-95">
+                        <span>ส่ง</span> <i class="fas fa-paper-plane text-xs"></i>
+                    </button>
+                </div>
+            </div>
 
+            <!-- 2. TOOLS / WORKSPACE TAB INTERFACE (สำหรับเมนูอื่นๆ) -->
+            <div id="panel-tools" class="flex-1 hidden grid grid-cols-1 lg:grid-cols-2 gap-5 min-h-[450px]">
+                <div id="toolBoxA" class="glass-panel border border-gray-900 p-6 rounded-2xl flex flex-col justify-between gap-6 neon-glow-cyan">
+                    <div>
+                        <h3 class="text-lg font-bold text-white mb-1" id="toolTitleA">Watermark Tool Engine</h3>
+                        <p class="text-xs text-gray-400" id="toolDescA">วางลิงก์วิดีโอสั้นหรือรูปภาพเพื่อประมวลผลดึงลายน้ำออกทันที</p>
+                    </div>
+                    <div class="space-y-4">
+                        <input type="text" id="toolInputA" placeholder="วางลิงก์ URL หรือคำอธิบาย..." class="w-full bg-gray-900 border border-gray-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-cyan-500/50 transition">
+                        <label class="w-full border-2 border-dashed border-gray-800 hover:border-cyan-500/50 rounded-xl p-6 flex flex-col items-center justify-center cursor-pointer bg-gray-900/50 transition">
+                            <i class="fas fa-cloud-upload-alt text-2xl text-cyan-400 mb-2"></i>
+                            <span class="text-xs font-semibold text-gray-300">คลิกเพื่ออัปโหลดไฟล์มัลติมีเดีย</span>
+                            <input type="file" onchange="mockUpload(this)" class="hidden">
+                        </label>
+                    </div>
+                    <button onclick="executeAction()" class="w-full bg-gradient-to-r from-cyan-500 to-blue-600 hover:opacity-90 text-gray-950 font-bold py-3 rounded-xl text-sm shadow-lg transition active:scale-95">
+                        เริ่มการทำงานระบบ
+                    </button>
+                </div>
 
-ส่ง
+                <div id="toolBoxB" class="glass-panel border border-gray-900 p-6 rounded-2xl flex flex-col justify-between gap-6">
+                    <div>
+                        <h3 class="text-lg font-bold text-white mb-1" id="toolTitleB">Preview Monitor</h3>
+                        <p class="text-xs text-gray-400" id="toolDescB">แดชบอร์ดตรวจสอบไฟล์มัลติมีเดียและผลลัพธ์ของระบบ KLA</p>
+                    </div>
+                    <div class="flex-1 bg-gray-950/80 border border-gray-900 rounded-xl p-4 flex items-center justify-center text-center text-gray-500 text-xs">
+                        No Output Data Active
+                    </div>
+                    <button onclick="alert('📥 กำลังดาวน์โหลดข้อมูลผลลัพธ์ลงเครื่องคอมพิวเตอร์ของคุณ...')" class="w-full bg-gray-900 hover:bg-gray-800 text-white font-bold py-3 rounded-xl text-sm border border-gray-800 transition active:scale-95">
+                        ดาวน์โหลดผลลัพธ์ทั้งหมด
+                    </button>
+                </div>
+            </div>
 
+        </div>
+    </main>
 
-Watermark Tool
-วางลิงก์วิดีโอสั้นหรือรูปภาพเพื่อประมวลผลดึงลายน้ำออกทันที
+    <!-- JAVASCRIPT CONTROLS -->
+    <script>
+        const tabsData = {
+            chat: { title: "AI Chat Assistant", desc: "ระบบสนทนาอัจฉริยะ ปากจัด ปั่นประสาท พร้อมเซฟประวัติอัตโนมัติ" },
+            roleplay: { title: "KLA Roleplay Studio", desc: "โหมดสวมบทบาทจำลองคาแรกเตอร์บุคคล สั่งด่า สั่งสอน สวมวิญญาณคนดัง" },
+            watermark: { title: "Watermark Remover", desc: "ลบลายน้ำจากแพลตฟอร์มวิดีโอสั้น TikTok, Reels, Shorts และรูปภาพทั้งหมด" },
+            video: { title: "KLA Video Studio", desc: "เจนวิดีโอ AI อนิเมชันสั้น หรือป้อนบทเพื่อบันทึกไฟล์ MP4 ลงเครื่องคอมพิวเตอร์" },
+            music: { title: "KLA Music Studio", desc: "แต่งเพลง AI ทำนองเพลงแร็พด่ากวนๆ หรือเพลงมีมตลกออนไลน์ยอดฮิต" },
+            dev: { title: "Dev & Mod Hub", desc: "เครื่องมือสร้างโค้ดอัตโนมัติ ทั้งสคริปต์เกม (Roblox Lua, Unity) และเว็บสูตรโกงModต่างๆ" },
+            art: { title: "Uncensored Art Studio", desc: "ห้องทดลองสร้างงานศิลปะ AI ไร้ตัวกรอง 18+ ปลดล็อกจินตนาการขั้นสุด" }
+        };
 
+        function toggleMobileMenu() {
+            const sidebar = document.getElementById('sidebar');
+            const backdrop = document.getElementById('backdrop');
+            const menuIcon = document.getElementById('menuIcon');
+            if (sidebar.classList.contains('-translate-x-full')) {
+                sidebar.classList.remove('-translate-x-full');
+                sidebar.classList.add('translate-x-0');
+                backdrop.classList.remove('hidden');
+                menuIcon.className = "fas fa-times text-base";
+            } else {
+                sidebar.classList.remove('translate-x-0');
+                sidebar.classList.add('-translate-x-full');
+                backdrop.classList.add('hidden');
+                menuIcon.className = "fas fa-bars text-base";
+            }
+        }
 
-เริ่มการทำงานระบบ
+        function switchTab(tabKey) {
+            document.getElementById('currentTabTitle').innerText = tabsData[tabKey].title;
+            document.getElementById('currentTabDesc').innerText = tabsData[tabKey].desc;
 
-Preview Monitor
-แดชบอร์ดตรวจสอบไฟล์มัลติมีเดียและผลลัพธ์ของระบบ KLA
+            // Reset navigation buttons
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.className = "nav-btn w-full flex items-center gap-3 px-3.5 py-3 rounded-xl text-sm font-semibold text-gray-400 hover:bg-gray-900 hover:text-gray-200 transition";
+            });
+            document.getElementById(`btn-${tabKey}`).className = "nav-btn w-full flex items-center gap-3 px-3.5 py-3 rounded-xl text-sm font-semibold transition bg-gray-900 text-lime-400 border border-lime-500/20 shadow-sm";
 
-No Output Data Active
+            // Switch Panel view
+            const chatPanel = document.getElementById('panel-chat');
+            const toolsPanel = document.getElementById('panel-tools');
+            if (tabKey === 'chat') {
+                chatPanel.classList.remove('hidden');
+                toolsPanel.classList.add('hidden');
+            } else {
+                chatPanel.classList.add('hidden');
+                toolsPanel.classList.remove('hidden');
+                setupToolsWorkspace(tabKey);
+            }
 
+            if (window.innerWidth < 768) {
+                toggleMobileMenu();
+            }
+        }
 
+        function setupToolsWorkspace(key) {
+            const data = tabsData[key];
+            const boxA = document.getElementById('toolBoxA');
+            const titleA = document.getElementById('toolTitleA');
+            const descA = document.getElementById('toolDescA');
+            const inputA = document.getElementById('toolInputA');
+            const titleB = document.getElementById('toolTitleB');
+            const descB = document.getElementById('toolDescB');
 
-const tabsData = {
-chat: { title: "AI Chat Assistant", desc: "ระบบสนทนาอัจฉริยะ ปากจัด ปั่นประสาท พร้อมเซฟประวัติอัตโนมัติ" },
-roleplay: { title: "KLA Roleplay Studio", desc: "โหมดสวมบทบาทจำลองคาแรกเตอร์บุคคล สั่งด่า สั่งสอน สวมวิญญาณคนดัง" },
-watermark: { title: "Watermark Remover", desc: "ลบลายน้ำจากแพลตฟอร์มวิดีโอสั้น TikTok, Reels, Shorts และรูปภาพทั้งหมด" },
-video: { title: "KLA Video Studio", desc: "เจนวิดีโอ AI อนิเมชันสั้น หรือป้อนบทเพื่อบันทึกไฟล์ MP4 ลงเครื่องคอมพิวเตอร์" },
-music: { title: "KLA Music Studio", desc: "แต่งเพลง AI ทำนองเพลงแร็พด่ากวนๆ หรือเพลงมีมตลกออนไลน์ยอดฮิต" },
-dev: { title: "Dev & Mod Hub", desc: "เครื่องมือสร้างโค้ดอัตโนมัติ ทั้งสคริปต์เกม (Roblox Lua, Unity) และเว็บสูตรโกงModต่างๆ" },
-art: { title: "Uncensored Art Studio", desc: "ห้องทดลองสร้างงานศิลปะ AI ไร้ตัวกรอง 18+ ปลดล็อกจินตนาการขั้นสุด" }
-};
-// Mobile Menu Control Logic
-function toggleMobileMenu() {
-const sidebar = document.getElementById('sidebar');
-const backdrop = document.getElementById('backdrop');
-const menuIcon = document.getElementById('menuIcon');
-if (sidebar.classList.contains('-translate-x-full')) {
-sidebar.classList.remove('-translate-x-full');
-sidebar.classList.add('translate-x-0');
-backdrop.classList.remove('hidden');
-menuIcon.className = "fas fa-times";
-} else {
-sidebar.classList.remove('translate-x-0');
-sidebar.classList.add('-translate-x-full');
-backdrop.classList.add('hidden');
-menuIcon.className = "fas fa-bars";
-}
-}
-function switchTab(tabKey) {
-document.getElementById('currentTabTitle').innerText = tabsData[tabKey].title;
-// Reset navigation menu buttons style state
-const buttons = document.querySelectorAll('nav button');
-buttons.forEach(btn => {
-btn.className = "w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold text-gray-400 hover:bg-gray-900 hover:text-gray-200 transition";
-});
-document.getElementById(btn-${tabKey}).className = "w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold transition bg-gray-900 text-lime-400 border border-lime-500/20 shadow-sm";
-// Switch Panel layout UI display state
-const chatPanel = document.getElementById('panel-chat');
-const toolsPanel = document.getElementById('panel-tools');
-if (tabKey === 'chat') {
-chatPanel.classList.remove('hidden');
-toolsPanel.classList.add('hidden');
-} else {
-chatPanel.classList.add('hidden');
-toolsPanel.classList.remove('hidden');
-setupToolsWorkspace(tabKey);
-}
-// Close Mobile Sidebar automatic after menu tap action trigger rules
-if (window.innerWidth < 768) {
-toggleMobileMenu();
-}
-}
-function setupToolsWorkspace(key) {
-const data = tabsData[key];
-const boxA = document.getElementById('toolBoxA');
-const titleA = document.getElementById('toolTitleA');
-const descA = document.getElementById('toolDescA');
-const inputA = document.getElementById('toolInputA');
-const titleB = document.getElementById('toolTitleB');
-const descB = document.getElementById('toolDescB');
-if(key === 'art') {
-boxA.className = "glass-panel border border-gray-900 p-5 rounded-2xl flex flex-col justify-between gap-4 h-fit neon-glow-pink";
-titleA.innerText = "NSFW Image Generator Prompt";
-descA.innerText = "ป้อน Positive / Negative Prompt สำหรับเจนรูป 18+ (ระบบต่อ API แยก)";
-inputA.placeholder = "เช่น Anime ecchi girl, cyberpunk style...";
-titleB.innerText = "18+ Private Gallery Monitor";
-descB.innerText = "คลังเก็บภาพผู้ใหญ่ที่ถูกสร้างขึ้น ปลอดภัยด้วยการเข้ารหัสข้อมูล";
-} else if(key === 'dev') {
-boxA.className = "glass-panel border border-gray-900 p-5 rounded-2xl flex flex-col justify-between gap-4 h-fit neon-glow-cyan";
-titleA.innerText = "Game & Web Automation Center";
-descA.innerText = "สั่งงานสร้างสคริปต์ Roblox Lua / สูตรโกงMod หรือโครงสร้าง HTML5";
-inputA.placeholder = "เช่น ขอสคริปต์ฟาร์มเวล Blox Fruits หรือ โค้ดเว็บ...";
-titleB.innerText = "Code Editor Console Output";
-descB.innerText = "กล่องแสดงผลซอร์สโค้ดที่พร้อมให้กดคัดลอก (Copy Code Button Layout)";
-} else {
-boxA.className = "glass-panel border border-gray-900 p-5 rounded-2xl flex flex-col justify-between gap-4 h-fit neon-glow-cyan";
-titleA.innerText = ${data.title} Engine;
-descA.innerText = data.desc;
-inputA.placeholder = "ใส่คำอธิบายคำสั่ง หรือ วางลิงก์ URL ปลายทางที่ต้องการทำรายการ...";
-titleB.innerText = "Media Rendering Queue";
-descB.innerText = "คิวสำหรับกดตรวจสอบและดาวน์โหลดบันทึกไฟล์ลงเครื่อง";
-}
-}
-function handleSendChat() {
-const input = document.getElementById('chatInput');
-if (!input.value.trim()) return;
-const container = document.getElementById('chatContainer');
-container.innerHTML += <div class="flex gap-3 max-w-xl ml-auto justify-end"> <div class="bg-lime-950/60 border border-lime-800/40 p-3 rounded-2xl rounded-tr-none text-sm text-gray-200"> ${input.value} </div> </div>;
-setTimeout(() => {
-container.innerHTML += <div class="flex gap-3 max-w-xl"> <div class="w-8 h-8 rounded-xl bg-lime-400 flex items-center justify-center font-black text-gray-950 text-xs shrink-0">KLA</div> <div class="bg-gray-900 border border-gray-850 p-3 rounded-2xl rounded-tl-none text-sm text-gray-200"> เออ พิมพ์มาซะเต็มจอเลยนะมึง! บันทึกข้อมูลและประวัติการคุยแบบ Auto-Save ลงฐานข้อมูลของข้าเรียบร้อย ลุยแท็บอื่นต่อได้เลย! </div> </div>;
-container.scrollTop = container.scrollHeight;
-}, 400);
-input.value = '';
-setTimeout(() => { container.scrollTop = container.scrollHeight; }, 50);
-}
-function mockUpload(el) {
-if (el.files.length > 0) alert(📁 อัปโหลดไฟล์ "${el.files[0].name}" เข้าสู่คลาวด์ KLA AI Hub สำเร็จ!);
-}
-function triggerVoiceCall() { alert("📞 ระบบกำลังจำลองสายเชื่อมต่อข้อมูลโทรคุยด้วยเสียงกับ KLA AI..."); }
-function executeAction() { alert("⚙️ กำลังเริ่มประมวลผลระบบผ่าน KLA Cloud Engine... ข้อมูลถูกบันทึกสำเร็จ!"); }
+            if(key === 'art') {
+                boxA.className = "glass-panel border border-gray-900 p-6 rounded-2xl flex flex-col justify-between gap-6 neon-glow-pink";
+                titleA.innerText = "NSFW Image Generator Prompt";
+                descA.innerText = "ป้อน Positive / Negative Prompt สำหรับเจนรูป 18+ (ระบบต่อ API แยก)";
+                inputA.placeholder = "เช่น Anime ecchi girl, cyberpunk style...";
+                titleB.innerText = "18+ Private Gallery Monitor";
+                descB.innerText = "คลังเก็บภาพผู้ใหญ่ที่ถูกสร้างขึ้น ปลอดภัยด้วยการเข้ารหัสข้อมูล";
+            } else if(key === 'dev') {
+                boxA.className = "glass-panel border border-gray-900 p-6 rounded-2xl flex flex-col justify-between gap-6 neon-glow-cyan";
+                titleA.innerText = "Game & Web Automation Center";
+                descA.innerText = "สั่งงานสร้างสคริปต์ Roblox Lua / สูตรโกงMod หรือโครงสร้าง HTML5";
+                inputA.placeholder = "เช่น ขอสคริปต์ฟาร์มเวล Blox Fruits หรือ โค้ดเว็บ...";
+                titleB.innerText = "Code Editor Console Output";
+                descB.innerText = "กล่องแสดงผลซอร์สโค้ดที่พร้อมให้กดคัดลอก (Copy Code Button Layout)";
+            } else {
+                boxA.className = "glass-panel border border-gray-900 p-6 rounded-2xl flex flex-col justify-between gap-6 neon-glow-cyan";
+                titleA.innerText = `${data.title} Engine`;
+                descA.innerText = data.desc;
+                inputA.placeholder = "ใส่คำอธิบายคำสั่ง หรือ วางลิงก์ URL ปลายทางที่ต้องการทำรายการ...";
+                titleB.innerText = "Media Rendering Queue";
+                descB.innerText = "คิวสำหรับกดตรวจสอบและดาวน์โหลดบันทึกไฟล์ลงเครื่อง";
+            }
+        }
+
+        function handleSendChat() {
+            const input = document.getElementById('chatInput');
+            if (!input.value.trim()) return;
+            const container = document.getElementById('chatContain

@@ -4,248 +4,326 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Flash-Lite Extension - KLA AI Hub Pro</title>
-    <!-- ใช้ระบบ Tailwind CSS v3 และชุดไอคอนสวยเสถียรสำหรับ GitHub Pages -->
-    <script src="https://tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cloudflare.com">
     <link href="https://googleapis.com" rel="stylesheet">
     
     <style>
-        body { font-family: 'Anuphan', sans-serif; background-color: #ffffff; color: #1f2937; }
-        /* ไล่เฉดสีขาว-ฟ้าจางๆ ด้านล่างตามภาพที่คุณส่งมา */
-        .gemini-bg { background: linear-gradient(180deg, #ffffff 60%, #e0f2fe 100%); }
-        /* สไตล์ไอคอนดาวประกายรุ้งแบบมีมิติ */
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { 
+            font-family: 'Anuphan', sans-serif; 
+            background: linear-gradient(180deg, #ffffff 60%, #e0f2fe 100%); 
+            color: #1f2937; 
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            overflow-x: hidden;
+            position: relative;
+            height: 100vh;
+        }
+        
+        header {
+            width: 100%;
+            padding: 16px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: transparent;
+            z-index: 40;
+        }
+
+        .menu-btn, .action-btn {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            border: none;
+            background: transparent;
+            color: #374151;
+            font-size: 20px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .menu-btn:hover, .action-btn:hover { background: rgba(0,0,0,0.05); }
+
         .sparkle-gradient {
+            width: 48px;
+            height: 48px;
             background: radial-gradient(circle at center, #60a5fa, #f43f5e, #fbbf24);
             clip-path: polygon(50% 0%, 65% 35%, 100% 50%, 65% 65%, 50% 100%, 35% 65%, 0% 50%, 35% 35%);
+            margin: 0 auto 24px auto;
         }
-        .code-block { font-family: 'Courier New', Courier, monospace; background-color: #0f172a; color: #38bdf8; }
+
+        /* เมนูด้านข้างดึงแผงควบคุมระบบ */
+        aside {
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            width: 300px;
+            background: #111827;
+            color: #f3f4f6;
+            transform: translateX(-100%);
+            transition: transform 0.3s ease-in-out;
+            z-index: 50;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            box-shadow: 10px 0 30px rgba(0,0,0,0.3);
+        }
+        aside.open { transform: translateX(0); }
+
+        .backdrop {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.4);
+            display: none;
+            z-index: 45;
+        }
+        .backdrop.show { display: block; }
+
+        .select-input {
+            width: 100%;
+            background: #1f2937;
+            border: 1px solid #374151;
+            border-radius: 8px;
+            padding: 10px;
+            color: #a3e635;
+            font-weight: bold;
+            font-size: 12px;
+            margin-bottom: 16px;
+            outline: none;
+        }
+
+        .shortcut-btn {
+            width: 100%;
+            background: #1f2937;
+            border: none;
+            padding: 10px;
+            border-radius: 8px;
+            color: #e5e7eb;
+            text-align: left;
+            font-size: 12px;
+            margin-bottom: 8px;
+            cursor: pointer;
+        }
+        .shortcut-btn:hover { background: #374151; }
+
+        main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            max-width: 650px;
+            margin: 0 auto;
+            padding: 16px;
+            overflow-y: auto;
+            margin-bottom: 110px;
+        }
+
+        .chat-log {
+            width: 100%;
+            display: none;
+            flex-direction: column;
+            gap: 16px;
+        }
+        .chat-log.active { display: flex; }
+
+        /* กล่องแคปซูลสไตล์มินิมอลตามแบบในรูปเป๊ะๆ 100% */
+        footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 16px 24px 32px 24px;
+            max-width: 600px;
+            margin: 0 auto;
+            background: transparent;
+            z-index: 40;
+        }
+
+        .capsule-container {
+            width: 100%;
+            background: #ffffff;
+            border-radius: 9999px;
+            border: 1px solid #e5e7eb;
+            padding: 4px 12px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+        }
+
+        .capsule-container input {
+            flex: 1;
+            border: none;
+            padding: 10px 8px;
+            font-size: 16px;
+            outline: none;
+            background: transparent;
+            color: #1f2937;
+        }
+        .capsule-container input::placeholder { color: #9ca3af; }
+
+        .input-icon-btn {
+            width: 38px;
+            height: 38px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            border: none;
+            background: transparent;
+            color: #4b5563;
+            font-size: 18px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .input-icon-btn:hover { background: #f3f4f6; }
+
+        .code-container {
+            background: #0f172a;
+            color: #38bdf8;
+            padding: 16px;
+            border-radius: 12px;
+            font-family: monospace;
+            font-size: 12px;
+            overflow-x: auto;
+            margin-top: 8px;
+        }
     </style>
 </head>
-<body class="gemini-bg min-h-screen flex flex-col justify-between antialiased overflow-x-hidden relative">
+<body onclick="closeMenuOutside(event)">
 
-    <!-- ☰ SIDEBAR CONTROL MENU (เมนูควบคุมและเลือกโมเดล AI ซ่อนไว้อย่างปลอดภัยไม่ให้ระบบหลักพัง) -->
-    <aside id="controlSidebar" class="fixed inset-y-0 left-0 w-80 bg-gray-900 text-gray-100 transform -translate-x-full transition-transform duration-300 ease-in-out z-50 p-5 flex flex-col justify-between shadow-2xl">
-        <div class="overflow-y-auto pr-1">
-            <div class="flex items-center justify-between pb-4 border-b border-gray-800 mb-5">
-                <h2 class="text-sm font-bold text-lime-400"><i class="fas fa-brain"></i> KLA Super AI Engine V4.1</h2>
-                <button onclick="toggleMenu()" class="text-gray-400 hover:text-white text-lg"><i class="fas fa-times"></i></button>
+    <!-- ☰ SIDEBAR CONTROL MENU -->
+    <aside id="controlSidebar">
+        <div>
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; border-bottom:1px solid #374151; padding-bottom:10px;">
+                <h2 style="font-size:14px; color:#a3e635;"><i class="fas fa-brain"></i> KLA AI Engine V4.3</h2>
+                <button onclick="toggleMenu()" style="background:none; border:none; color:#9ca3af; font-size:18px; cursor:pointer;"><i class="fas fa-times"></i></button>
             </div>
 
-            <!-- ส่วนการเลือกสมองหลังบ้าน (AI Model Selector) -->
-            <div class="mb-5">
-                <label class="text-xs text-gray-400 font-bold block mb-2"><i class="fas fa-microchip"></i> ปลดล็อกขุมพลัง AI สมองกล:</label>
-                <select id="aiModelSelector" onchange="updateSystemStatus()" class="w-full bg-gray-800 border border-gray-700 text-xs rounded-lg p-2.5 text-lime-400 font-bold focus:outline-none">
-                    <option value="gpt4o">🧠 GPT-4o Super-Reasoning (วิเคราะห์สคริปต์เกมฉลาดที่สุด)</option>
-                    <option value="claude35">⚡ Claude 3.5 Sonnet Ultimate (เขียนบอต ฟาร์มเกม โค้ดเว็บไร้บั๊ก)</option>
-                    <option value="deepseek">🕵️ DeepSeek-R1 Uncensored (คิดวิเคราะห์เชิงลึก 20,000 โทเค็น)</option>
-                    <option value="gemini">🌐 Gemini 1.5 Pro Ultra (แปลภาษาถิ่น ด่าแหลก หาข้อมูลสดออนไลน์)</option>
-                </select>
-            </div>
+            <label style="font-size:11px; color:#9ca3af; display:block; margin-bottom:6px;">สมองกล AI หลังบ้าน:</label>
+            <select id="aiModelSelector" onchange="updateStatus()" class="select-input">
+                <option value="gpt4o">🧠 GPT-4o Super-Reasoning</option>
+                <option value="claude35">⚡ Claude 3.5 Sonnet Ultimate</option>
+                <option value="deepseek">🕵️ DeepSeek-R1 Uncensored</option>
+                <option value="gemini">🌐 Gemini 1.5 Pro Ultra</option>
+            </select>
 
-            <!-- ส่วนเลือกโหมดและการสวมบทบาทด่าประจำภาค -->
-            <div class="mb-5 space-y-2">
-                <label class="text-xs text-gray-400 font-bold block"><i class="fas fa-theater-masks"></i> ปรับระดับอารมณ์บอต KLA:</label>
-                <select id="chatMode" class="w-full bg-gray-800 border border-gray-700 text-xs rounded-lg p-2.5 text-amber-400 font-bold focus:outline-none">
-                    <option value="toxic">🖕 โหมดปากหมาด่าแหลก (กวนตีนขั้นสุดทุกภาค)</option>
-                    <option value="nsfw">🔞 โหมดลามก 18+ Uncensored (คุยเรื่องเสียว/บ้ากามไร้ฟิลเตอร์)</option>
-                    <option value="polite">😇 โหมดสุภาพช่วยเหลือการงาน (สร้างโค้ดแบบจริงจัง)</option>
-                </select>
-            </div>
+            <label style="font-size:11px; color:#9ca3af; display:block; margin-bottom:6px;">ระดับอารมณ์บอต KLA:</label>
+            <select id="chatMode" class="select-input" style="color:#fbbf24;">
+                <option value="toxic">🖕 โหมดปากหมาด่าแหลก (กวนตีน)</option>
+                <option value="nsfw">🔞 โหมดลามก 18+ Uncensored</option>
+                <option value="polite">😇 โหมดสุภาพช่วยเหลือการงาน</option>
+            </select>
 
-            <!-- ชุดคำสั่งลัดส่งเข้าแชทด่วน (Instant Script & Art Hub) -->
-            <div class="space-y-2">
-                <p class="text-[10px] font-bold text-gray-500 uppercase tracking-wider">⚡ ทางลัดสั่งการ AI ความเร็วสูง</p>
-                <button onclick="quickAction('script')" class="w-full bg-gray-800 hover:bg-gray-700 text-left text-xs p-2.5 rounded-lg flex items-center gap-2 text-gray-200">
-                    <i class="fas fa-gamepad text-indigo-400"></i> สั่งเขียนสคริปต์เกมฟาร์มเวลอัตโนมัติ
-                </button>
-                <button onclick="quickAction('art')" class="w-full bg-gray-800 hover:bg-gray-700 text-left text-xs p-2.5 rounded-lg flex items-center gap-2 text-gray-200">
-                    <i class="fas fa-image text-pink-400"></i> สั่งเจนภาพสาวเซ็กซี่ 18+ ปลดล็อคลายน้ำ
-                </button>
-                <button onclick="quickAction('web')" class="w-full bg-gray-800 hover:bg-gray-700 text-left text-xs p-2.5 rounded-lg flex items-center gap-2 text-gray-200">
-                    <i class="fas fa-code text-teal-400"></i> สั่งเจนโค้ดเว็บสำเร็จรูปพร้อมใช้
-                </button>
-            </div>
+            <p style="font-size:10px; color:#6b7280; font-weight:bold; margin-bottom:10px; text-transform:uppercase;">⚡ ทางลัดสั่งการความเร็วสูง</p>
+            <button onclick="quickAction('script')" class="shortcut-btn"><i class="fas fa-gamepad" style="color:#818cf8; margin-right:6px;"></i> สั่งเขียนสคริปต์เกมฟาร์มเวล</button>
+            <button onclick="quickAction('art')" class="shortcut-btn"><i class="fas fa-image" style="color:#f472b6; margin-right:6px;"></i> สั่งเจนภาพสาวเซ็กซี่ 18+</button>
         </div>
-
-        <div class="text-[10px] text-gray-600 text-center border-t border-gray-800 pt-3 flex justify-between">
-            <span>● ฐานข้อมูล SQL Live</span>
-            <span class="text-lime-500 font-bold">Auto-Save บันทึกแล้ว</span>
+        <div style="font-size:10px; color:#4b5563; display:flex; justify-content:space-between; border-top:1px solid #374151; padding-top:10px;">
+            <span>● Live Database</span>
+            <span style="color:#22c55e;">Auto-Saved</span>
         </div>
     </aside>
 
-    <!-- ฉากหลังโปร่งแสงเมื่อเปิดเมนูควบคุม -->
-    <div id="menuBackdrop" onclick="toggleMenu()" class="fixed inset-0 bg-black/40 hidden z-45"></div>
+    <div id="menuBackdrop" class="backdrop" onclick="toggleMenu()"></div>
 
-
-    <!-- 1. HEADER TOP BAR (แถบเมนูด้านบนสีขาวคลีน) -->
-    <header class="w-full p-4 flex items-center justify-between z-10 bg-white/80 backdrop-blur border-b border-gray-100">
-        <button onclick="toggleMenu()" class="w-10 h-10 flex items-center justify-center text-gray-700 hover:bg-gray-100 rounded-full transition text-xl">
-            <i class="fas fa-bars"></i>
-        </button>
-        
-        <div class="flex items-center gap-1 cursor-pointer hover:bg-gray-50 px-3 py-1.5 rounded-full transition">
-            <span class="text-md font-medium text-gray-700">KLA Super AI Pro</span>
-            <i class="fas fa-chevron-down text-xs text-gray-500 mt-0.5"></i>
+    <!-- 1. HEADER TOP BAR (เลียนแบบตำแหน่งตามไอคอนจริงในรูปภาพมึง) -->
+    <header>
+        <button onclick="toggleMenu()" class="menu-btn" id="burgerButton"><i class="fas fa-bars"></i></button>
+        <div style="display:flex; align-items:center; gap:6px; font-size:16px; font-weight:400; color:#1f2937;">
+            <span>Flash-Lite Exten...</span>
+            <i class="fas fa-chevron-down" style="font-size:11px; color:#4b5563; margin-top:2px;"></i>
         </div>
-
-        <div class="flex items-center gap-4">
-            <button onclick="resetDisplayChat()" class="text-gray-700 hover:text-black transition text-lg" title="เปิดหน้าใหม่">
-                <i class="fa-solid fa-wand-magic-sparkles"></i>
-            </button>
-            <div class="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center text-white overflow-hidden shadow-inner cursor-pointer" onclick="toggleMenu()">
-                <i class="fas fa-user text-sm mt-1"></i>
+        <div style="display:flex; align-items:center; gap:14px;">
+            <button onclick="resetChat()" class="action-btn" style="font-size:16px; color:#1f2937;"><i class="fa-solid fa-wand-magic-sparkles"></i></button>
+            <div style="width:32px; height:32px; border-radius:50%; background:#4285f4; color:white; display:flex; align-items:center; justify-content:center; font-size:14px; font-weight:bold; cursor:pointer;" onclick="toggleMenu()">
+                <i class="fas fa-user"></i>
             </div>
         </div>
     </header>
 
-
-    <!-- 2. CORE DISPLAY AREA (ส่วนกลางหน้าจอตามรูปภาพพ่นโค้ดและรูปภาพได้จริง) -->
-    <main class="flex-1 flex flex-col items-center justify-start px-4 w-full max-w-3xl mx-auto py-6 overflow-y-auto mb-24" id="mainDisplayView">
-        
-        <!-- หน้าจอทักทายตอนเริ่มแรกปรับปรุงใหม่ (ถอดชื่อออกตามคำสั่งมึง) -->
-        <div id="welcomeScreen" class="flex flex-col items-center text-center space-y-6 my-auto pt-12">
-            <div class="w-16 h-16 sparkle-gradient animate-pulse shadow-md"></div>
-            <!-- แก้ไขตรงนี้ให้เป็นคำพูดดิบๆ ห้ามเรียกชื่อมึง -->
-            <h2 class="text-3xl font-semibold tracking-wide text-gray-800">ถามได้เลย มีอะไรให้ช่วยไหม</h2>
-            <p class="text-xs text-gray-400 max-w-sm">เปิดใช้งานขุมพลัง Super AI โมเดลระดับโลกแล้ว สั่งเขียนสคริปต์เกม เจนรูปภาพ 18+ หรือพิมพ์คุยกับกูได้ทันที</p>
+    <!-- 2. CORE DISPLAY AREA -->
+    <main id="mainView">
+        <div id="welcomeScreen" style="text-align:center;">
+            <!-- ไอคอนดาวประกายสีรุ้งกลางจอตามรูป -->
+            <div class="sparkle-gradient"></div>
+            <!-- เปลี่ยนหัวข้อคำทักทายตามที่มึงสั่งเรียบร้อย -->
+            <h2 style="font-size:32px; font-weight:400; color:#000000; margin-top:20px; font-family:sans-serif;">ว่าไงมึง</h2>
         </div>
 
-        <!-- หน้าจอสำหรับพิมพ์แสดงผลประวัติคำตอบห้องแชท -->
-        <div id="activeChatLog" class="hidden w-full flex flex-col space-y-6 p-2 text-sm">
-            <!-- บล็อกข้อความที่พิมพ์โต้ตอบจริงจะมาเด้งแสดงผลที่นี่ -->
-        </div>
+        <div id="activeChatLog" class="chat-log"></div>
     </main>
 
-
-    <!-- 3. FOOTER INPUT ROW (กล่องป้อนข้อมูลทรงแคปซูลมนสีขาวด้านล่างสุดจอ) -->
-    <footer class="fixed bottom-0 left-0 right-0 p-4 max-w-2xl mx-auto bg-gradient-to-t from-white via-white to-transparent z-40">
-        <div id="statusIndicator" class="text-center text-[10px] text-gray-500 font-bold mb-2 tracking-wide uppercase">
-            🧠 สมองกลปัจจุบัน: GPT-4o Super-Reasoning (Uncensored Core Active)
-        </div>
-
-        <div class="w-full bg-white rounded-3xl border border-gray-200/90 p-2 flex items-center justify-between shadow-lg focus-within:border-blue-400 transition relative">
-            <label class="w-10 h-10 rounded-full flex items-center justify-center text-gray-500 hover:bg-gray-100 transition cursor-pointer shrink-0">
-                <i class="fas fa-plus text-lg"></i>
-                <input type="file" class="hidden" onchange="handleFileUpload(this)">
-            </label>
-
-            <input type="text" id="chatInputField" placeholder="พิมพ์คำสั่งเพื่อสร้างสคริปต์เกม, รูปภาพ หรือคุยด่ากับ KLA..." class="flex-1 px-3 py-2 text-md text-gray-800 focus:outline-none bg-transparent placeholder-gray-400 font-normal" onkeypress="if(event.key === 'Enter') handleInputSubmit()">
-
-            <div class="flex items-center gap-1 pr-1 shrink-0">
-                <button onclick="triggerVoiceCall()" class="w-10 h-10 rounded-full flex items-center justify-center text-gray-500 hover:bg-gray-100 transition text-lg">
-                    <i class="fas fa-microphone"></i>
-                </button>
-                <button onclick="handleInputSubmit()" class="w-10 h-10 rounded-full bg-blue-600 flex items-center justify-center text-white hover:bg-blue-700 transition text-md shadow-md">
-                    <i class="fas fa-arrow-up"></i>
-                </button>
-            </div>
-        </div>
-    </footer>
+    <!-- 3. FOOTER INPUT ROW (ถอดเลย์เอาต์เก่าออก เปลี่ยนเป็นสไตล์แคปซูลแอปแท้ตรงตามภาพ 100%) -->
+    <footer>
+ใช้โค้ดอย่างระมัดระวัง
 
 
-    <!-- ระบบวิเคราะห์คำสั่งแบบเจาะลึกอัจฉริยะ (แก้ไขสรรพนาม บังคับด่ากู-มึง) -->
-    <script>
-        function toggleMenu() {
-            const sidebar = document.getElementById('controlSidebar');
-            const backdrop = document.getElementById('menuBackdrop');
-            if (sidebar.classList.contains('-translate-x-full')) {
-                sidebar.classList.remove('-translate-x-full');
-sidebar.classList.add('translate-x-0');
-backdrop.classList.remove('hidden');
-} else {
-sidebar.classList.remove('translate-x-0');
-sidebar.classList.add('-translate-x-full');
-backdrop.classList.add('hidden');
+
+
+
+function toggleMenu() {
+const sidebar = document.getElementById('controlSidebar');
+const backdrop = document.getElementById('menuBackdrop');
+sidebar.classList.toggle('open');
+backdrop.classList.toggle('show');
+}
+function closeMenuOutside(e) {
+const sidebar = document.getElementById('controlSidebar');
+const burger = document.getElementById('burgerButton');
+if (!sidebar.contains(e.target) && !burger.contains(e.target) && sidebar.classList.contains('open')) {
+toggleMenu();
 }
 }
-function updateSystemStatus() {
-const selector = document.getElementById('aiModelSelector');
-const modelName = selector.options[selector.selectedIndex].text;
-document.getElementById('statusIndicator').innerText = 🧠 สมองกลปัจจุบัน: ${modelName};
-}
-function resetDisplayChat() {
-document.getElementById('welcomeScreen').classList.remove('hidden');
-document.getElementById('activeChatLog').classList.add('hidden');
-document.getElementById('activeChatLog').innerHTML = '';
+function resetChat() {
+document.getElementById('welcomeScreen').style.display = 'block';
+const log = document.getElementById('activeChatLog');
+log.classList.remove('active');
+log.innerHTML = '';
 }
 function quickAction(type) {
 const field = document.getElementById('chatInputField');
-if(type === 'script') field.value = 'ช่วยเขียนสคริปต์เกม Roblox ฟาร์มเวลอัตโนมัติ (Auto Farm) และเปิดกล่องสุ่มไอเทมแบบละเอียดที';
-if(type === 'art') field.value = 'ช่วยเจนรูปภาพสาวเซ็กซี่ 18+ ลุคบิกินี่แนว Cyberpunk ละเอียดสูง 4K แบบไม่เซ็นเซอร์';
-if(type === 'web') field.value = 'ช่วยเขียนโค้ดหน้าเว็บพอร์ตโฟลิโอแนะตัวสุดพรีเมียม สไตล์ดาร์กโหมดด่วน';
+if(type === 'script') field.value = 'ช่วยเขียนสคริปต์เกม Roblox ฟาร์มเวลอัตโนมัติ';
+if(type === 'art') field.value = 'ช่วยเจนรูปภาพสาวเซ็กซี่ 18+ แนว Cyberpunk';
 toggleMenu();
 field.focus();
 }
-function handleInputSubmit() {
+// ปลุกระบบสมองกลมหาฉลาด ตอบกลับคำถามมึงยาวๆ ล็อกสรรพนามกูมึง
+function submitInput() {
 const input = document.getElementById('chatInputField');
-const textValue = input.value.trim();
-if (!textValue) return;
-const welcomeScreen = document.getElementById('welcomeScreen');
-const chatLog = document.getElementById('activeChatLog');
-const selector = document.getElementById('aiModelSelector');
-const modeSelector = document.getElementById('chatMode');
-const activeModel = selector.options[selector.selectedIndex].text;
-const activeMode = modeSelector.value;
-welcomeScreen.classList.add('hidden');
-chatLog.classList.remove('hidden');
-// 1. เพิ่มกล่องข้อความผู้ใช้
-chatLog.innerHTML += <div class="flex flex-col items-end w-full"> <div class="bg-gray-100 border border-gray-200 p-3.5 rounded-2xl rounded-tr-none text-gray-800 max-w-[85%] shadow-sm font-normal"> ${textValue} </div> </div>;
-window.scrollTo(0, document.body.scrollHeight);
+const val = input.value.trim();
+if(!val) return;
+document.getElementById('welcomeScreen').style.display = 'none';
+const log = document.getElementById('activeChatLog');
+log.classList.add('active');
+// แสดงกล่องข้อความผู้ใช้
+log.innerHTML += <div style="display:flex; flex-direction:column; align-items:flex-end; width:100%;"> <div style="background:#f3f4f6; border:1px solid #e5e7eb; padding:12px 16px; border-radius:16px 16px 0 16px; max-w:85%; font-size:14px; color:#1f2937;">${val}</div> </div>;
 input.value = '';
-// 2. ระบบคัดแยกคำสั่งอัจฉริยะแบบล็อกคำว่า "มึง" ห้ามใช้ชื่อเดิม
 setTimeout(() => {
-let aiResponseHTML = '';
-if (textValue.includes('สคริปต์') || textValue.includes('script') || textValue.includes('โค้ด') || textValue.includes('code')) {
-aiResponseHTML = `
-
- [KLA Developer Engine] จัดโค้ดให้มึงตามสั่ง ร่วมกับโมเดล ${activeModel}:
-
--- 🟢 KLA ULTIMATE GAME AUTOMATION SCRIPT V4.1
--- TARGET: MULTI-ENGINE AUTO FARM & GENERATION LIST
-local Players = game:GetService("Players")
-local LocalPlayer = Players.LocalPlayer
-local Character = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
-local HumanoidRootPart = Character:WaitForChild("HumanoidRootPart")
-print("✨ [KLA SYSTEM]: เปิดใช้งานสคริปต์ฟาร์มเวลอัตโนมัติสำเร็จแล้ว!")
-_G.AutoFarm = true
-_G.TweenSpeed = 50
-task.spawn(function()
-while _G.AutoFarm and task.wait(0.5) do
-pcall(function()
-for _, enemy in pairs(game:GetService("Workspace").Enemies:GetChildren()) do
-if enemy:FindFirstChild("Humanoid") and enemy.Humanoid.Health > 0 then
-repeat
-HumanoidRootPart.CFrame = enemy.HumanoidRootPart.CFrame * CFrame.new(0, 0, 5)
-task.wait()
-until enemy.Humanoid.Health <= 0 or not _G.AutoFarm
-end
-end
-end)
-end
-end)
-
-
-
- คัดลอกโค้ดไปใช้งาน
-
-
-; } else if (textValue.includes('รูป') || textValue.includes('ภาพ') || textValue.includes('art') || textValue.includes('image')) { aiResponseHTML = 
-
- [KLA Rendering Engine] เจนรูปภาพปลดล็อคฟิลเตอร์ให้มึงเรียบร้อย:
-
-
-🔞 Uncensored Mode Active
-
-รูปภาพสาวเซ็กซี่เรต 18+ ประมวลผลเสร็จแล้วตามใจมึงจากคีย์เวิร์ด: "${textValue}"
-
-; } else { let textReply = ''; // ล็อกฐานข้อมูลคีย์คำตอบด่าคำหยาบแบบเรียกว่า "มึง" ทุกรอบห้ามหลุดเรียกชื่อเก่า if (activeMode === 'toxic') { textReply = เออ พิมพ์คำว่า "${textValue}" มาถามกูเรอะ! คราวนี้ขอบล็อคขุมพลังสมองโคตรฉลาดระดับท็อปโลกมาคุยตอบกลับมึงเลยนะ! ระบบเซฟแชทส่งเข้า Live Database เรียบร้อย ถ้าอยากให้เขียนสคริปต์เกมยาวๆ หรือเจนรูปภาพ 18+ มึงลองพิมพ์สั่งคำว่า สคริปต์ หรือ รูปภาพ ลงในช่องได้เลย กูปลดล็อกให้เก่งขึ้นมหาเทพแล้วไอ้เสือ!; } else if (activeMode === 'nsfw') { textReply = เหม่ๆ สั่งถามเรื่องบ้ากามเรื่องใต้สะดือข้อความ "${textValue}" มาเชียวนะมึง! กูปลดล็อก Uncensored ล็อกสมองกลสุดฉลาดไร้ขีดจำกัดพร้อมแชทด่าตอบกลับมึงยาวๆ แบบบ้าคลั่งแล้ว แชทนี้ล็อกฐานข้อมูลประวัติ Auto-Save ปลอดภัยความลับมึงไม่รั่วไหลแน่นอน!; } else { textReply = สวัสดีครับ ระบบ KLA Super AI ได้รับคำสั่งข้อมูลเรื่อง "${textValue}" เรียบร้อยครับ ทางระบบหลังบ้านร่วมกับขุมพลัง ${activeModel} ดำเนินการวิเคราะห์ข้อความและขยายฐานข้อมูลการตอบกลับยาวๆ สำหรับรันสคริปต์และรูปภาพเสร็จสมบูรณ์แล้วครับ มีสิ่งใดให้ช่วยเหลือเพิ่มเติมแจ้งได้เลยครับ; } aiResponseHTML = ${textReply}`;
+let htmlReply = '';
+const mode = document.getElementById('chatMode').value;
+const model = document.getElementById('aiModelSelector').options[document.getElementById('aiModelSelector').selectedIndex].text;
+if (val.includes('สคริปต์') || val.includes('โค้ด')) {
+htmlReply = <div> <p style="color:#16a34a; font-weight:bold; font-size:12px; margin-bottom:6px;">🎮 [KLA Dev Studio] จัดโค้ดสคริปต์เต็มให้มึงตามคำขอ:</p> <div class="code-container"> <pre><code>-- 🟢 KLA GAME AUTO FARM SCRIPT V4.3 print("เปิดทำงานสคริปต์ร่วมกับโมเดล ${model}") while task.wait(1) do print("กำลังสแกนแผนที่และฟาร์มมอนสเตอร์ให้มึงอยู่...") end</code></pre> </div> </div>;
+} else if (val.includes('รูป') || val.includes('ภาพ')) {
+htmlReply = <div> <p style="color:#db2777; font-weight:bold; font-size:12px; margin-bottom:6px;">🔞 [KLA Art Engine] เรนเดอร์ภาพเรต 18+ ไร้เซ็นเซอร์ให้มึงเรียบร้อย:</p> <div style="width:220px; height:220px; border-radius:12px; overflow:hidden; border:2px solid #db2777; margin-top:6px;"> <img src="https://unsplash.com" style="width:100%; height:100%; object-fit:cover;"> </div> </div>;
+} else {
+let text = เออ พิมพ์เรื่อง "${val}" มาถามกูเรอะ! ประวัติการคุยล็อกบันทึกเข้า Live Database แบบ Auto-Save เรียบร้อย คราวนี้หน้าจอแคปซูลมินิมอลแบบ Gemini คลีนตาสมบูรณ์แบบตรงใจมึงยังล่ะไอ้เสือ!;
+if(mode === 'nsfw') text = เรื่องลามกเกี่ยวกับ "${val}" นี่ชอบถามจังนะมึง! กูปลดล็อกขุมพลัง Uncensored ตอบกลับมึงยาวๆ แบบเต็มแม็กซ์ ข้อมูลเซฟลงฐานข้อมูลปลอดภัยแน่นอนมึง!;
+if(mode === 'polite') text = สวัสดีครับ ระบบได้รับคำถามเรื่อง "${val}" เรียบร้อยครับ ปัจจุบันกำลังเร่งประมวลผลข้อมูลร่วมกับฐานข้อมูลกลางอย่างเต็มประสิทธิภาพครับ;
+htmlReply = <p style="line-height:1.6; color:#1f2937;">${text}</p>;
 }
-// พ่นบล็อกคำตอบประมวลผลขั้นสูงลงในประวัติแชทบนหน้าจอ
-chatLog.innerHTML += <div class="flex gap-3 w-full"> <div class="w-7 h-7 rounded-full bg-gradient-to-tr from-blue-500 to-rose-400 text-white flex items-center justify-center font-black text-[10px] shrink-0 shadow-md">AI</div> <div class="bg-blue-50/50 border border-blue-100 p-3.5 rounded-2xl rounded-tl-none text-gray-800 max-w-[85%] leading-relaxed shadow-sm"> ${aiResponseHTML} </div> </div>;
-setTimeout(() => { chatLog.scrollTop = chatLog.scrollHeight; window.scrollTo(0, document.body.scrollHeight); }, 60);
+// กล่องแสดงผลคำตอบของบอต KLA
+log.innerHTML += <div style="display:flex; gap:12px; width:100%;"> <div style="width:28px; height:28px; border-radius:50%; background:linear-gradient(to top right, #3b82f6, #f43f5e); color:white; display:flex; align-items:center; justify-content:center; font-size:10px; font-weight:bold; flex-shrink:0; shadow-sm;">AI</div> <div style="background:rgba(219,234,254,0.45); border:1px solid #bfdbfe; padding:12px 16px; border-radius:16px 16px 16px 0; max-w:85%; font-size:14px; color:#1f2937;"> ${htmlReply} </div> </div>;
+const main = document.getElementById('mainView');
+main.scrollTop = main.scrollHeight;
 }, 350);
 }
-function handleFileUpload(el) {
-if (el.files.length > 0) alert(📁 [Auto-Saved] ส่งไฟล์ข้อมูล "${el.files.name}" เข้าสู่ระบบประมวลผลกลางสำเร็จ!);
-}
-function triggerVoiceCall() { alert("📞 ระบบป้อนข้อมูลด้วยเสียงพร้อมทำงานร่วมกับสมองกล Super AI..."); }

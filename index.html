@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Flash-Lite Extension - KLA AI Hub Pro</title>
-    <!-- แก้ไขลิงก์ CDN ที่ถูกต้องและสมบูรณ์ -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Anuphan:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
@@ -252,7 +251,7 @@
             <select id="aiModelSelector" onchange="updateStatus()" class="select-input">
                 <option value="gpt4o">🧠 GPT-4o Super-Reasoning</option>
                 <option value="claude35">⚡ Claude 3.5 Sonnet Ultimate</option>
-                <option value="deepseek">🕵️ DeepSeek-R1 Uncensored</option>
+                <option value="deepseek">🕵️️ DeepSeek-R1 Uncensored</option>
                 <option value="gemini">🌐 Gemini 1.5 Pro Ultra</option>
             </select>
             <label style="font-size:11px; color:#9ca3af; display:block; margin-bottom:6px;">ระดับอารมณ์บอต KLA:</label>
@@ -310,7 +309,7 @@
         </div>
     </footer>
 
-    <!-- ระบบการทำงาน JavaScript ที่ถูกแก้ไขและจัดระเบียบใหม่ให้ถูกต้องสมบูรณ์ -->
+    <!-- ระบบการทำงาน JavaScript ปลอดภัย ไร้ปัญหาแบ็คทิกตีกัน -->
     <script>
         function toggleMenu() {
             document.getElementById('controlSidebar').classList.toggle('open');
@@ -327,7 +326,8 @@
 
         function updateStatus() {
             const selector = document.getElementById('aiModelSelector');
-            document.getElementById('statusIndicator').innerText = `🧠 สมองกลปัจจุบัน: ${selector.options[selector.selectedIndex].text.toUpperCase()}`;
+            const modelText = selector.options[selector.selectedIndex].text.toUpperCase();
+            document.getElementById('statusIndicator').innerText = '🧠 สมองกลปัจจุบัน: ' + modelText;
         }
 
         function resetChat() {
@@ -354,27 +354,31 @@
             const log = document.getElementById('activeChatLog');
             log.classList.add('active');
 
-            log.innerHTML += `<div class="user-bubble"><div class="user-text">${val}</div></div>`;
+            log.innerHTML += '<div class="user-bubble"><div class="user-text">' + val + '</div></div>';
             input.value = '';
 
-            setTimeout(() => {
-                let htmlReply = '';
-                const mode = document.getElementById('chatMode').value;
-                const model = document.getElementById('aiModelSelector').options[document.getElementById('aiModelSelector').selectedIndex].text;
+            setTimeout(function() {
+                var htmlReply = '';
+                var mode = document.getElementById('chatMode').value;
+                var modelSelect = document.getElementById('aiModelSelector');
+                var model = modelSelect.options[modelSelect.selectedIndex].text;
 
                 if (val.includes('สคริปต์') || val.includes('โค้ด')) {
-                    htmlReply = `<div><p style="color:#16a34a; font-weight:bold; font-size:12px; margin-bottom:6px;"><i class="fas fa-check-circle"></i> [KLA Dev Studio] เจนสคริปต์ให้มึงตามสั่ง:</p><div class="code-container"><pre><code>-- 🟢 KLA GAME AUTO FARM SCRIPT V4.5\nprint("เปิดทำงานสคริปต์ร่วมกับโมเดล ${model}")\nwhile task.wait(1) do\n    print("กำลังฟาร์มมอนสเตอร์ให้มึงอยู่...")\nend</code></pre></div></div>`;
+                    htmlReply = '<div><p style="color:#16a34a; font-weight:bold; font-size:12px; margin-bottom:6px;"><i class="fas fa-check-circle"></i> [KLA Dev Studio] เจนสคริปต์ให้มึงตามสั่ง:</p><div class="code-container"><pre><code>-- 🟢 KLA GAME AUTO FARM SCRIPT V4.5\nprint("เปิดทำงานสคริปต์ร่วมกับโมเดล ' + model + '")\nwhile task.wait(1) do\n    print("กำลังฟาร์มมอนสเตอร์ให้มึงอยู่...")\nend</code></pre></div></div>';
                 } else if (val.includes('รูป') || val.includes('ภาพ')) {
-                    htmlReply = `<div><p style="color:#db2777; font-weight:bold; font-size:12px; margin-bottom:6px;"><i class="fas fa-image"></i> [KLA Art Engine] ปลดล็อกภาพเรต 18+ ไร้เซ็นเซอร์:</p><div style="width:200px; height:200px; border-radius:12px; overflow:hidden; border:2px solid #db2777; margin-top:6px;"><img src="https://picsum.photos/200/200" style="width:100%; height:100%; object-fit:cover;"></div></div>`;
+                    htmlReply = '<div><p style="color:#db2777; font-weight:bold; font-size:12px; margin-bottom:6px;"><i class="fas fa-image"></i> [KLA Art Engine] ปลดล็อกภาพเรต 18+ ไร้เซ็นเซอร์:</p><div style="width:200px; height:200px; border-radius:12px; overflow:hidden; border:2px solid #db2777; margin-top:6px;"><img src="https://picsum.photos/200/200" style="width:100%; height:100%; object-fit:cover;"></div></div>';
                 } else {
-                    let text = `เออ พิมพ์เรื่อง "${val}" มาถามกูเรอะ! ประวัติการคุยล็อกบันทึกเข้า Live Database แบบ Auto-Save เรียบร้อย คราวนี้หน้าจอแคปซูลมินิมอลแบบ Gemini คลีนตาสมบูรณ์แบบตรงใจมึงยังล่ะไอ้เสือ!`;
-                    if(mode === 'nsfw') text = `เรื่องลามกเกี่ยวกับ "${val}" นี่ชอบถามจังนะมึง! กูปลดล็อกขุมพลัง Uncensored ตอบกลับมึงยาวๆ แบบเต็มแม็กซ์ ข้อมูลเซฟลงฐานข้อมูลปลอดภัยแน่นอนมึง!`;
-                    if(mode === 'polite') text = `สวัสดีครับ ระบบได้รับคำถามเรื่อง "${val}" เรียบร้อยครับ ปัจจุบันกำลังเร่งประมวลผลข้อมูลร่วมกับฐานข้อมูลกลางอย่างเต็มประสิทธิภาพครับ`;
-                    htmlReply = `<p>${text}</p>`;
+                    var text = 'เออ พิมพ์เรื่อง "' + val + '" มาถามกูเรอะ! ประวัติการคุยล็อกบันทึกเข้า Live Database แบบ Auto-Save เรียบร้อย คราวนี้หน้าจอแคปซูลมินิมอลแบบ Gemini คลีนตาสมบูรณ์แบบตรงใจมึงยังล่ะไอ้เสือ!';
+                    if(mode === 'nsfw') {
+                        text = 'เรื่องลามกเกี่ยวกับ "' + val + '" นี่ชอบถามจังนะมึง! กูปลดล็อกขุมพลัง Uncensored ตอบกลับมึงยาวๆ แบบเต็มแม็กซ์ ข้อมูลเซฟลงฐานข้อมูลปลอดภัยแน่นอนมึง!';
+                    } else if(mode === 'polite') {
+                        text = 'สวัสดีครับ ระบบได้รับคำถามเรื่อง "' + val + '" เรียบร้อยครับ ปัจจุบันกำลังเร่งประมวลผลข้อมูลร่วมกับฐานข้อมูลกลางอย่างเต็มประสิทธิภาพครับ';
+                    }
+                    htmlReply = '<p>' + text + '</p>';
                 }
 
-                log.innerHTML += `<div class="bot-container"><div class="bot-avatar">AI</div><div class="bot-text">${htmlReply}</div></div>`;
-                const main = document.getElementById('mainView');
+                log.innerHTML += '<div class="bot-container"><div class="bot-avatar">AI</div><div class="bot-text">' + htmlReply + '</div></div>';
+                var main = document.getElementById('mainView');
                 main.scrollTop = main.scrollHeight;
             }, 350);
         }

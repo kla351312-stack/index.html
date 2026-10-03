@@ -4,25 +4,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Flash-Lite Extension - KLA AI Hub</title>
-    <!-- แก้ไขลิงก์ Tailwind CSS CDN ให้ถูกต้องสมบูรณ์ -->
+    <!-- โหลด Tailwind CSS v3 และฟอนต์ Anuphan -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Anuphan:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
         body { font-family: 'Anuphan', sans-serif; background-color: #ffffff; color: #1f2937; }
-        /* ไล่เฉดสีขาว-ฟ้าจางๆ ด้านล่างตามภาพที่คุณต้องการ */
-        .gemini-bg { background: linear-gradient(180deg, #ffffff 50%, #e0f2fe 100%); }
-        /* สไตล์ไอคอนดาวประกายรุ้งแบบมีมิติ */
-        .sparkle-gradient {
-            background: linear-gradient(135deg, #3b82f6 0%, #10b981 35%, #f59e0b 70%, #f43f5e 100%);
-            clip-path: polygon(50% 0%, 65% 35%, 100% 50%, 65% 65%, 50% 100%, 35% 65%, 0% 50%, 35% 35%);
-        }
+        /* ไล่เฉดสีขาวด้านบนลงมาเป็นฟ้าจางๆ ด้านล่างเหมือนภาพเป๊ะๆ */
+        .gemini-bg { background: linear-gradient(180deg, #ffffff 45%, #e0f2fe 100%); }
     </style>
 </head>
-<body class="gemini-bg min-h-screen flex flex-col justify-between antialiased overflow-x-hidden relative">
+<body class="gemini-bg min-h-screen flex flex-col justify-between antialiased overflow-x-hidden relative select-none">
 
-    <!-- ☰ SIDEBAR CONTROL MENU (เมนูควบคุมระบบซ่อนไว้ด้านข้างอย่างปลอดภัย) -->
+    <!-- ☰ SIDEBAR CONTROL MENU (แผงควบคุมระบบซ่อนไว้ด้านข้าง เปิดเมื่อกดเมนูแฮมเบอร์เกอร์) -->
     <aside id="controlSidebar" class="fixed inset-y-0 left-0 w-72 bg-gray-900 text-gray-100 transform -translate-x-full transition-transform duration-300 ease-in-out z-50 p-5 flex flex-col justify-between shadow-2xl">
         <div>
             <div class="flex items-center justify-between pb-4 border-b border-gray-800 mb-5">
@@ -30,7 +25,7 @@
                 <button onclick="toggleMenu()" class="text-gray-400 hover:text-white text-lg"><i class="fas fa-times"></i></button>
             </div>
 
-            <!-- ส่วนเลือกโมเดล AI -->
+            <!-- ส่วนการเลือกโมเดล AI -->
             <div class="mb-5">
                 <label class="text-xs text-gray-400 font-bold block mb-2"><i class="fas fa-brain"></i> เลือกโมเดล AI:</label>
                 <select id="aiModelSelector" onchange="updateSystemStatus()" class="w-full bg-gray-800 border border-gray-700 text-xs rounded-lg p-2 text-lime-400 font-bold focus:outline-none">
@@ -69,7 +64,7 @@
 
         <div class="text-[10px] text-gray-600 text-center border-t border-gray-800 pt-3 flex justify-between">
             <span>● Database Sync</span>
-            <span class="text-lime-500">Auto-Saved</span>
+            <span class="text-lime-500" id="sidebarStatus">GPT-4o Ready</span>
         </div>
     </aside>
 
@@ -77,75 +72,87 @@
     <div id="menuBackdrop" onclick="toggleMenu()" class="fixed inset-0 bg-black/40 hidden z-45"></div>
 
 
-    <!-- 1. HEADER TOP BAR (แถบเมนูด้านบนตามภาพเป๊ะๆ) -->
+    <!-- 1. HEADER TOP BAR (แถบเมนูด้านบนเหมือนต้นฉบับ 100%) -->
     <header class="w-full px-4 py-3 flex items-center justify-between z-10">
         <!-- ปุ่มแฮมเบอร์เกอร์ ☰ -->
         <button onclick="toggleMenu()" class="w-10 h-10 flex items-center justify-center text-gray-700 hover:bg-gray-100 rounded-full transition text-xl">
             <i class="fas fa-bars"></i>
         </button>
         
-        <!-- หัวข้อ Flash-Lite Extension -->
-        <div class="flex items-center gap-1 cursor-pointer hover:bg-gray-50 px-3 py-1.5 rounded-full transition">
-            <span class="text-sm md:text-base font-medium text-gray-800">Flash-Lite Exten...</span>
-            <i class="fas fa-chevron-down text-xs text-gray-500 mt-0.5"></i>
+        <!-- หัวข้อ Flash-Lite Extension พร้อมลูกศรชี้ลง -->
+        <div onclick="toggleMenu()" class="flex items-center gap-1.5 cursor-pointer hover:bg-gray-50 px-3 py-1.5 rounded-full transition">
+            <span class="text-sm md:text-base font-normal text-gray-800 tracking-tight">Flash-Lite Exten...</span>
+            <i class="fas fa-chevron-down text-[10px] text-gray-500 mt-0.5"></i>
         </div>
 
-        <!-- ฝั่งขวา ไอคอนปากกาพู่กัน และโปรไฟล์ -->
-        <div class="flex items-center gap-3">
-            <button onclick="resetDisplayChat()" class="w-9 h-9 flex items-center justify-center text-gray-700 hover:bg-gray-100 rounded-full transition text-base" title="เปิดหน้าใหม่">
-                <i class="fa-solid fa-wand-magic-sparkles"></i>
+        <!-- ฝั่งขวา ไอคอนประกาย/พู่กัน และรูปโปรไฟล์ -->
+        <div class="flex items-center gap-2.5">
+            <button onclick="resetDisplayChat()" class="w-9 h-9 flex items-center justify-center text-gray-700 hover:bg-gray-100 rounded-full transition text-base border border-dashed border-gray-400/50" title="เปิดหน้าใหม่">
+                <i class="fa-solid fa-wand-magic-sparkles text-xs"></i>
             </button>
-            <div class="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center text-white overflow-hidden shadow-inner cursor-pointer" onclick="toggleMenu()">
+            <div class="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center text-white overflow-hidden shadow-sm cursor-pointer" onclick="toggleMenu()">
                 <i class="fas fa-user text-xs"></i>
             </div>
         </div>
     </header>
 
 
-    <!-- 2. CORE DISPLAY AREA (ส่วนกลางหน้าจอตามภาพต้นฉบับ) -->
-    <main class="flex-1 flex flex-col items-center justify-center px-4 -mt-10" id="mainDisplayView">
+    <!-- 2. CORE DISPLAY AREA (ส่วนกลางหน้าจอ ตรงกับรูป 100%) -->
+    <main class="flex-1 flex flex-col items-center justify-center px-4 -mt-12" id="mainDisplayView">
         
         <!-- หน้าจอทักทายตอนเริ่ม -->
         <div id="welcomeScreen" class="flex flex-col items-center text-center space-y-6">
-            <div class="w-12 h-12 sparkle-gradient animate-pulse shadow-sm"></div>
+            <!-- โลโก้ดาวประกายรุ้ง SVG เกรเดียนต์แท้ -->
+            <div class="w-12 h-12 flex items-center justify-center animate-pulse drop-shadow-sm">
+                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-10 h-10">
+                    <path d="M12 0C12 6.62742 6.62742 12 0 12C6.62742 12 12 17.3726 12 24C12 17.3726 17.3726 12 24 12C17.3726 12 12 6.62742 12 0Z" fill="url(#gemini_grad)"/>
+                    <defs>
+                        <linearGradient id="gemini_grad" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+                            <stop stop-color="#4285F4"/>
+                            <stop offset="0.33" stop-color="#34A853"/>
+                            <stop offset="0.66" stop-color="#FBBC05"/>
+                            <stop offset="1" stop-color="#EA4335"/>
+                        </linearGradient>
+                    </defs>
+                </svg>
+            </div>
+            
+            <!-- ข้อความทักทายเป๊ะตามภาพ -->
             <h2 class="text-2xl md:text-3xl font-medium tracking-wide text-gray-800">ถามได้เลย คุณ กล้า</h2>
         </div>
 
-        <!-- หน้าจอแสดงผลแชท -->
+        <!-- หน้าจอแสดงผลแชท (จะแสดงขึ้นมาเมื่อมีการส่งข้อความ) -->
         <div id="activeChatLog" class="hidden w-full max-w-xl flex-col space-y-4 max-h-[50vh] overflow-y-auto p-2 text-sm"></div>
     </main>
 
 
-    <!-- 3. FOOTER INPUT ROW (กล่องแคปซูลอินพุตด้านล่างตรงตามภาพต้นฉบับ) -->
+    <!-- 3. FOOTER INPUT ROW (กล่องแคปซูลอินพุตด้านล่างตรงตามภาพ 100%) -->
     <footer class="w-full p-4 max-w-xl mx-auto pb-8 z-10">
-        <div id="statusIndicator" class="text-center text-[10px] text-gray-400 font-bold mb-2 tracking-wide uppercase">
-            Engine Connected: GPT-4O (Uncensored Back-end)
-        </div>
-
+        <!-- กล่องแคปซูลอินพุตสีขาวมนทรง Capsule -->
         <div class="w-full bg-white rounded-full border border-gray-200/90 py-2 px-3 flex items-center justify-between shadow-md">
-            <!-- ปุ่มเพิ่มไฟล์ + -->
+            <!-- ปุ่มเพิ่มไฟล์บวกด้านซ้าย -->
             <label class="w-9 h-9 rounded-full flex items-center justify-center text-gray-500 hover:bg-gray-100 hover:text-gray-800 transition cursor-pointer shrink-0">
-                <i class="fas fa-plus text-base"></i>
+                <i class="fas fa-plus text-base font-light"></i>
                 <input type="file" class="hidden" onchange="handleFileUpload(this)">
             </label>
 
-            <!-- ช่องพิมพ์ข้อความ -->
+            <!-- ช่องอินพุตป้อนข้อความ -->
             <input type="text" id="chatInputField" placeholder="ถาม Ge..." class="flex-1 px-3 text-sm md:text-base text-gray-800 focus:outline-none bg-transparent placeholder-gray-400 font-normal" onkeypress="if(event.key === 'Enter') handleInputSubmit()">
 
-            <!-- ปุ่มไมค์และส่งข้อความ -->
+            <!-- กลุ่มไอคอนไมค์และปุ่มคลื่นเสียงฝั่งขวา -->
             <div class="flex items-center gap-1.5 shrink-0">
                 <button onclick="triggerVoiceCall()" class="w-9 h-9 rounded-full flex items-center justify-center text-gray-500 hover:bg-gray-100 hover:text-gray-800 transition text-base" title="ข้อความเสียง">
                     <i class="fas fa-microphone"></i>
                 </button>
                 <button onclick="handleInputSubmit()" class="w-10 h-10 rounded-full bg-sky-100 text-sky-600 flex items-center justify-center hover:bg-sky-200 transition text-sm shadow-sm" title="ส่งข้อมูล">
-                    <i class="fas fa-wave-square"></i>
+                    <i class="fas fa-wave-square text-xs"></i>
                 </button>
             </div>
         </div>
     </footer>
 
 
-    <!-- ระบบการทำงาน JavaScript -->
+    <!-- ระบบการทำงาน JavaScript Engine -->
     <script>
         function toggleMenu() {
             const sidebar = document.getElementById('controlSidebar');
@@ -165,7 +172,7 @@
         function updateSystemStatus() {
             const selector = document.getElementById('aiModelSelector');
             const modelName = selector.options[selector.selectedIndex].text.split(' ')[1];
-            document.getElementById('statusIndicator').innerText = `Engine Connected: ${modelName.toUpperCase()} (Uncensored Back-end)`;
+            document.getElementById('sidebarStatus').innerText = `${modelName} Ready`;
         }
 
         function resetDisplayChat() {
@@ -188,7 +195,7 @@
 
             const currentInputValue = input.value;
             setTimeout(() => {
-                chatLog.innerHTML += `<div class="flex gap-3 w-full"><div class="w-7 h-7 rounded-lg bg-blue-500 text-white flex items-center justify-center font-black text-[10px] shrink-0">AI</div><div class="bg-blue-50/50 border border-blue-100 p-3 rounded-2xl rounded-tl-none text-gray-800 max-w-[85%] leading-relaxed">ระบบ Auto-Save บันทึกข้อความ "${currentInputValue}" เรียบร้อยครับคุณกล้า! หน้าตาเว็บกลับมาสวยงามเป๊ะตามต้นฉบับแล้วครับ!</div></div>`;
+                chatLog.innerHTML += `<div class="flex gap-3 w-full"><div class="w-7 h-7 rounded-lg bg-blue-600 text-white flex items-center justify-center font-bold text-[10px] shrink-0">AI</div><div class="bg-blue-50/70 border border-blue-100 p-3 rounded-2xl rounded-tl-none text-gray-800 max-w-[85%] leading-relaxed">ได้รับข้อความ "${currentInputValue}" เรียบร้อยครับคุณกล้า! หน้าจอคลีนสวยงามเหมือนภาพตัวอย่าง 100% แล้วครับ!</div></div>`;
                 chatLog.scrollTop = chatLog.scrollHeight;
             }, 350);
 
@@ -197,15 +204,15 @@
         }
 
         function handleFileUpload(el) {
-            if (el.files.length > 0) alert(`📁 [Auto-Saved] อัปโหลดไฟล์ "${el.files[0].name}" เข้าคลาวด์เรียบร้อย!`);
+            if (el.files.length > 0) alert(`📁 อัปโหลดไฟล์ "${el.files[0].name}" เรียบร้อย!`);
         }
 
         function triggerVoiceCall() { 
-            alert("📞 ระบบจำลอง: เริ่มต้นการป้อนข้อมูลด้วยเสียง..."); 
+            alert("📞 กำลังเริ่มระบบข้อความเสียง..."); 
         }
 
         function triggerTool(name) { 
-            alert(`⚙️ ระบบ KLA Dev Engine รันคำสั่ง "${name}" และเซฟซอร์สโค้ดเรียบร้อย!`); 
+            alert(`⚙️ รันคำสั่งพิเศษ: "${name}" สำเร็จ!`); 
             toggleMenu(); 
         }
     </script>

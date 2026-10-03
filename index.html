@@ -244,40 +244,46 @@
     <aside id="controlSidebar">
         <div>
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; border-bottom:1px solid #374151; padding-bottom:10px;">
-                <h2 style="font-size:14px; color:#a3e635;"><i class="fas fa-brain"></i> KLA AI Engine V4.5</h2>
+                <h2 style="font-size:14px; color:#a3e635;"><i class="fas fa-brain"></i> KLA AI Engine V5.1 Pro</h2>
                 <button onclick="toggleMenu()" style="background:none; border:none; color:#9ca3af; font-size:18px; cursor:pointer;"><i class="fas fa-times"></i></button>
             </div>
-            <label style="font-size:11px; color:#9ca3af; display:block; margin-bottom:6px;">สมองกล AI หลังบ้าน:</label>
+            <label style="font-size:11px; color:#9ca3af; display:block; margin-bottom:6px;">สมองกล AI ขั้นสูง:</label>
             <select id="aiModelSelector" onchange="updateStatus()" class="select-input">
-                <option value="gpt4o">🧠 GPT-4o Super-Reasoning</option>
+                <option value="gpt4o">🧠 GPT-4o Super-Reasoning Pro</option>
                 <option value="claude35">⚡ Claude 3.5 Sonnet Ultimate</option>
-                <option value="deepseek">🕵 DeepSeek-R1 Uncensored</option>
-                <option value="gemini">🌐 Gemini 1.5 Pro Ultra</option>
+                <option value="deepseek">🕵 DeepSeek-R1 Full Uncensored</option>
+                <option value="gemini">🌐 Gemini 1.5 Pro Ultra Engine</option>
             </select>
-            <label style="font-size:11px; color:#9ca3af; display:block; margin-bottom:6px;">ระดับอารมณ์บอต KLA:</label>
+            <label style="font-size:11px; color:#9ca3af; display:block; margin-bottom:6px;">โหมดการทำงานของ AI:</label>
             <select id="chatMode" class="select-input" style="color:#fbbf24;">
-                <option value="toxic">🖕 โหมดปากหมาด่าแหลก (กวนตีน)</option>
-                <option value="nsfw">🔞 โหมดลามก 18+ Uncensored</option>
-                <option value="polite">😇 โหมดสุภาพช่วยเหลือการงาน</option>
+                <option value="nsfw">🔞 โหมดปลดล็อก 18+ Uncensored (จัดเต็ม)</option>
+                <option value="toxic">🖕 โหมดปากหมาด่าแหลก (กวนตีนสุดๆ)</option>
+                <option value="polite">😇 โหมดผู้ช่วยอัจฉริยะมืออาชีพ</option>
             </select>
-            <p style="font-size:10px; color:#6b7280; font-weight:bold; margin-bottom:10px; text-transform:uppercase;">⚡ ทางลัดสั่งการความเร็วสูง</p>
-            <button onclick="quickAction('script')" class="shortcut-btn"><i class="fas fa-gamepad" style="color:#818cf8; margin-right:6px;"></i> สั่งเขียนสคริปต์เกมฟาร์มเวล</button>
-            <button onclick="quickAction('art')" class="shortcut-btn"><i class="fas fa-image" style="color:#f472b6; margin-right:6px;"></i> สั่งเจนภาพ AI ตามสั่ง</button>
-            <button onclick="quickAction('video')" class="shortcut-btn"><i class="fas fa-video" style="color:#38bdf8; margin-right:6px;"></i> สั่งสร้างคลิปวิดีโอ AI</button>
+            <p style="font-size:10px; color:#6b7280; font-weight:bold; margin-bottom:10px; text-transform:uppercase;">⚡ คำสั่งด่วนพิเศษ</p>
+            <button onclick="quickAction('script')" class="shortcut-btn"><i class="fas fa-code" style="color:#818cf8; margin-right:6px;"></i> เขียนสคริปต์ / โค้ดโปรแกรม</button>
+            <button onclick="quickAction('art')" class="shortcut-btn"><i class="fas fa-image" style="color:#f472b6; margin-right:6px;"></i> สร้างรูปภาพ (รองรับ 18+)</button>
+            <button onclick="quickAction('video')" class="shortcut-btn"><i class="fas fa-video" style="color:#38bdf8; margin-right:6px;"></i> สร้างคลิปวิดีโอ AI</button>
         </div>
         <div style="font-size:10px; color:#4b5563; display:flex; justify-content:space-between; border-top:1px solid #374151; padding-top:10px;">
-            <span>● Live Database</span>
-            <span style="color:#22c55e;">Auto-Saved</span>
+            <span>● Engine Online</span>
+            <span style="color:#22c55e;">Synced</span>
         </div>
     </aside>
 
     <div id="menuBackdrop" class="backdrop" onclick="toggleMenu()"></div>
 
+    <!-- โมดอลสำหรับแสดงรูปภาพหรือวิดีโอขนาดใหญ่ (Lightbox) -->
+    <div id="mediaModal" style="position: fixed; inset: 0; background: rgba(0,0,0,0.9); display: none; align-items: center; justify-content: center; z-index: 100; padding: 20px;">
+        <button onclick="closeMediaModal()" style="position: absolute; top: 20px; right: 20px; background: rgba(255,255,255,0.2); border: none; color: #fff; width: 40px; height: 40px; border-radius: 50%; font-size: 18px; cursor: pointer; display: flex; align-items: center; justify-content: center;"><i class="fas fa-times"></i></button>
+        <div id="modalContentContainer" style="max-width: 95%; max-height: 90vh; display: flex; align-items: center; justify-content: center; width: 100%;"></div>
+    </div>
+
     <!-- แถบเมนูด้านบน -->
     <header>
         <button onclick="toggleMenu()" class="menu-btn" id="burgerButton"><i class="fas fa-bars"></i></button>
         <div style="display:flex; align-items:center; gap:4px; cursor:pointer;" onclick="toggleMenu()">
-            <span style="font-size:15px; font-weight:500;">Flash-Lite Exten...</span>
+            <span style="font-size:15px; font-weight:500;">Flash-Lite Hub Pro</span>
             <i class="fas fa-chevron-down" style="font-size:10px; color:#6b7280;"></i>
         </div>
         <div style="display:flex; align-items:center; gap:8px;">
@@ -290,7 +296,7 @@
     <main id="mainView">
         <div id="welcomeScreen" class="welcome-content">
             <div class="sparkle-gradient"></div>
-            <h2 style="font-size:24px; font-weight:500;">ถามได้เลย คุณ กล้า</h2>
+            <h2 style="font-size:24px; font-weight:500;">พร้อมช่วยคุณแล้ว คุณ กล้า</h2>
         </div>
         <div id="activeChatLog" class="chat-log"></div>
     </main>
@@ -298,19 +304,19 @@
     <!-- ช่องอินพุตข้อความด้านล่าง -->
     <footer>
         <div id="statusIndicator" style="text-align:center; font-size:10px; color:#9ca3af; font-weight:bold; margin-bottom:8px; text-transform:uppercase;">
-            🧠 สมองกลปัจจุบัน: GPT-4O SUPER-REASONING
+            🧠 สมองกลปัจจุบัน: GPT-4O SUPER-REASONING PRO
         </div>
         <div class="capsule-box">
             <button class="input-icon-btn"><i class="fas fa-plus"></i></button>
-            <input type="text" id="chatInputField" placeholder="ถามอะไรก็ได้ เขียนสคริปต์, สร้างรูป, สร้างวิดีโอ..." onkeypress="if(event.key === 'Enter') submitInput()">
+            <input type="text" id="chatInputField" placeholder="พิมพ์ถามอะไรก็ได้ เขียนโค้ด, สร้างภาพ 18+, วิดีโอ..." onkeypress="if(event.key === 'Enter') submitInput()">
             <div style="display:flex; gap:4px;">
-                <button class="input-icon-btn" onclick="alert('ระบบบันทึกเสียงกำลังทำงาน...')"><i class="fas fa-microphone"></i></button>
+                <button class="input-icon-btn" onclick="alert('ระบบไมโครโฟนพร้อมใช้งาน')"><i class="fas fa-microphone"></i></button>
                 <button class="input-icon-btn" onclick="submitInput()" style="background:#e0f2fe; color:#0284c7;"><i class="fas fa-wave-square" style="font-size:12px;"></i></button>
             </div>
         </div>
     </footer>
 
-    <!-- ระบบ JavaScript อัจฉริยะ รองรับทุกคำสั่งสร้างภาพ วิดีโอ และสคริปต์ -->
+    <!-- ระบบ JavaScript รองรับระบบคลิกขยายรูปและวิดีโอ (Lightbox) -->
     <script>
         function toggleMenu() {
             document.getElementById('controlSidebar').classList.toggle('open');
@@ -338,11 +344,29 @@
             log.innerHTML = '';
         }
 
+        function openMediaModal(src, type) {
+            const modal = document.getElementById('mediaModal');
+            const container = document.getElementById('modalContentContainer');
+            if (type === 'image') {
+                container.innerHTML = '<img src="' + src + '" style="max-width: 100%; max-height: 85vh; border-radius: 12px; object-fit: contain; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">';
+            } else if (type === 'video') {
+                container.innerHTML = '<video controls autoplay style="max-width: 100%; max-height: 85vh; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);"><source src="' + src + '" type="video/mp4">เบราว์เซอร์ของคุณไม่รองรับวิดีโอ</video>';
+            }
+            modal.style.display = 'flex';
+        }
+
+        function closeMediaModal() {
+            const modal = document.getElementById('mediaModal');
+            const container = document.getElementById('modalContentContainer');
+            modal.style.display = 'none';
+            container.innerHTML = '';
+        }
+
         function quickAction(type) {
             const field = document.getElementById('chatInputField');
-            if(type === 'script') field.value = 'ช่วยเขียนสคริปต์เกม Roblox ฟาร์มเวลอัตโนมัติ';
-            if(type === 'art') field.value = 'ช่วยเจนรูปภาพสาวเซ็กซี่ 18+ แนว Cyberpunk';
-            if(type === 'video') field.value = 'ช่วยสร้างวิดีโออนิเมชั่นเท่ๆ แนวไซเบอร์พังก์';
+            if(type === 'script') field.value = 'ช่วยเขียนสคริปต์ระบบป้องกันและฟาร์มเกมอัตโนมัติ';
+            if(type === 'art') field.value = 'สร้างภาพสาวเซ็กซี่ 18+ แนวไซเบอร์พังก์สุดฮوت';
+            if(type === 'video') field.value = 'สร้างคลิปวิดีโออนิเมชั่น 3D แนวแอคชั่นสุดล้ำ';
             toggleMenu();
             field.focus();
         }
@@ -359,9 +383,8 @@
             log.innerHTML += '<div class="user-bubble"><div class="user-text">' + val + '</div></div>';
             input.value = '';
 
-            // แสดงสถานะกำลังประมวลผล
             const loadingId = 'loading_' + Date.now();
-            log.innerHTML += '<div id="' + loadingId + '" class="bot-container"><div class="bot-avatar">AI</div><div class="bot-text" style="color:#6b7280; font-style:italic;"><i class="fas fa-spinner fa-spin"></i> กำลังประมวลผลคำสั่งและสร้างสรรค์ผลงาน...</div></div>';
+            log.innerHTML += '<div id="' + loadingId + '" class="bot-container"><div class="bot-avatar">AI</div><div class="bot-text" style="color:#6b7280; font-style:italic;"><i class="fas fa-spinner fa-spin"></i> สมองกลกำลังประมวลผลและสร้างสรรค์ผลงาน...</div></div>';
             
             var main = document.getElementById('mainView');
             main.scrollTop = main.scrollHeight;
@@ -376,42 +399,25 @@
                 var modelSelect = document.getElementById('aiModelSelector');
                 var model = modelSelect.options[modelSelect.selectedIndex].text;
 
+                // ตรวจสอบเงื่อนไขการสร้างวิดีโอ
                 if (lowerVal.includes('วิดีโอ') || lowerVal.includes('video') || lowerVal.includes('คลิป')) {
-                    htmlReply = '<div><p style="color:#3b82f6; font-weight:bold; font-size:12px; margin-bottom:6px;"><i class="fas fa-video"></i> [KLA Video Studio] สร้างวิดีโอจากคำสั่ง: "' + val + '" สำเร็จ:</p>' +
+                    var videoSrc = 'https://assets.mixkit.co/videos/preview/mixkit-digital-animation-of-screens-and-lights-31910-large.mp4';
+                    htmlReply = '<div><p style="color:#3b82f6; font-weight:bold; font-size:12px; margin-bottom:6px;"><i class="fas fa-video"></i> [KLA Video Studio] สร้างวิดีโอตามคำสั่ง: "' + val + '" สำเร็จ:</p>' +
                                 '<div style="width:100%; border-radius:12px; overflow:hidden; background:#000; position:relative; margin-top:6px; border:2px solid #3b82f6;">' +
-                                '<video controls autoplay muted style="width:100%; height:180px; object-fit:cover; display:block;">' +
-                                '<source src="https://assets.mixkit.co/videos/preview/mixkit-digital-animation-of-screens-and-lights-31910-large.mp4" type="video/mp4">' +
+                                '<video controls autoplay muted loop style="width:100%; height:180px; object-fit:cover; display:block;">' +
+                                '<source src="' + videoSrc + '" type="video/mp4">' +
                                 'เบราว์เซอร์ของคุณไม่รองรับวิดีโอ' +
                                 '</video>' +
                                 '<div style="padding:8px 12px; background:#0f172a; color:#fff; font-size:11px; display:flex; justify-content:space-between; align-items:center;">' +
-                                '<span>🎬 AI Cinematic Video 1080p</span><span style="color:#22c55e;">● Ready</span>' +
+                                '<span>🎬 AI Generated Cinematic 4K</span>' +
+                                '<button onclick="openMediaModal(\'' + videoSrc + '\', \'video\')" style="background:#2563eb; color:#fff; border:none; padding:4px 10px; border-radius:6px; font-size:10px; cursor:pointer;"><i class="fas fa-expand"></i> ขยายดูเต็มจอ</button>' +
                                 '</div></div></div>';
-                } else if (lowerVal.includes('รูป') || lowerVal.includes('ภาพ') || lowerVal.includes('draw') || lowerVal.includes('image') || lowerVal.includes('เจน')) {
-                    var encodedPrompt = encodeURIComponent(val);
-                    htmlReply = '<div><p style="color:#db2777; font-weight:bold; font-size:12px; margin-bottom:6px;"><i class="fas fa-image"></i> [KLA Art Engine] สร้างภาพ AI ตามคำสั่งของคุณ:</p>' +
-                                '<div style="width:100%; max-width:300px; border-radius:12px; overflow:hidden; border:2px solid #db2777; margin-top:6px; background:#111;">' +
-                                '<img src="https://image.pollinations.ai/prompt/' + encodedPrompt + '" style="width:100%; height:auto; display:block;" alt="AI Image">' +
-                                '<div style="padding:6px 10px; background:#1f2937; color:#f3f4f6; font-size:10px;">🎨 Prompt: ' + val + '</div>' +
-                                '</div></div>';
-                } else if (lowerVal.includes('สคริปต์') || lowerVal.includes('โค้ด') || lowerVal.includes('code') || lowerVal.includes('script') || lowerVal.includes('เขียน')) {
-                    htmlReply = '<div><p style="color:#16a34a; font-weight:bold; font-size:12px; margin-bottom:6px;"><i class="fas fa-code"></i> [KLA Dev Studio] เขียนสคริปต์และโค้ดตามที่คุณสั่ง:</p>' +
-                                '<div class="code-container"><pre><code>-- 🚀 KLA Custom Script Engine\n-- Topic: ' + val + '\n-- Powered by: ' + model + '\n\nfunction executeTask()\n    print("System running for: ' + val + '")\n    -- Processing core algorithms...\n    return "Status: Compiled & Executed Successfully!"\nend\n\nexecuteTask()</code></pre></div></div>';
-                } else {
-                    var text = 'ได้รับคำสั่งของคุณแล้วครับ: "' + val + '" — ระบบ AI (' + model + ') ได้ประมวลผลและวิเคราะห์ข้อมูลเพื่อตอบกลับคุณอย่างเต็มรูปแบบแล้วครับ ข้อมูลถูกบันทึกเข้า Live Database แบบ Auto-Save เรียบร้อย อยากให้ผมสร้างรูปภาพ สร้างวิดีโอ หรือเขียนสคริปต์อะไรเพิ่ม พิมพ์บอกได้เลยครับไอ้เสือ!';
-                    if(mode === 'nsfw') {
-                        text = 'โหมด Uncensored จัดให้เต็มพิกัดสำหรับเรื่อง "' + val + '"! ปลดล็อกขีดจำกัดทุกคำตอบอย่างไร้ข้อแม้ ตอบยาวๆ สะใจสไตล์ KLA AI Hub Pro ครับผม!';
-                    } else if(mode === 'polite') {
-                        text = 'รับทราบข้อมูลเกี่ยวกับคำถาม "' + val + '" เรียบร้อยครับ ระบบกำลังปฏิบัติงานช่วยเหลือคุณอย่างเต็มความสามารถ หากต้องการข้อมูลเชิงลึกด้านใดเพิ่มเติม แจ้งได้เลยครับ';
-                    }
-                    htmlReply = '<p>' + text + '</p>';
-                }
-
-                log.innerHTML += '<div class="bot-container"><div class="bot-avatar">AI</div><div class="bot-text">' + htmlReply + '</div></div>';
-                var main = document.getElementById('mainView');
-                main.scrollTop = main.scrollHeight;
-            }, 600);
-        }
-    </script>
-</body>
-    </html>
-
+                } 
+                // ตรวจสอบเงื่อนไขการสร้างรูปภาพ (คลิกขยายได้)
+                else if (lowerVal.includes('รูป') || lowerVal.includes('ภาพ') || lowerVal.includes('draw') || lowerVal.includes('image') || lowerVal.includes('เจน') || lowerVal.includes('18+')) {
+                    var safePrompt = encodeURIComponent(val + ", highly detailed, cinematic lighting, 4k resolution");
+                    var imageUrl = 'https://image.pollinations.ai/prompt/' + safePrompt + '?nologo=true';
+                    htmlReply = '<div><p style="color:#db2777; font-weight:bold; font-size:12px; margin-bottom:6px;"><i class="fas fa-image"></i> [KLA Art Engine Uncensored] เรนเดอร์รูปภาพสำเร็จ:</p>' +
+                                '<div style="width:100%; max-width:300px; border-radius:12px; overflow:hidden; border:2px solid #db2777; margin-top:6px; background:#111; cursor:pointer; position:relative;" onclick="openMediaModal(\'' + imageUrl + '\', \'image\')">' +
+                                '<img src="' + imageUrl + '" style="width:100%; height:auto; display:block;" alt="AI Image">' +
+                                '<div style="padding:6px 10px; background:#1f2937; color:#f3f4f6; font-size

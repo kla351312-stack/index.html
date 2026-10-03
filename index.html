@@ -4,8 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Flash-Lite Extension - KLA AI Hub Pro</title>
-    <link rel="stylesheet" href="https://cloudflare.com">
-    <link href="https://googleapis.com" rel="stylesheet">
+    <!-- แก้ไขลิงก์ CDN ที่ถูกต้องและสมบูรณ์ -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Anuphan:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { 
@@ -239,6 +241,7 @@
 </head>
 <body onclick="closeMenuOutside(event)">
 
+    <!-- แผงควบคุมด้านข้าง -->
     <aside id="controlSidebar">
         <div>
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; border-bottom:1px solid #374151; padding-bottom:10px;">
@@ -270,82 +273,112 @@
 
     <div id="menuBackdrop" class="backdrop" onclick="toggleMenu()"></div>
 
+    <!-- แถบเมนูด้านบน -->
     <header>
         <button onclick="toggleMenu()" class="menu-btn" id="burgerButton"><i class="fas fa-bars"></i></button>
-Flash-Lite Exten...
+        <div style="display:flex; align-items:center; gap:4px; cursor:pointer;" onclick="toggleMenu()">
+            <span style="font-size:15px; font-weight:500;">Flash-Lite Exten...</span>
+            <i class="fas fa-chevron-down" style="font-size:10px; color:#6b7280;"></i>
+        </div>
+        <div style="display:flex; align-items:center; gap:8px;">
+            <button onclick="resetChat()" class="action-btn" title="รีเซ็ตแชท"><i class="fa-solid fa-wand-magic-sparkles" style="font-size:14px;"></i></button>
+            <div style="width:32px; height:32px; border-radius:50%; background:#2563eb; color:white; display:flex; align-items:center; justify-content:center; font-size:12px; cursor:pointer;" onclick="toggleMenu()"><i class="fas fa-user"></i></div>
+        </div>
+    </header>
 
+    <!-- พื้นที่แสดงผลหลัก -->
+    <main id="mainView">
+        <div id="welcomeScreen" class="welcome-content">
+            <div class="sparkle-gradient"></div>
+            <h2 style="font-size:24px; font-weight:500;">ถามได้เลย คุณ กล้า</h2>
+        </div>
+        <div id="activeChatLog" class="chat-log"></div>
+    </main>
 
+    <!-- ช่องอินพุตข้อความด้านล่าง -->
+    <footer>
+        <div id="statusIndicator" style="text-align:center; font-size:10px; color:#9ca3af; font-weight:bold; margin-bottom:8px; text-transform:uppercase;">
+            🧠 สมองกลปัจจุบัน: GPT-4O SUPER-REASONING
+        </div>
+        <div class="capsule-box">
+            <button class="input-icon-btn"><i class="fas fa-plus"></i></button>
+            <input type="text" id="chatInputField" placeholder="ถาม Ge..." onkeypress="if(event.key === 'Enter') submitInput()">
+            <div style="display:flex; gap:4px;">
+                <button class="input-icon-btn" onclick="alert('ระบบบันทึกเสียงกำลังทำงาน...')"><i class="fas fa-microphone"></i></button>
+                <button class="input-icon-btn" onclick="submitInput()" style="background:#e0f2fe; color:#0284c7;"><i class="fas fa-wave-square" style="font-size:12px;"></i></button>
+            </div>
+        </div>
+    </footer>
 
+    <!-- ระบบการทำงาน JavaScript ที่ถูกแก้ไขและจัดระเบียบใหม่ให้ถูกต้องสมบูรณ์ -->
+    <script>
+        function toggleMenu() {
+            document.getElementById('controlSidebar').classList.toggle('open');
+            document.getElementById('menuBackdrop').classList.toggle('show');
+        }
 
+        function closeMenuOutside(e) {
+            const sidebar = document.getElementById('controlSidebar');
+            const burger = document.getElementById('burgerButton');
+            if (!sidebar.contains(e.target) && !burger.contains(e.target) && sidebar.classList.contains('open')) {
+                toggleMenu();
+            }
+        }
 
+        function updateStatus() {
+            const selector = document.getElementById('aiModelSelector');
+            document.getElementById('statusIndicator').innerText = `🧠 สมองกลปัจจุบัน: ${selector.options[selector.selectedIndex].text.toUpperCase()}`;
+        }
 
+        function resetChat() {
+            document.getElementById('welcomeScreen').style.display = 'block';
+            const log = document.getElementById('activeChatLog');
+            log.classList.remove('active');
+            log.innerHTML = '';
+        }
 
+        function quickAction(type) {
+            const field = document.getElementById('chatInputField');
+            if(type === 'script') field.value = 'ช่วยเขียนสคริปต์เกม Roblox ฟาร์มเวลอัตโนมัติ';
+            if(type === 'art') field.value = 'ช่วยเจนรูปภาพสาวเซ็กซี่ 18+ แนว Cyberpunk';
+            toggleMenu();
+            field.focus();
+        }
 
-ว่าไงมึง
+        function submitInput() {
+            const input = document.getElementById('chatInputField');
+            const val = input.value.trim();
+            if(!val) return;
 
+            document.getElementById('welcomeScreen').style.display = 'none';
+            const log = document.getElementById('activeChatLog');
+            log.classList.add('active');
 
-🧠 สมองกลปัจจุบัน: GPT-4O SUPER-REASONING
+            log.innerHTML += `<div class="user-bubble"><div class="user-text">${val}</div></div>`;
+            input.value = '';
 
+            setTimeout(() => {
+                let htmlReply = '';
+                const mode = document.getElementById('chatMode').value;
+                const model = document.getElementById('aiModelSelector').options[document.getElementById('aiModelSelector').selectedIndex].text;
 
+                if (val.includes('สคริปต์') || val.includes('โค้ด')) {
+                    htmlReply = `<div><p style="color:#16a34a; font-weight:bold; font-size:12px; margin-bottom:6px;"><i class="fas fa-check-circle"></i> [KLA Dev Studio] เจนสคริปต์ให้มึงตามสั่ง:</p><div class="code-container"><pre><code>-- 🟢 KLA GAME AUTO FARM SCRIPT V4.5\nprint("เปิดทำงานสคริปต์ร่วมกับโมเดล ${model}")\nwhile task.wait(1) do\n    print("กำลังฟาร์มมอนสเตอร์ให้มึงอยู่...")\nend</code></pre></div></div>`;
+                } else if (val.includes('รูป') || val.includes('ภาพ')) {
+                    htmlReply = `<div><p style="color:#db2777; font-weight:bold; font-size:12px; margin-bottom:6px;"><i class="fas fa-image"></i> [KLA Art Engine] ปลดล็อกภาพเรต 18+ ไร้เซ็นเซอร์:</p><div style="width:200px; height:200px; border-radius:12px; overflow:hidden; border:2px solid #db2777; margin-top:6px;"><img src="https://picsum.photos/200/200" style="width:100%; height:100%; object-fit:cover;"></div></div>`;
+                } else {
+                    let text = `เออ พิมพ์เรื่อง "${val}" มาถามกูเรอะ! ประวัติการคุยล็อกบันทึกเข้า Live Database แบบ Auto-Save เรียบร้อย คราวนี้หน้าจอแคปซูลมินิมอลแบบ Gemini คลีนตาสมบูรณ์แบบตรงใจมึงยังล่ะไอ้เสือ!`;
+                    if(mode === 'nsfw') text = `เรื่องลามกเกี่ยวกับ "${val}" นี่ชอบถามจังนะมึง! กูปลดล็อกขุมพลัง Uncensored ตอบกลับมึงยาวๆ แบบเต็มแม็กซ์ ข้อมูลเซฟลงฐานข้อมูลปลอดภัยแน่นอนมึง!`;
+                    if(mode === 'polite') text = `สวัสดีครับ ระบบได้รับคำถามเรื่อง "${val}" เรียบร้อยครับ ปัจจุบันกำลังเร่งประมวลผลข้อมูลร่วมกับฐานข้อมูลกลางอย่างเต็มประสิทธิภาพครับ`;
+                    htmlReply = `<p>${text}</p>`;
+                }
 
+                log.innerHTML += `<div class="bot-container"><div class="bot-avatar">AI</div><div class="bot-text">${htmlReply}</div></div>`;
+                const main = document.getElementById('mainView');
+                main.scrollTop = main.scrollHeight;
+            }, 350);
+        }
+    </script>
+</body>
+    </html>
 
-
-
-
-
-function toggleMenu() {
-document.getElementById('controlSidebar').classList.toggle('open');
-document.getElementById('menuBackdrop').classList.toggle('show');
-}
-function closeMenuOutside(e) {
-const sidebar = document.getElementById('controlSidebar');
-const burger = document.getElementById('burgerButton');
-if (!sidebar.contains(e.target) && !burger.contains(e.target) && sidebar.classList.contains('open')) {
-toggleMenu();
-}
-}
-function updateStatus() {
-const selector = document.getElementById('aiModelSelector');
-document.getElementById('statusIndicator').innerText = 🧠 สมองกลปัจจุบัน: ${selector.options[selector.selectedIndex].text.toUpperCase()};
-}
-function resetChat() {
-document.getElementById('welcomeScreen').style.display = 'block';
-const log = document.getElementById('activeChatLog');
-log.classList.remove('active');
-log.innerHTML = '';
-}
-function quickAction(type) {
-const field = document.getElementById('chatInputField');
-if(type === 'script') field.value = 'ช่วยเขียนสคริปต์เกม Roblox ฟาร์มเวลอัตโนมัติ';
-if(type === 'art') field.value = 'ช่วยเจนรูปภาพสาวเซ็กซี่ 18+ แนว Cyberpunk';
-toggleMenu();
-field.focus();
-}
-function submitInput() {
-const input = document.getElementById('chatInputField');
-const val = input.value.trim();
-if(!val) return;
-document.getElementById('welcomeScreen').style.display = 'none';
-const log = document.getElementById('activeChatLog');
-log.classList.add('active');
-log.innerHTML += <div class="user-bubble"><div class="user-text">${val}</div></div>;
-input.value = '';
-setTimeout(() => {
-let htmlReply = '';
-const mode = document.getElementById('chatMode').value;
-const model = document.getElementById('aiModelSelector').options[document.getElementById('aiModelSelector').selectedIndex].text;
-if (val.includes('สคริปต์') || val.includes('โค้ด')) {
-htmlReply = <div><p style="color:#16a34a; font-weight:bold; font-size:12px; margin-bottom:6px;"><i class="fas fa-check-circle"></i> [KLA Dev Studio] เจนสคริปต์ให้มึงตามสั่ง:</p><div class="code-container"><pre><code>-- 🟢 KLA GAME AUTO FARM SCRIPT V4.5\nprint("เปิดทำงานสคริปต์ร่วมกับโมเดล ${model}")\nwhile task.wait(1) do\n    print("กำลังฟาร์มมอนสเตอร์ให้มึงอยู่...")\nend</code></pre></div></div>;
-} else if (val.includes('รูป') || val.includes('ภาพ')) {
-htmlReply = <div><p style="color:#db2777; font-weight:bold; font-size:12px; margin-bottom:6px;"><i class="fas fa-image"></i> [KLA Art Engine] ปลดล็อกภาพเรต 18+ ไร้เซ็นเซอร์:</p><div style="width:200px; height:200px; border-radius:12px; overflow:hidden; border:2px solid #db2777; margin-top:6px;"><img src="https://unsplash.com" style="width:100%; height:100%; object-fit:cover;"></div></div>;
-} else {
-let text = เออ พิมพ์เรื่อง "${val}" มาถามกูเรอะ! ประวัติการคุยล็อกบันทึกเข้า Live Database แบบ Auto-Save เรียบร้อย คราวนี้หน้าจอแคปซูลมินิมอลแบบ Gemini คลีนตาสมบูรณ์แบบตรงใจมึงยังล่ะไอ้เสือ!;
-if(mode === 'nsfw') text = เรื่องลามกเกี่ยวกับ "${val}" นี่ชอบถามจังนะมึง! กูปลดล็อกขุมพลัง Uncensored ตอบกลับมึงยาวๆ แบบเต็มแม็กซ์ ข้อมูลเซฟลงฐานข้อมูลปลอดภัยแน่นอนมึง!;
-if(mode === 'polite') text = สวัสดีครับ ระบบได้รับคำถามเรื่อง "${val}" เรียบร้อยครับ ปัจจุบันกำลังเร่งประมวลผลข้อมูลร่วมกับฐานข้อมูลกลางอย่างเต็มประสิทธิภาพครับ;
-htmlReply = <p>${text}</p>;
-}
-log.innerHTML += <div class="bot-container"><div class="bot-avatar">AI</div><div class="bot-text">${htmlReply}</div></div>;
-const main = document.getElementById('mainView');
-main.scrollTop = main.scrollHeight;
-}, 350);
-}

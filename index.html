@@ -237,12 +237,12 @@
         }
     </style>
 </head>
-<body onclick="closeMenuOutside(event)">
+<body class="gemini-bg" onclick="closeMenuOutside(event)">
 
     <aside id="controlSidebar">
         <div>
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; border-bottom:1px solid #374151; padding-bottom:10px;">
-                <h2 style="font-size:14px; color:#a3e635;"><i class="fas fa-brain"></i> KLA AI Engine V4.5</h2>
+                <h2 style="font-size:14px; color:#a3e635;"><i class="fas fa-brain"></i> KLA AI Engine V4.6</h2>
                 <button onclick="toggleMenu()" style="background:none; border:none; color:#9ca3af; font-size:18px; cursor:pointer;"><i class="fas fa-times"></i></button>
             </div>
             <label style="font-size:11px; color:#9ca3af; display:block; margin-bottom:6px;">สมองกล AI หลังบ้าน:</label>
@@ -272,7 +272,6 @@
 
     <header>
         <button onclick="toggleMenu()" class="menu-btn" id="burgerButton"><i class="fas fa-bars"></i></button>
-ใช้โค้ดอย่างระมัดระวัง
 Flash-Lite Exten...
 
 
@@ -286,6 +285,7 @@ Flash-Lite Exten...
 
 
 🧠 สมองกลปัจจุบัน: GPT-4O SUPER-REASONING
+
 
 
 
@@ -309,7 +309,7 @@ const selector = document.getElementById('aiModelSelector');
 document.getElementById('statusIndicator').innerText = 🧠 สมองกลปัจจุบัน: ${selector.options[selector.selectedIndex].text.toUpperCase()};
 }
 function resetChat() {
-document.getElementById('welcomeScreen').style.style.display = 'block';
+document.getElementById('welcomeScreen').style.display = 'block';
 const log = document.getElementById('activeChatLog');
 log.classList.remove('active');
 log.innerHTML = '';
@@ -335,7 +335,7 @@ let htmlReply = '';
 const mode = document.getElementById('chatMode').value;
 const model = document.getElementById('aiModelSelector').options[document.getElementById('aiModelSelector').selectedIndex].text;
 if (val.includes('สคริปต์') || val.includes('โค้ด')) {
-htmlReply = <div><p style="color:#16a34a; font-weight:bold; font-size:12px; margin-bottom:6px;"><i class="fas fa-check-circle"></i> [KLA Dev Studio] เจนสคริปต์ให้มึงตามสั่ง:</p><div class="code-container"><pre><code>-- 🟢 KLA GAME AUTO FARM SCRIPT V4.5\nprint("เปิดทำงานสคริปต์ร่วมกับโมเดล ${model}")\nwhile task.wait(1) do\n    print("กำลังฟาร์มมอนสเตอร์ให้มึงอยู่...")\nend</code></pre></div></div>;
+htmlReply = <div><p style="color:#16a34a; font-weight:bold; font-size:12px; margin-bottom:6px;"><i class="fas fa-check-circle"></i> [KLA Dev Studio] เจนสคริปต์ให้มึงตามสั่ง:</p><div class="code-container"><pre><code>-- 🟢 KLA GAME AUTO FARM SCRIPT V4.6\nprint("เปิดทำงานสคริปต์ร่วมกับโมเดล ${model}")\nwhile task.wait(1) do\n    print("กำลังฟาร์มมอนสเตอร์ให้มึงอยู่...")\nend</code></pre></div></div>;
 } else if (val.includes('รูป') || val.includes('ภาพ')) {
 htmlReply = <div><p style="color:#db2777; font-weight:bold; font-size:12px; margin-bottom:6px;"><i class="fas fa-image"></i> [KLA Art Engine] ปลดล็อกภาพเรต 18+ ไร้เซ็นเซอร์:</p><div style="width:200px; height:200px; border-radius:12px; overflow:hidden; border:2px solid #db2777; margin-top:6px;"><img src="https://unsplash.com" style="width:100%; height:100%; object-fit:cover;"></div></div>;
 } else {
@@ -349,3 +349,4 @@ const main = document.getElementById('mainView');
 main.scrollTop = main.scrollHeight;
 }, 350);
 }
+

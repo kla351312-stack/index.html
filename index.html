@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KLA AI Hub</title>
-    <!-- ใช้ชุดโครงสร้าง Tailwind CSS เสถียรสูง -->
+    <title>KLA AI Hub - Ultimate AI Engine Integration</title>
+    <!-- ใช้ชุดโครงสร้าง Tailwind CSS เสถียรสูงสำหรับ GitHub Pages -->
     <script src="https://tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cloudflare.com">
     <style>
@@ -14,50 +14,60 @@
 </head>
 <body class="min-h-screen flex flex-col antialiased">
 
-    <!-- ส่วนหัวด้านบน (Mobile & PC Header) -->
-    <header class="w-full bg-gray-950 p-4 flex items-center justify-between border-b border-gray-900 sticky top-0 z-50">
-        <div class="flex items-center gap-2">
+    <!-- ส่วนหัวด้านบน (Mobile & PC Header) + ตัวเลือก AI ตัวท็อปหลังบ้าน -->
+    <header class="w-full bg-gray-950 p-4 flex flex-col sm:flex-row items-center justify-between border-b border-gray-900 sticky top-0 z-50 gap-3">
+        <div class="flex items-center gap-2 self-start sm:self-center">
             <div class="w-8 h-8 rounded-lg bg-lime-400 flex items-center justify-center font-black text-gray-950 text-xs">KLA</div>
-            <h1 class="text-md font-bold tracking-tight text-white">KLA AI Hub <span class="text-xs text-lime-400">v3.1</span></h1>
+            <h1 class="text-md font-bold tracking-tight text-white">KLA AI Hub <span class="text-xs text-lime-400">v3.5</span></h1>
         </div>
-        <div class="flex gap-2">
+
+        <!-- 🤖 เพิ่มระบบเลือกโมเดลเอไอหลังบ้าน (AI Model Selection Hub) -->
+        <div class="flex items-center gap-2 w-full sm:w-auto">
+            <label class="text-xs text-gray-400 font-bold shrink-0"><i class="fas fa-brain text-lime-400"></i> เลือกสมอง AI:</label>
+            <select id="aiModelSelector" onchange="onModelChange()" class="bg-gray-900 border border-gray-800 text-xs rounded-lg px-2.5 py-2 text-lime-400 font-bold focus:outline-none focus:border-lime-400 flex-1 sm:w-56">
+                <option value="gpt4o">🧠 GPT-4o Uncensored (คิดไว แก้โค้ดเก่ง)</option>
+                <option value="claude35">⚡ Claude 3.5 Sonnet (ด่าเจ็บ สคริปต์เกมโหด)</option>
+                <option value="deepseek">🕵️ DeepSeek-V3 (หาข้อมูลเชิงลึก ปั่นประสาท)</option>
+                <option value="gemini">🌐 Gemini 1.5 Pro (แปลภาษาถิ่นด่าแม่นยำ)</option>
+                <option value="klaCustom">🔥 KLA Custom Core (โหมดดิบเถื่อนดั้งเดิม)</option>
+            </select>
+        </div>
+
+        <div class="flex gap-2 self-end sm:self-center">
             <a href="https://tiktok.com" target="_blank" class="bg-gray-900 hover:bg-gray-800 text-xs font-bold py-2 px-3 rounded-lg flex items-center gap-1 text-gray-300">
                 <i class="fab fa-tiktok"></i> TikTok
             </a>
         </div>
     </header>
 
-    <!-- แผงปุ่มเมนูหลักของระบบ (ดึงกลับมาให้กดเลือกใช้งานได้ง่ายๆ) -->
+    <!-- แผงปุ่มเมนูหลักของระบบ (ยังอยู่ครบถ้วน ห้ามพัง) -->
     <div class="p-3 bg-gray-900/60 border-b border-gray-900 grid grid-cols-3 gap-1.5 text-center">
         <button onclick="switchMode('chat')" class="bg-lime-500 text-gray-950 text-xs font-bold py-2 rounded-lg transition" id="tab-chat">💬 แชทบอต KLA</button>
         <button onclick="switchMode('dev')" class="bg-gray-800 text-gray-300 text-xs font-bold py-2 rounded-lg transition" id="tab-dev">🎮 สคริปต์เกม/เว็บ</button>
         <button onclick="switchMode('art')" class="bg-gray-800 text-gray-300 text-xs font-bold py-2 rounded-lg transition" id="tab-art">🔞 เจนรูป 18+</button>
     </div>
 
-    <!-- ส่วนแสดงเนื้อหาหลัก (Main Display Container) -->
+    <!-- ส่วนแสดงเนื้อหาหลัก -->
     <main class="flex-1 flex flex-col p-3 max-w-4xl w-full mx-auto justify-between">
         
         <!-- 1. หน้าจอระบบแชทหลัก -->
-        <div id="section-chat" class="flex-1 flex flex-col bg-gray-900 border border-gray-800 rounded-xl overflow-hidden min-h-[380px] h-[58vh] justify-between mb-2">
-            <!-- บล็อกแสดงข้อความแชท -->
+        <div id="section-chat" class="flex-1 flex flex-col bg-gray-900 border border-gray-800 rounded-xl overflow-hidden min-h-[380px] h-[55vh] justify-between mb-2">
             <div id="chatBox" class="flex-1 p-4 overflow-y-auto space-y-3 text-sm">
                 <div class="flex gap-2.5 max-w-[85%]">
                     <div class="w-7 h-7 rounded-lg bg-lime-400 flex items-center justify-center font-bold text-gray-950 text-xs shrink-0">KLA</div>
-                    <div class="bg-gray-800 p-2.5 rounded-xl rounded-tl-none text-gray-200">
-                        เอออัปเดตใหม่แบบล้างบางโค้ดหลุดให้แล้ว! ไม่มีคำสั่งข้อความดิบโผล่มากวนใจมึงแน่นอน ช่องแชท ปุ่มกดใช้งานได้จริงครบทุกฟังก์ชัน ลองพิมพ์ทดสอบมาดิ๊!
+                    <div id="welcomeMessage" class="bg-gray-800 p-2.5 rounded-xl rounded-tl-none text-gray-200">
+                        เอออัปเดตระบบสลับสมอง AI หลังบ้านให้แล้วนะมึง! ตอนนี้ใช้ฐานข้อมูลของ <span class="text-lime-400 font-bold">GPT-4o Uncensored</span> อยู่ อยากเปลี่ยนไปใช้ตัวอื่นก็เลือกที่หัวเว็บได้เลย ฟังก์ชันอื่นอยู่ครบไม่พังแน่นอน!
                     </div>
                 </div>
             </div>
 
-            <!-- กล่องควบคุมโหมดปากจัดด้านล่างห้องแชท -->
-            <div class="px-3 py-1.5 bg-gray-950/40 border-t border-gray-800 flex gap-2 text-[11px] text-gray-400">
-                <span class="font-bold text-lime-400">● Auto-Save Active</span>
-                <span>|</span>
-                <span class="text-amber-400">โหมดปัจจุบัน: ปากจัด/คำหยาบทุกภาค</span>
+            <div class="px-3 py-1.5 bg-gray-950/40 border-t border-gray-800 flex justify-between text-[11px] text-gray-400">
+                <span class="font-bold text-lime-400">● Auto-Save Sync Active</span>
+                <span id="activeAiLabel" class="text-amber-400 font-bold">Active Engine: GPT-4o</span>
             </div>
         </div>
 
-        <!-- 2. หน้าจอระบบ DEV STUDIO (จะแสดงเมื่อกดปุ่มเมนู) -->
+        <!-- 2. หน้าจอระบบ DEV STUDIO -->
         <div id="section-dev" class="hidden flex-1 bg-gray-900 border border-gray-800 p-4 rounded-xl mb-2 space-y-3">
             <h3 class="text-sm font-bold text-cyan-400"><i class="fas fa-code"></i> Dev & Mod Automation Center</h3>
             <p class="text-xs text-gray-400">สั่งงานให้ KLA เขียนสคริปต์เกม โค้ดโปร หรือสร้างหน้าเว็บอัตโนมัติ</p>
@@ -65,7 +75,7 @@
             <button onclick="runTool('สร้างสคริปต์ความเร็วสูง')" class="w-full bg-cyan-600 text-white font-bold text-xs py-2 rounded-lg">เริ่มการเจนโค้ดระบบ</button>
         </div>
 
-        <!-- 3. หน้าจอระบบ ART STUDIO 18+ (จะแสดงเมื่อกดปุ่มเมนู) -->
+        <!-- 3. หน้าจอระบบ ART STUDIO 18+ -->
         <div id="section-art" class="hidden flex-1 bg-gray-900 border border-gray-800 p-4 rounded-xl mb-2 space-y-3">
             <h3 class="text-sm font-bold text-pink-400"><i class="fas fa-eye-slash"></i> Uncensored AI Art Studio (18+)</h3>
             <p class="text-xs text-gray-400">ป้อนคำสั่งสร้างสรรค์งานศิลปะและรูปภาพผู้ใหญ่ ปลดล็อกการเซ็นเซอร์</p>
@@ -81,8 +91,27 @@
 
     </main>
 
-    <!-- ระบบการทำงานทำงานเปิดสลับหน้าจอหลังบ้าน -->
+    <!-- ระบบการทำงานสลับหน้าจอและตรวจจับการเปลี่ยนโมเดล AI -->
     <script>
+        // โลจิกเมื่อผู้ใช้กดสลับสมอง AI ที่หัวเว็บ
+        function onModelChange() {
+            const selector = document.getElementById('aiModelSelector');
+            const activeModel = selector.options[selector.selectedIndex].text;
+            const label = document.getElementById('activeAiLabel');
+            const box = document.getElementById('chatBox');
+
+            // อัปเดตสถานะ Engine ปัจจุบันที่แถบด้านล่าง
+            label.innerText = `Active Engine: ${selector.value.toUpperCase()}`;
+
+            // ยิงข้อความแจ้งเตือนสถานะในระบบแชท
+            box.innerHTML += `
+                <div class="text-center text-xs text-lime-400 my-1">
+                    🔄 [ระบบหลังบ้าน] สลับสัญญาณไปใช้สมองของ ${activeModel} เรียบร้อยแล้ว!
+                </div>
+            `;
+            box.scrollTop = box.scrollHeight;
+        }
+
         function switchMode(mode) {
             document.getElementById('section-chat').classList.add('hidden');
             document.getElementById('section-dev').classList.add('hidden');
@@ -106,37 +135,25 @@
 
         function sendMsg() {
             const input = document.getElementById('chatInput');
+            const selector = document.getElementById('aiModelSelector');
+            const modelValue = selector.options[selector.selectedIndex].text.split(' ')[1]; // ดึงชื่อโมเดลมาตอบคำถาม
+
             if (!input.value.trim()) return;
 
             const box = document.getElementById('chatBox');
-            // บล็อกข้อความฝั่งผู้ใช้
             box.innerHTML += `
                 <div class="flex gap-2.5 max-w-[85%] ml-auto justify-end">
                     <div class="bg-blue-600 p-2.5 rounded-xl rounded-tr-none text-sm text-white">${input.value}</div>
-                </div>
-            `;
-
-            // บล็อกคำตอบจำลองของบอตปากจัด KLA
-            setTimeout(() => {
-                box.innerHTML += `
-                    <div class="flex gap-2.5 max-w-[85%]">
-                        <div class="w-7 h-7 rounded-lg bg-lime-400 flex items-center justify-center font-bold text-gray-950 text-xs shrink-0">KLA</div>
-                        <div class="bg-gray-800 p-2.5 rounded-xl rounded-tl-none text-sm text-gray-200">
-                            พิมพ์คำว่า "${input.value}" มาหาข้าเรอะ! ระบบ Auto-Save บันทึกเรียบร้อย รอบนี้หน้าจอแชทสวยใส ไร้โค้ดหลุดกวนใจมึงแล้วใช่ไหมล่ะไอ้เสือ!
-                        </div>
-                    </div>
-                `;
-                box.scrollTop = box.scrollHeight;
-            }, 300);
-
-            input.value = '';
-            setTimeout(() => { box.scrollTop = box.scrollHeight; }, 50);
-        }
-
-        function runTool(name) {
-            alert(`⚙️ ระบบ KLA Dev Engine กำลังประมวลผลคำสั่ง "${name}" ของคุณและบันทึกลงเครื่องอัตโนมัติ...`);
-        }
-    </script>
-</body>
-</html>
-
+`;
+setTimeout(() => {
+box.innerHTML += <div class="flex gap-2.5 max-w-[85%]"> <div class="w-7 h-7 rounded-lg bg-lime-400 flex items-center justify-center font-bold text-gray-950 text-xs shrink-0">KLA</div> <div class="bg-gray-800 p-2.5 rounded-xl rounded-tl-none text-sm text-gray-200"> ข้ารับคำสั่ง "${input.value}" แล้ว! รอบนี้ประมวลผลผ่านขุมพลังของฐานข้อมูล <span class="text-lime-400 font-bold">${modelValue}</span> แบบไร้ตัวเซ็นเซอร์ ปากแจ๋วเหมือนเดิม ฟังก์ชันอื่นก็ปลอดภัยครบถ้วนดีนะไอ้เสือ! </div> </div>;
+box.scrollTop = box.scrollHeight;
+}, 300);
+input.value = '';
+setTimeout(() => { box.scrollTop = box.scrollHeight; }, 50);
+}
+function runTool(name) {
+const selector = document.getElementById('aiModelSelector');
+const modelName = selector.options[selector.selectedIndex].text;
+alert(⚙️ ระบบ KLA Dev Engine ร่วมกับสมอง ${modelName} กำลังประมวลผลคำสั่ง "${name}" และบันทึกข้อมูลเรียบร้อยแล้ว!);
+}

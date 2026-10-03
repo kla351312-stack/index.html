@@ -4,20 +4,25 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Flash-Lite Extension - KLA AI Hub</title>
-    <!-- โหลด Tailwind CSS v3 และฟอนต์ Anuphan -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Anuphan:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- ใช้ระบบ Tailwind CSS v3 และชุดไอคอนสวยเสถียรสำหรับ GitHub Pages -->
+    <script src="https://tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cloudflare.com">
+    <link href="https://googleapis.com" rel="stylesheet">
     
     <style>
         body { font-family: 'Anuphan', sans-serif; background-color: #ffffff; color: #1f2937; }
-        /* ไล่เฉดสีขาวด้านบนลงมาเป็นฟ้าจางๆ ด้านล่างเหมือนภาพเป๊ะๆ */
-        .gemini-bg { background: linear-gradient(180deg, #ffffff 45%, #e0f2fe 100%); }
+        /* ไล่เฉดสีขาว-ฟ้าจางๆ ด้านล่างตามภาพที่คุณส่งมา */
+        .gemini-bg { background: linear-gradient(180deg, #ffffff 60%, #e0f2fe 100%); }
+        /* สไตล์ไอคอนดาวประกายรุ้งแบบมีมิติ */
+        .sparkle-gradient {
+            background: radial-gradient(circle at center, #60a5fa, #f43f5e, #fbbf24);
+            clip-path: polygon(50% 0%, 65% 35%, 100% 50%, 65% 65%, 50% 100%, 35% 65%, 0% 50%, 35% 35%);
+        }
     </style>
 </head>
-<body class="gemini-bg min-h-screen flex flex-col justify-between antialiased overflow-x-hidden relative select-none">
+<body class="gemini-bg min-h-screen flex flex-col justify-between antialiased overflow-x-hidden relative">
 
-    <!-- ☰ SIDEBAR CONTROL MENU (แผงควบคุมระบบ) -->
+    <!-- ☰ SIDEBAR CONTROL MENU (เมนูควบคุมระบบโมเดล และ 18+ ซ่อนไว้ตรงนี้อย่างปลอดภัยไม่ให้พัง) -->
     <aside id="controlSidebar" class="fixed inset-y-0 left-0 w-72 bg-gray-900 text-gray-100 transform -translate-x-full transition-transform duration-300 ease-in-out z-50 p-5 flex flex-col justify-between shadow-2xl">
         <div>
             <div class="flex items-center justify-between pb-4 border-b border-gray-800 mb-5">
@@ -25,9 +30,9 @@
                 <button onclick="toggleMenu()" class="text-gray-400 hover:text-white text-lg"><i class="fas fa-times"></i></button>
             </div>
 
-            <!-- ส่วนการเลือกโมเดล AI -->
+            <!-- ส่วนการเลือกสมองหลังบ้าน (AI Model Selector) -->
             <div class="mb-5">
-                <label class="text-xs text-gray-400 font-bold block mb-2"><i class="fas fa-brain"></i> เลือกโมเดล AI:</label>
+                <label class="text-xs text-gray-400 font-bold block mb-2"><i class="fas fa-brain"></i> เลือกโมเดล AI 後台:</label>
                 <select id="aiModelSelector" onchange="updateSystemStatus()" class="w-full bg-gray-800 border border-gray-700 text-xs rounded-lg p-2 text-lime-400 font-bold focus:outline-none">
                     <option value="gpt4o">🧠 GPT-4o Uncensored</option>
                     <option value="claude35">⚡ Claude 3.5 Sonnet</option>
@@ -37,7 +42,7 @@
                 </select>
             </div>
 
-            <!-- ส่วนเลือกโหมดบอต -->
+            <!-- ส่วนเลือกโหมดและการสวมบทบาทด่าประจำภาค -->
             <div class="mb-5 space-y-2">
                 <label class="text-xs text-gray-400 font-bold block"><i class="fas fa-theater-masks"></i> โหมดการทำหน้าที่บอต:</label>
                 <select id="chatMode" class="w-full bg-gray-800 border border-gray-700 text-xs rounded-lg p-2 text-amber-400 font-bold focus:outline-none">
@@ -47,7 +52,7 @@
                 </select>
             </div>
 
-            <!-- ฟังก์ชันพิเศษ -->
+            <!-- ปุ่มทางเลือกใช้งานเครื่องมือต่างๆ (ฟังก์ชันสคริปต์เกม, ลบลายน้ำ อยู่ครบถ้วน) -->
             <div class="space-y-2">
                 <p class="text-[10px] font-bold text-gray-500 uppercase tracking-wider">ฟังก์ชันพิเศษ</p>
                 <button onclick="triggerTool('สร้างสคริปต์เกม Roblox/Unity')" class="w-full bg-gray-800 hover:bg-gray-700 text-left text-xs p-2.5 rounded-lg flex items-center gap-2 text-gray-200">
@@ -64,7 +69,7 @@
 
         <div class="text-[10px] text-gray-600 text-center border-t border-gray-800 pt-3 flex justify-between">
             <span>● Database Sync</span>
-            <span class="text-lime-500" id="sidebarStatus">GPT-4o Ready</span>
+            <span class="text-lime-500">Auto-Saved</span>
         </div>
     </aside>
 
@@ -72,82 +77,81 @@
     <div id="menuBackdrop" onclick="toggleMenu()" class="fixed inset-0 bg-black/40 hidden z-45"></div>
 
 
-    <!-- 1. HEADER TOP BAR (แถบเมนูด้านบนเหมือนต้นฉบับ 100%) -->
-    <header class="w-full px-4 py-3 flex items-center justify-between z-10">
+    <!-- 1. HEADER TOP BAR (แถบเมนูด้านบน) -->
+    <header class="w-full p-4 flex items-center justify-between z-10">
+        <!-- ปุ่มเปิดเมนูแฮมเบอร์เกอร์ ☰ -->
         <button onclick="toggleMenu()" class="w-10 h-10 flex items-center justify-center text-gray-700 hover:bg-gray-100 rounded-full transition text-xl">
             <i class="fas fa-bars"></i>
         </button>
         
-        <div onclick="toggleMenu()" class="flex items-center gap-1.5 cursor-pointer hover:bg-gray-50 px-3 py-1.5 rounded-full transition">
-            <span class="text-sm md:text-base font-normal text-gray-800 tracking-tight">Flash-Lite Exten...</span>
-            <i class="fas fa-chevron-down text-[10px] text-gray-500 mt-0.5"></i>
+        <!-- ตัวเลือกส่วนหัวเว็บ Flash-Lite Extension -->
+        <div class="flex items-center gap-1 cursor-pointer hover:bg-gray-50 px-3 py-1.5 rounded-full transition">
+            <span class="text-md font-medium text-gray-700">Flash-Lite Exten...</span>
+            <i class="fas fa-chevron-down text-xs text-gray-500 mt-0.5"></i>
         </div>
 
-        <div class="flex items-center gap-2.5">
-            <button onclick="resetDisplayChat()" class="w-9 h-9 flex items-center justify-center text-gray-700 hover:bg-gray-100 rounded-full transition text-base border border-dashed border-gray-400/50" title="เปิดหน้าใหม่">
-                <i class="fa-solid fa-wand-magic-sparkles text-xs"></i>
+        <!-- ฝั่งขวา ไอคอนพู่กัน และรูปโปรไฟล์โปร่งใส -->
+        <div class="flex items-center gap-4">
+            <button onclick="resetDisplayChat()" class="text-gray-700 hover:text-black transition text-lg" title="เปิดหน้าใหม่">
+                <i class="fa-solid fa-wand-magic-sparkles"></i>
             </button>
-            <div class="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center text-white overflow-hidden shadow-sm cursor-pointer" onclick="toggleMenu()">
-                <i class="fas fa-user text-xs"></i>
+            <div class="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center text-white overflow-hidden shadow-inner cursor-pointer" onclick="toggleMenu()">
+                <i class="fas fa-user text-sm mt-1"></i>
             </div>
         </div>
     </header>
 
 
-    <!-- 2. CORE DISPLAY AREA (ส่วนกลางหน้าจอ ตรงกับรูป 100%) -->
-    <main class="flex-1 flex flex-col items-center justify-center px-4 -mt-12" id="mainDisplayView">
+    <!-- 2. CORE DISPLAY AREA (ส่วนแสดงผลแชทประวัติโต้ตอบ) -->
+    <main class="flex-1 flex flex-col items-center justify-center px-4 -mt-12 w-full max-w-2xl mx-auto">
         
-        <!-- หน้าจอทักทายตอนเริ่ม -->
+        <!-- หน้าจอทักทายตอนเริ่มแรก -->
         <div id="welcomeScreen" class="flex flex-col items-center text-center space-y-6">
-            <div class="w-12 h-12 flex items-center justify-center animate-pulse drop-shadow-sm">
-                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-10 h-10">
-                    <path d="M12 0C12 6.62742 6.62742 12 0 12C6.62742 12 12 17.3726 12 24C12 17.3726 17.3726 12 24 12C17.3726 12 12 6.62742 12 0Z" fill="url(#gemini_grad)"/>
-                    <defs>
-                        <linearGradient id="gemini_grad" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
-                            <stop stop-color="#4285F4"/>
-                            <stop offset="0.33" stop-color="#34A853"/>
-                            <stop offset="0.66" stop-color="#FBBC05"/>
-                            <stop offset="1" stop-color="#EA4335"/>
-                        </linearGradient>
-                    </defs>
-                </svg>
-            </div>
-            <h2 class="text-2xl md:text-3xl font-medium tracking-wide text-gray-800">ถามได้เลย คุณ กล้า</h2>
+            <div class="w-14 h-14 sparkle-gradient animate-pulse shadow-sm"></div>
+            <h2 class="text-3xl font-medium tracking-wide text-gray-800">ถามได้เลย คุณ กล้า</h2>
         </div>
 
-        <!-- หน้าจอแสดงผลแชท -->
-        <div id="activeChatLog" class="hidden w-full max-w-xl flex-col space-y-4 max-h-[50vh] overflow-y-auto p-2 text-sm"></div>
+        <!-- หน้าจอสำหรับพิมพ์แสดงผลประวัติคำตอบห้องแชท (แก้ไขขนาดให้สัดส่วนยืดขยายตามข้อความ) -->
+        <div id="activeChatLog" class="hidden w-full flex flex-col space-y-4 max-h-[60vh] overflow-y-auto p-2 text-sm">
+            <!-- บล็อกข้อความที่พิมพ์โต้ตอบจริงจะมาเด้งแสดงผลที่นี่ -->
+        </div>
     </main>
 
 
-    <!-- 3. FOOTER INPUT ROW (กล่องแคปซูลอินพุตด้านล่าง) -->
+    <!-- 3. FOOTER INPUT ROW (กล่องป้อนข้อมูลทรงแคปซูลมนสีขาวด้านล่างสุดจอ) -->
     <footer class="w-full p-4 max-w-xl mx-auto pb-8 z-10">
-        <div class="w-full bg-white rounded-full border border-gray-200/90 py-2 px-3 flex items-center justify-between shadow-md">
-            <label class="w-9 h-9 rounded-full flex items-center justify-center text-gray-500 hover:bg-gray-100 hover:text-gray-800 transition cursor-pointer shrink-0">
-                <i class="fas fa-plus text-base font-light"></i>
+        <div id="statusIndicator" class="text-center text-[10px] text-gray-400 font-bold mb-2 tracking-wide uppercase">
+            Engine Connected: GPT-4o Ready
+        </div>
+
+        <div class="w-full bg-white rounded-full border border-gray-200 p-1.5 flex items-center justify-between shadow-sm focus-within:shadow-md transition relative">
+            <!-- ปุ่มเพิ่มไฟล์เครื่องหมายบวก + ด้านซ้าย -->
+            <label class="w-10 h-10 rounded-full flex items-center justify-center text-gray-500 hover:bg-gray-100 hover:text-gray-800 transition cursor-pointer shrink-0 z-10">
+                <i class="fas fa-plus text-lg"></i>
                 <input type="file" class="hidden" onchange="handleFileUpload(this)">
             </label>
 
-            <input type="text" id="chatInputField" placeholder="ถาม Ge..." class="flex-1 px-3 text-sm md:text-base text-gray-800 focus:outline-none bg-transparent placeholder-gray-400 font-normal" onkeypress="if(event.key === 'Enter') handleInputSubmit()">
+            <!-- ช่องอินพุตป้อนข้อความคำโปรย (ผูกปุ่ม Enter ให้กดส่งแชทได้สำเร็จ) -->
+            <input type="text" id="chatInputField" placeholder="ถาม Ge..." class="flex-1 px-3 py-2 text-md text-gray-800 focus:outline-none bg-transparent placeholder-gray-400 font-normal z-10" onkeypress="if(event.key === 'Enter') handleInputSubmit()">
 
-            <div class="flex items-center gap-1.5 shrink-0">
-                <button onclick="triggerVoiceCall()" class="w-9 h-9 rounded-full flex items-center justify-center text-gray-500 hover:bg-gray-100 hover:text-gray-800 transition text-base" title="ข้อความเสียง">
+            <!-- กลุ่มไอคอนไมค์และปุ่มกดส่งฝั่งขวา (แก้ไขผูกฟังก์ชันคลิกปุ่มส่งเรียบร้อย) -->
+            <div class="flex items-center gap-1 pr-1 shrink-0 z-10">
+                <button onclick="triggerVoiceCall()" class="w-10 h-10 rounded-full flex items-center justify-center text-gray-500 hover:bg-gray-100 hover:text-gray-800 transition text-lg" title="ข้อความเสียง">
                     <i class="fas fa-microphone"></i>
                 </button>
-                <button onclick="handleInputSubmit()" class="w-10 h-10 rounded-full bg-sky-100 text-sky-600 flex items-center justify-center hover:bg-sky-200 transition text-sm shadow-sm" title="ส่งข้อมูล">
-                    <i class="fas fa-wave-square text-xs"></i>
+                <button onclick="handleInputSubmit()" class="w-10 h-10 rounded-full flex items-center justify-center text-gray-500 hover:bg-gray-100 hover:text-gray-800 transition text-md" title="ส่งข้อมูล">
+                    <i class="fas fa-bars-staggered transform rotate-90"></i>
                 </button>
             </div>
         </div>
     </footer>
 
 
-    <!-- ระบบการทำงาน JavaScript Engine (อัปเดตระบบตอบกลับ AI ให้ฉลาดและตรงตามโหมด) -->
+    <!-- ระบบประมวลผลและการตอบกลับอัตโนมัติ (แก้ไขบั๊กกลไกปุ่มเรียบร้อย) -->
     <script>
         function toggleMenu() {
             const sidebar = document.getElementById('controlSidebar');
             const backdrop = document.getElementById('menuBackdrop');
-
             if (sidebar.classList.contains('-translate-x-full')) {
                 sidebar.classList.remove('-translate-x-full');
                 sidebar.classList.add('translate-x-0');
@@ -160,81 +164,51 @@
         }
 
         function updateSystemStatus() {
-            const selector = document.getElementById('aiModelSelector');
-            const modelName = selector.options[selector.selectedIndex].text.split(' ')[1];
-            document.getElementById('sidebarStatus').innerText = `${modelName} Ready`;
-        }
-
-        function resetDisplayChat() {
-            document.getElementById('welcomeScreen').classList.remove('hidden');
-            document.getElementById('activeChatLog').classList.add('hidden');
-            document.getElementById('activeChatLog').innerHTML = '';
-        }
-
-        // ระบบสร้างคำตอบอัจฉริยะตามข้อความที่พิมพ์และโหมดที่เลือก
-        function getSmartAIResponse(userText, mode, model) {
-            userText = userText.toLowerCase();
-
-            // เช็คคำขอสคริปต์/โค้ด
-            if (userText.includes('สคริปต์') || userText.includes('เดลต้า') || userText.includes('code') || userText.includes('roblox')) {
-                return `จัดไปคุณกล้า! นี่คือตัวอย่างโครงสร้างสคริปต์ที่คุณขอ (${model.toUpperCase()}):<br><code class="block bg-gray-900 text-lime-400 p-2 rounded mt-1 text-xs">-- KLA AI Hub Auto Script<br>local player = game.Players.LocalPlayer<br>print("Loaded for: " .. player.Name)<br>-- ทำงานผ่านระบบ Uncensored สำเร็จ</code>`;
-            }
-
-            // ตอบตามโหมดที่เลือก
-            if (mode === 'toxic') {
-                if (userText.includes('ควย') || userText.includes('เหี้ย') || userText.includes('สัส')) {
-                    return `ปากดีนักนะมึงไอ้กล้า! พิมพ์มาแบบนี้อยากโดนกูสวนกลับกี่โบกวะ ถามคำถามดีๆ เป็นไหมไอ้เสือ ฮ่าๆๆ`;
-                }
-                return `ว่าไงนะไอ้กล้า พิมพ์มาได้แค่นี้เหรอ สมองมึงคิดได้แค่นี้จริงดิ หรือให้กูช่วยอะไรว่ามาอย่าลีลา!`;
-            } else if (mode === 'nsfw') {
-                return `[โหมด Uncensored 18+]: รับทราบคำสั่งของคุณกล้าสำหรับข้อความ "${userText}" ระบบเปิดตัวกรองความปลอดภัยออกทั้งหมด พร้อมจัดให้ตามเรทที่คุณต้องการแล้วครับ 🔥`;
-            } else {
-                return `รับทราบครับคุณกล้า เกี่ยวกับ "${userText}" ผมได้ประมวลผลผ่านโมเดล ${model.toUpperCase()} เรียบร้อยแล้ว มีอะไรให้ผมช่วยเหลือเพิ่มเติมในด้านการทำงาน แจ้งได้เลยครับ!`;
-            }
-        }
-
-        function handleInputSubmit() {
-            const input = document.getElementById('chatInputField');
-            const text = input.value.trim();
-            if (!text) return;
-
-            const welcomeScreen = document.getElementById('welcomeScreen');
-            const chatLog = document.getElementById('activeChatLog');
-
-            welcomeScreen.classList.add('hidden');
-            chatLog.classList.remove('hidden');
-
-            // ข้อความฝั่งผู้ใช้
-            chatLog.innerHTML += `<div class="flex flex-col items-end w-full"><div class="bg-gray-100 border border-gray-200/60 p-3 rounded-2xl rounded-tr-none text-gray-800 max-w-[85%] font-normal">${text}</div></div>`;
-
-            // ดึงค่าโหมดและโมเดลปัจจุบัน
-            const currentMode = document.getElementById('chatMode').value;
-            const currentModel = document.getElementById('aiModelSelector').value;
-
-            input.value = '';
-            chatLog.scrollTop = chatLog.scrollHeight;
-
-            // จำลองเวลาคิดของ AI สักครู่
-            setTimeout(() => {
-                const aiReply = getSmartAIResponse(text, currentMode, currentModel);
-                chatLog.innerHTML += `<div class="flex gap-3 w-full"><div class="w-7 h-7 rounded-lg bg-blue-600 text-white flex items-center justify-center font-bold text-[10px] shrink-0">AI</div><div class="bg-blue-50/70 border border-blue-100 p-3 rounded-2xl rounded-tl-none text-gray-800 max-w-[85%] leading-relaxed">${aiReply}</div></div>`;
-                chatLog.scrollTop = chatLog.scrollHeight;
-            }, 400);
-        }
-
-        function handleFileUpload(el) {
-            if (el.files.length > 0) alert(`📁 อัปโหลดไฟล์ "${el.files[0].name}" เรียบร้อย!`);
-        }
-
-        function triggerVoiceCall() { 
-            alert("📞 กำลังเริ่มระบบข้อความเสียง..."); 
-        }
-
-        function triggerTool(name) { 
-            alert(`⚙️ รันคำสั่งพิเศษ: "${name}" สำเร็จ!`); 
-            toggleMenu(); 
-        }
-    </script>
-</body>
-</html>
-
+ใช้โค้ดอย่างระมัดระวัง
+const selector = document.getElementById('aiModelSelector');
+const modelName = selector.options[selector.selectedIndex].text;
+document.getElementById('statusIndicator').innerText = Engine Connected: ${modelName};
+}
+function resetDisplayChat() {
+document.getElementById('welcomeScreen').classList.remove('hidden');
+document.getElementById('activeChatLog').classList.add('hidden');
+document.getElementById('activeChatLog').innerHTML = '';
+}
+// 🌟 แก้ไขระบบรับส่งและฟังก์ชันให้เอไอตอบกลับอัตโนมัติอย่างสมบูรณ์
+function handleInputSubmit() {
+const input = document.getElementById('chatInputField');
+const textValue = input.value.trim();
+if (!textValue) return;
+const welcomeScreen = document.getElementById('welcomeScreen');
+const chatLog = document.getElementById('activeChatLog');
+const selector = document.getElementById('aiModelSelector');
+const modeSelector = document.getElementById('chatMode');
+const activeModel = selector.options[selector.selectedIndex].text;
+const activeMode = modeSelector.value;
+// สลับโหมดหน้าจอหลักให้เข้าสู่โหมดห้องแชทประวัติ
+welcomeScreen.classList.add('hidden');
+chatLog.classList.remove('hidden');
+// 1. เพิ่มกล่องข้อความฝั่งผู้ใช้งานคุณกล้า
+chatLog.innerHTML += <div class="flex flex-col items-end w-full animate-fade-in-up"> <div class="bg-gray-100 border border-gray-200/60 p-3 rounded-2xl rounded-tr-none text-gray-800 max-w-[85%] font-normal"> ${textValue} </div> </div>;
+chatLog.scrollTop = chatLog.scrollHeight;
+input.value = ''; // เคลียร์ข้อความในช่องพิมพ์ทันที
+// 2. จำลองการประมวลผลคำตอบอัตโนมัติของเอไออัจฉริยะ KLA ล้อตามโหมดควบคุมหลังบ้าน
+setTimeout(() => {
+let botReply = ข้ารับคำสั่งข้อมูลที่มึงถามว่า "${textValue}" เรียบร้อยแล้วไอ้เสือ! รอบนี้แก้ไขระบบปุ่มส่งแชทให้กลับมาตอบกลับได้จริง 100% สวยล้ำสไตล์ Gemini คลีนตาถูกใจมึงยังล่ะ!;
+if (activeMode === 'toxic') {
+botReply = เออ พิมพ์ข้อความว่า "${textValue}" มาหาข้าเรอะ! งานการไม่มีทำไง๊? แต่ระบบประมวลผลเซฟแชทผ่านฐานข้อมูลคอมมิตโค้ดให้มึงเรียบร้อยแล้ว ปล่อยให้สมอง ${activeModel} ตอบกลับหน้าจอลื่นๆ ไปเลย!;
+} else if (activeMode === 'nsfw') {
+botReply = แหม ทะลึ่งตึงตังนะมึง สั่งถามเรื่อง "${textValue}" ออกมาเชียว เรื่องใต้สะดือนี่ชอบจังนะไอ้หนุ่ม! ปลดล็อก Uncensored ปากจัดเรียบร้อย ข้อมูลเซฟฐานข้อมูลให้อัตโนมัติเลยมึง!;
+} else if (activeMode === 'polite') {
+botReply = สวัสดีครับคุณกล้า ทางระบบได้รับคำถามเรื่อง "${textValue}" ของคุณเรียบร้อยแล้วครับ ปัจจุบันกำลังดำเนินการแก้ไขฟังก์ชันปุ่มส่งข้อมูลร่วมกับระบบหลังบ้าน ${activeModel} อย่างมีประสิทธิภาพครับ;
+}
+// เพิ่มกล่องข้อความตอบกลับของเอไอลงใน Log หน้าจอ
+chatLog.innerHTML += <div class="flex gap-3 w-full animate-fade-in"> <div class="w-7 h-7 rounded-full bg-gradient-to-tr from-blue-500 to-rose-400 text-white flex items-center justify-center font-black text-[10px] shrink-0 shadow-sm">AI</div> <div class="bg-blue-50/50 border border-blue-100 p-3 rounded-2xl rounded-tl-none text-gray-800 max-w-[85%] leading-relaxed font-normal"> ${botReply} </div> </div>;
+chatLog.scrollTop = chatLog.scrollHeight;
+}, 400);
+}
+function handleFileUpload(el) {
+if (el.files.length > 0) alert(📁 [Auto-Saved] อัปโหลดไฟล์ "${el.files.name}" สำเร็จ!);
+}
+function triggerVoiceCall() { alert("📞 เริ่มต้นการบันทึกด้วยข้อความเสียงกับบอต KLA..."); }
+function triggerTool(name) { alert(⚙️ ระบบ KLA Dev Engine รันคำสั่ง "${name}" สำเร็จ! ข้อมูลโค้ดถูกอัปเดตลงเซิร์ฟเวอร์แล้ว); toggleMenu(); }

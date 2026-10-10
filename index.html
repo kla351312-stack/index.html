@@ -1,190 +1,53 @@
-# ==========================================
-# 1. ส่วนคำสั่งติดตั้งระบบ (สำหรับรันใน Terminal)
-# ==========================================
-# ก่อนรันโค้ดนี้ ให้พิมพ์คำสั่งเหล่านี้ใน Terminal ของ GCP เพื่อเตรียมระบบ:
-#   sudo apt update && sudo apt install -y adb android-tools-adb python3-pip
-#   pip install fastapi uvicorn websockets pure-python-adb
-#   adb start-server
-#   python3 app.py
-# ==========================================
+// ==UserScript==
+// @name         BluezyGPT เปลี่ยนชื่อและโลโก้เป็น KLA
+// @namespace    http://tampermonkey.net
+// @version      1.1
+// @description  เปลี่ยนข้อความ BluezyGPT เป็น KLA และเปลี่ยนรูปโลโก้หน้าเว็บ
+// @author       You
+// @match        https://bluezygpt.space*
+// @grant        none
+// @run-at       document-end
+// ==/UserScript==
 
-import os
-import json
-import base64
-import asyncio
-from fastapi import FastAPI, WebSocket
-from fastapi.responses import HTMLResponse
-from ppadb.client import Client as AdbClient
+(function() {
+    'use strict';
 
-app = FastAPI()
-
-# ----------------------------------------------------
-# ⚙️ CONFIGURATION (ตั้งค่าการเชื่อมต่อ)
-# ----------------------------------------------------
-# IP ภายในเครื่อง Server (หาก Android Emulator รันอยู่บนเครื่องเดียวกัน)
-CLOUD_PHONE_IP = "127.0.0.1"  
-CLOUD_PHONE_PORT = 5555
-
-SCREEN_WIDTH = 1080   # ความละเอียดหน้าจอแนวนอนของมือถือคลาวด์
-SCREEN_HEIGHT = 1920  # ความละเอียดหน้าจอแนวตั้งของมือถือคลาวด์
-
-def connect_adb_device():
-    """ฟังก์ชันเชื่อมต่อไปยังเครื่อง Cloud Phone ผ่าน ADB"""
-    client = AdbClient(host="127.0.0.1", port=5037)
-    try:
-        client.remote_connect(CLOUD_PHONE_IP, CLOUD_PHONE_PORT)
-        device = client.device(f"{CLOUD_PHONE_IP}:{CLOUD_PHONE_PORT}")
-        return device
-    except Exception as e:
-        print(f"🚨 ADB Connection Error: {e}")
-        return None
-
-# ----------------------------------------------------
-# 📱 FRONTEND UI (หน้าจอควบคุม - รวมอยู่ในนี้เลย)
-# ----------------------------------------------------
-HTML_CONTENT = """
-<!DOCTYPE html>
-<html lang="th">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GCP Cloud Phone Controller</title>
-    <style>
-        body { font-family: sans-serif; background-color: #1e1e24; color: #fff; text-align: center; margin: 0; padding: 20px; }
-        .container { display: flex; flex-direction: column; align-items: center; justify-content: center; margin-top: 10px; }
-        #phone-wrapper { position: relative; width: 360px; height: 640px; border: 8px solid #333; border-radius: 20px; background-color: #000; overflow: hidden; box-shadow: 0 10px 25px rgba(0,0,0,0.5); }
-        #screen-view { width: 100%; height: 100%; object-fit: contain; cursor: crosshair; user-select: none; -webkit-user-drag: none; }
-        .controls { margin-top: 15px; display: flex; gap: 10px; }
-        button { padding: 10px 20px; font-size: 14px; font-weight: bold; color: white; background-color: #3b82f6; border: none; border-radius: 5px; cursor: pointer; }
-        button:hover { background-color: #2563eb; }
-        #status { font-weight: bold; }
-    </style>
-</head>
-<body>
-
-    <h1>☁️ GCP Cloud Phone Panel</h1>
-    <div>สถานะระบบ: <span id="status" style="color: #f59e0b;">กำลังเชื่อมต่อสัญญาณ...</span></div>
-
-    <div class="container">
-        <div id="phone-wrapper">
-            <img id="screen-view" src="" alt="กำลังโหลดสตรีมภาพจากคลาวด์...">
-        </div>
-
-        <div class="controls">
-            <button id="btn-back">⬅️ Back</button>
-            <button id="btn-home">⭕ Home</button>
-            <button id="btn-menu">📋 Menu</button>
-        </div>
-    </div>
-
-    <script>
-        // เชื่อมต่อระบบสื่อสารแบบ Real-time ตาม IP ของ Google Cloud โดยอัตโนมัติ
-        const protocol = window.location.protocol === "https:" ? "wss:" : "ws:";
-        const wsUrl = `${protocol}//${window.location.host}/ws/stream`;
-        const ws = new WebSocket(wsUrl);
-
-        const screenView = document.getElementById('screen-view');
-        const statusText = document.getElementById('status');
-
-        ws.onopen = () => { 
-            statusText.innerText = "เชื่อมต่อสำเร็จ (ออนไลน์)"; 
-            statusText.style.color = "#10b981";
-        };
-        ws.onclose = () => { 
-            statusText.innerText = "การเชื่อมต่อขาดหาย"; 
-            statusText.style.color = "#ef4444";
-        };
-
-        // 1. รับภาพสตรีมหน้าจอมาแสดงผล
-        ws.onmessage = (event) => {
-            if (typeof event.data === "string" && event.data.startsWith("data:image")) {
-                screenView.src = event.data;
+    // 1. ฟังก์ชันสำหรับเปลี่ยนข้อความบนหน้าจอ
+    function renameText() {
+        const elements = document.querySelectorAll('body *:not(script):not(style)');
+        elements.forEach(element => {
+            if (element.children.length === 0 && element.textContent.includes('BluezyGPT')) {
+                element.textContent = element.textContent.replace(/BluezyGPT/g, 'KLA');
             }
-        };
-
-        // 2. ฟังก์ชันส่งคำสั่งควบคุมไปยัง Backend
-        function sendCommand(payload) {
-            if (ws.readyState === WebSocket.OPEN) {
-                ws.send(JSON.stringify(payload));
-            }
-        }
-
-        // 3. ดักจับการคลิกเมาส์บนหน้าจอแล้วส่งพิกัดไปที่มือถือ
-        screenView.addEventListener('mousedown', (e) => {
-            const rect = screenView.getBoundingClientRect();
-            const clickX = (e.clientX - rect.left) / rect.width;
-            const clickY = (e.clientY - rect.top) / rect.height;
-
-            sendCommand({
-                action: "tap",
-                x_percent: clickX,
-                y_percent: clickY
-            });
         });
+    }
 
-        // 4. ปุ่มควบคุมมาตรฐาน Android
-        document.getElementById('btn-back').onclick = () => sendCommand({ action: "keyevent", code: 4 });
-        document.getElementById('btn-home').onclick = () => sendCommand({ action: "keyevent", code: 3 });
-        document.getElementById('btn-menu').onclick = () => sendCommand({ action: "keyevent", code: 187 });
-    </script>
-</body>
-</html>
-"""
+    // 2. ฟังก์ชันสำหรับเปลี่ยนรูปภาพโลโก้หน้าเว็บ
+    function replaceLogo() {
+        // ใส่ลิงก์ URL รูปภาพโลโก้ KLA ของคุณในช่องเครื่องหมายคำพูดด้านล่างนี้
+        const newLogoUrl = "วาง_ลิงก์_URL_รูปภาพโลโก้ตรงนี้"; 
 
-@app.get("/", response_class=HTMLResponse)
-async def get_index():
-    """ส่งหน้าจอควบคุมหลักให้ผู้ใช้งาน"""
-    return HTML_CONTENT
+        // ค้นหารูปภาพโลโก้เดิมบนหน้าเว็บ (สแกนหาแท็ก img ทั้งหมด)
+        const images = document.querySelectorAll('img');
+        images.forEach(img => {
+            // ดักจับจากชื่อไฟล์เดิม หรือ คลาสที่เกี่ยวกับ logo (ปรับแต่งเพิ่มเติมได้ตามโครงสร้างหน้าเว็บจริง)
+            if (img.src.includes('logo') || img.alt.includes('logo') || img.className.includes('logo')) {
+                img.src = newLogoUrl;
+            }
+        });
+    }
 
-# ----------------------------------------------------
-# ⚙️ BACKEND CORE (ระบบประมวลผลคำสั่งและจัดการวิดีโอ)
-# ----------------------------------------------------
-@app.websocket("/ws/stream")
-async def websocket_stream_endpoint(websocket: WebSocket):
-    await websocket.accept()
-    device = connect_adb_device()
-    
-    if not device:
-        print("🚨 คำเตือน: ยังไม่ได้เปิดเครื่องจำลอง Android หรือต่อ ADB ไม่ติด")
-        
-    # ระบบส่งภาพหน้าจอ (สตรีมมิงออกจากเซิร์ฟเวอร์ GCP)
-    async def capture_loop():
-        try:
-            while True:
-                if device:
-                    screenshot_bytes = device.screencap()
-                    base64_image = base64.b64encode(screenshot_bytes).decode('utf-8')
-                    await websocket.send_text(f"data:image/png;base64,{base64_image}")
-                await asyncio.sleep(0.07) # สตรีมเฟรมเรตคงที่
-        except Exception as e:
-            print(f"การสตรีมภาพหยุดทำงาน: {e}")
+    // รวมฟังก์ชันการทำงานทั้งหมด
+    function runKLAChanges() {
+        renameText();
+        replaceLogo();
+    }
 
-    # ระบบรับคำสั่งคลิก/กดปุ่ม จากหน้าเว็บไปกดบนมือถือจริง
-    async def command_loop():
-        try:
-            while True:
-                data = await websocket.receive_text()
-                command = json.loads(data)
-                
-                if not device:
-                    continue
-                
-                if command["action"] == "tap":
-                    real_x = int(command["x_percent"] * SCREEN_WIDTH)
-                    real_y = int(command["y_percent"] * SCREEN_HEIGHT)
-                    device.shell(f"input tap {real_x} {real_y}")
-                
-                elif command["action"] == "keyevent":
-                    key_code = command["code"]
-                    device.shell(f"input keyevent {key_code}")
-        except Exception as e:
-            print(f"ระบบสั่งการหยุดทำงาน: {e}")
+    // สั่งให้รันครั้งแรกเมื่อโหลดหน้าเว็บ
+    runKLAChanges();
 
-    # รันทั้งสองระบบพร้อมกันแบบคู่ขนาน
-    await asyncio.gather(capture_loop(), command_loop())
-
-if __name__ == "__main__":
-    import uvicorn
-    # เปิดบริการที่พอร์ต 80 เพื่อให้พิมพ์แค่ IP ของ Google Cloud บนเว็บแล้วเข้าได้ทันที
-    uvicorn.run(app, host="0.0.0.0", port=80)
+    // ติดตามตรวจสอบการเปลี่ยนแปลงของหน้าเว็บแบบ Dynamic
+    const observer = new MutationObserver(runKLAChanges);
+    observer.observe(document.body, { childList: true, subtree: true });
+})();
 

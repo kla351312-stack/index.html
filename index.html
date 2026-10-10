@@ -6,62 +6,114 @@
     <title>KLA - แพลตฟอร์ม AI อัจฉริยะ</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        body { background-color: #131314; color: #e3e3e3; display: flex; height: 100vh; }
+        body { background-color: #131314; color: #e3e3e3; display: flex; height: 100vh; overflow: hidden; flex-direction: row; }
         
-        /* แถบเมนูด้านซ้าย */
-        .sidebar { width: 260px; background-color: #0f0f10; padding: 20px; display: flex; flex-direction: column; gap: 20px; border-right: 1px solid #282829; }
+        /* แถบเมนูด้านซ้าย (สำหรับคอมพิวเตอร์) */
+        .sidebar { width: 280px; background-color: #0f0f10; padding: 20px; display: flex; flex-direction: column; gap: 20px; border-right: 1px solid #282829; flex-shrink: 0; }
         .logo-container { display: flex; align-items: center; gap: 12px; padding: 5px; }
-        .logo-img { width: 40px; height: 40px; border-radius: 50%; border: 2px solid #ff4a7d; }
-        .brand-name { font-size: 20px; font-weight: bold; color: #fff; letter-spacing: 1px; }
-        .new-chat-btn { background-color: #1a1a1c; border: 1px solid #424244; color: #fff; padding: 12px; border-radius: 8px; cursor: pointer; text-align: left; transition: 0.3s; }
+        .logo-img { width: 45px; height: 45px; border-radius: 12px; border: 1px solid #ff4a7d; object-fit: cover; }
+        .brand-name { font-size: 22px; font-weight: bold; color: #fff; letter-spacing: 1px; }
+        .new-chat-btn { background-color: #1a1a1c; border: 1px solid #424244; color: #fff; padding: 14px; border-radius: 8px; cursor: pointer; text-align: left; font-size: 15px; transition: 0.3s; width: 100%; }
         .new-chat-btn:hover { background-color: #2b2b2e; }
 
+        /* ตัวเลือกโมเดล */
+        .model-select-group { display: flex; flex-direction: column; gap: 8px; }
+        .model-label { font-size: 11px; color: #aaa; text-transform: uppercase; letter-spacing: 0.5px; }
+        .model-select { background-color: #1a1a1c; color: white; border: 1px solid #424244; padding: 12px; border-radius: 8px; outline: none; cursor: pointer; width: 100%; font-size: 14px; }
+
         /* พื้นที่แชทหลัก */
-        .chat-area { flex: 1; display: flex; flex-direction: column; justify-content: space-between; position: relative; }
-        .chat-header { padding: 20px; border-bottom: 1px solid #282829; text-align: center; font-size: 18px; color: #aaa; }
+        .chat-area { flex: 1; display: flex; flex-direction: column; justify-content: space-between; position: relative; height: 100%; background-color: #131314; }
+        .chat-header { padding: 18px; border-bottom: 1px solid #282829; text-align: center; font-size: 15px; color: #aaa; background-color: #131314; }
         
         /* ส่วนแสดงกล่องข้อความ */
-        .messages-container { flex: 1; overflow-y: auto; padding: 40px 20% 100px 20%; display: flex; flex-direction: column; gap: 24px; }
-        .welcome-screen { text-align: center; margin-top: 10vh; display: flex; flex-direction: column; align-items: center; gap: 15px; }
-        .welcome-logo { width: 100px; height: 100px; border-radius: 50%; box-shadow: 0 0 20px rgba(255, 74, 125, 0.4); }
+        .messages-container { flex: 1; overflow-y: auto; padding: 20px 20% 120px 20%; display: flex; flex-direction: column; gap: 24px; scroll-behavior: smooth; }
+        .welcome-screen { text-align: center; margin-top: 12vh; display: flex; flex-direction: column; align-items: center; gap: 20px; }
+        .welcome-logo { width: 120px; height: 120px; border-radius: 20px; box-shadow: 0 0 25px rgba(255, 74, 125, 0.3); object-fit: cover; }
+        .welcome-screen h2 { font-size: 24px; font-weight: 500; color: #fff; }
         
-        .message { display: flex; gap: 16px; padding: 15px; border-radius: 8px; line-height: 1.6; max-width: 85%; }
-        .message.user { background-color: #2b2b2e; align-self: flex-end; color: #fff; }
-        .message.ai { background-color: transparent; align-self: flex-start; }
+        .message { display: flex; flex-direction: column; gap: 5px; padding: 15px 20px; border-radius: 12px; line-height: 1.6; max-width: 85%; word-break: break-word; font-size: 16px; }
+        .message.user { background-color: #2b2b2e; align-self: flex-end; color: #fff; border-bottom-right-radius: 2px; }
+        .message.ai { background-color: #1e1e20; align-self: flex-start; border-bottom-left-radius: 2px; border: 1px solid #282829; }
+        .sender-name { font-size: 12px; font-weight: bold; margin-bottom: 2px; }
+        .user .sender-name { color: #ff4a7d; text-align: right; }
+        .ai .sender-name { color: #4af5ff; }
+
+        /* ระบบกำลังโหลด */
+        .loading-dots { display: flex; gap: 6px; padding: 15px 20px; align-self: flex-start; background-color: #1e1e20; border-radius: 12px; border: 1px solid #282829; }
+        .dot { width: 8px; height: 8px; background-color: #aaa; border-radius: 50%; animation: pulse 1.5s infinite ease-in-out; }
+        .dot:nth-child(2) { animation-delay: 0.2s; }
+        .dot:nth-child(3) { animation-delay: 0.4s; }
+        @keyframes pulse { 0%, 100% { transform: scale(0.6); opacity: 0.4; } 50% { transform: scale(1.2); opacity: 1; } }
 
         /* ช่องกรอกข้อความด้านล่าง */
-        .input-container { position: absolute; bottom: 0; left: 0; right: 0; padding: 20px 20%; background: linear-gradient(transparent, #131314 30%); }
-        .input-box-wrapper { display: flex; background-color: #1e1e20; border-radius: 28px; padding: 6px 16px; align-items: center; border: 1px solid #303030; }
+        .input-container { position: absolute; bottom: 0; left: 0; right: 0; padding: 30px 20%; background: linear-gradient(transparent, #131314 40%); }
+        .input-box-wrapper { display: flex; background-color: #1e1e20; border-radius: 28px; padding: 6px 16px; align-items: center; border: 1px solid #303030; box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
         .input-box-wrapper:focus-within { border-color: #ff4a7d; }
         .chat-input { flex: 1; background: none; border: none; color: #fff; padding: 12px; font-size: 16px; outline: none; }
-        .send-btn { background-color: #ff4a7d; border: none; color: white; width: 40px; height: 40px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; font-weight: bold; transition: 0.3s; }
+        .send-btn { background-color: #ff4a7d; border: none; color: white; width: 40px; height: 40px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; font-weight: bold; transition: 0.3s; flex-shrink: 0; }
         .send-btn:hover { background-color: #e03e6c; transform: scale(1.05); }
+
+        /* 📱 ปรับแต่งหน้าจอสำหรับมือถือ (Responsive Breakpoint) */
+        @media (max-width: 850px) {
+            body { flex-direction: column; }
+            
+            /* ปรับแถบเมนูให้เป็นแถบหัวเว็บด้านบนบนมือถือ */
+            .sidebar { width: 100%; height: auto; border-right: none; border-bottom: 1px solid #282829; padding: 12px 20px; flex-direction: row; align-items: center; justify-content: space-between; gap: 10px; }
+            .logo-container { padding: 0; }
+            .logo-img { width: 35px; height: 35px; border-radius: 8px; }
+            .brand-name { font-size: 18px; }
+            
+            .new-chat-btn { width: auto; padding: 8px 16px; font-size: 13px; order: 3; }
+            .model-select-group { flex-direction: row; align-items: center; gap: 8px; order: 2; }
+            .model-label { display: none; } /* ซ่อนข้อความเลเบลบนมือถือเพื่อประหยัดพื้นที่ */
+            .model-select { padding: 8px 12px; font-size: 13px; width: 160px; }
+
+            /* ปรับระยะขอบหน้าแชทบนมือถือให้กว้างเต็มตาขึ้น */
+            .messages-container { padding: 15px 5% 100px 5%; gap: 16px; }
+            .welcome-screen { margin-top: 8vh; gap: 15px; }
+            .welcome-logo { width: 90px; height: 90px; border-radius: 15px; }
+            .welcome-screen h2 { font-size: 18px; padding: 0 10px; }
+            
+            .message { max-width: 90%; font-size: 15px; padding: 12px 16px; }
+            .chat-header { display: none; } /* ซ่อนแถบหัวข้อซ้ำซ้อนบนมือถือ */
+            
+            .input-container { padding: 15px 5%; background: linear-gradient(transparent, #131314 20%); }
+            .chat-input { padding: 8px; font-size: 15px; }
+        }
     </style>
 </head>
 <body>
 
-    <!-- แถบด้านซ้าย -->
+    <!-- แถบเมนู (คอมพิวเตอร์อยู่ซ้าย / มือถืออยู่บน) -->
     <div class="sidebar">
         <div class="logo-container">
-            <img src="https://imgbox.com" class="logo-img" alt="KLA Logo">
+            <img src="https://imgur.com" class="logo-img" alt="KLA Logo">
             <span class="brand-name">KLA AI</span>
         </div>
         <button class="new-chat-btn" onclick="resetChat()">+ แชทใหม่</button>
+        
+        <div class="model-select-group">
+            <label class="model-label">ขุมพลังเบื้องหลัง (Engine)</label>
+            <select id="modelSelect" class="model-select">
+                <option value="gpt-4o-mini">KLA-Flash (GPT)</option>
+                <option value="claude-3-haiku">KLA-Pro (Gemini)</option>
+            </select>
+        </div>
     </div>
 
-    <!-- ส่วนของแชท -->
+    <!-- ส่วนพื้นที่แชท -->
     <div class="chat-area">
-        <div class="chat-header">โมเดลพัฒนาพิเศษ: KLA-Flash-v1</div>
+        <div class="chat-header" id="chatHeader">กำลังใช้งานโมเดล: KLA-Flash</div>
         
         <div class="messages-container" id="chatMessages">
-            <!-- หน้าจอเริ่มต้น -->
+            <!-- หน้าจอเริ่มต้นต้อนรับ -->
             <div class="welcome-screen" id="welcomeScreen">
-                <img src="https://imgbox.com" class="welcome-logo" alt="KLA Logo">
+                <img src="https://imgur.com" class="welcome-logo" alt="KLA Logo">
                 <h2>มีอะไรให้ KLA ช่วยเหลือคุณในวันนี้ไหมครับ?</h2>
             </div>
         </div>
 
-        <!-- กล่องพิมพ์ข้อความ -->
+        <!-- กล่องสำหรับพิมพ์ข้อความส่ง -->
         <div class="input-container">
             <div class="input-box-wrapper">
                 <input type="text" id="userInput" class="chat-input" placeholder="ถาม KLA ได้ทุกเรื่อง..." onkeypress="checkEnter(event)">
@@ -74,43 +126,77 @@
         const chatMessages = document.getElementById('chatMessages');
         const userInput = document.getElementById('userInput');
         const welcomeScreen = document.getElementById('welcomeScreen');
+        const modelSelect = document.getElementById('modelSelect');
+        const chatHeader = document.getElementById('chatHeader');
+
+        modelSelect.addEventListener('change', () => {
+            chatHeader.innerText = `กำลังใช้งานโมเดล: ${modelSelect.options[modelSelect.selectedIndex].text}`;
+        });
 
         function checkEnter(event) {
             if (event.key === 'Enter') sendMessage();
         }
 
-        function sendMessage() {
+        async function sendMessage() {
             const text = userInput.value.trim();
             if (!text) return;
 
-            // ซ่อนหน้าจอเปลี่ยนเมื่อเริ่มคุย
             if (welcomeScreen) welcomeScreen.style.display = 'none';
 
-            // 1. เพิ่มข้อความฝั่งผู้ใช้
-            appendMessage(text, 'user');
+            // 1. แสดงข้อความฝั่งผู้ใช้งาน
+            appendMessage(text, 'user', 'คุณ');
             userInput.value = '';
 
-            // 2. สร้างข้อความจำลองจากฝั่ง AI KLA ตอบกลับ (ตรงนี้สามารถนำไปเชื่อมต่อ API เพิ่มเติมได้)
-            setTimeout(() => {
-                const aiReply = `สวัสดีครับ ผมคือระบบ AI อัจฉริยะนามว่า **KLA** ยินดีที่ได้ให้บริการครับ คุณเพิ่งถามผมว่า: "${text}" มีอะไรให้ผมช่วยเจาะลึกต่อไหมครับ?`;
-                appendMessage(aiReply, 'ai');
-            }, 800);
-        }
+            // 2. แสดงจุดไข่ปลาสถานะกำลังโหลดคำตอบ
+            const loadingDiv = document.createElement('div');
+            loadingDiv.classList.add('loading-dots');
+            loadingDiv.innerHTML = '<div class="dot"></div><div class="dot"></div><div class="dot"></div>';
+            chatMessages.appendChild(loadingDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
 
-        function appendMessage(text, sender) {
-            const msgDiv = document.createElement('div');
-            msgDiv.classList.add('message', sender);
-            msgDiv.innerHTML = text.replace(/\*\*(.*?)\*\*/g, '<strong>\$1</strong>'); // แปลงตัวหนาแบบง่าย
-            chatMessages.appendChild(msgDiv);
-            chatMessages.scrollTop = chatMessages.scrollHeight; // เลื่อนหน้าจอลงล่างสุดอัตโนมัติ
-        }
-
-        function resetChat() {
-            chatMessages.innerHTML = '';
-            chatMessages.appendChild(welcomeScreen);
-            welcomeScreen.style.display = 'flex';
-        }
-    </script>
-</body>
-</html>
-
+            // 3. ยิงไปหาเซิร์ฟเวอร์ดึงคำตอบ AI
+            try {
+                const selectedModel = modelSelect.value;
+                const response = await fetch('https://aryahcr.cc', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        prompt: `คุณคือผู้ช่วย AI อัจฉริยะชื่อ KLA จงตอบคำถามต่อไปนี้ในฐานะ KLA อย่างเป็นมิตรและเป็นกันเอง: ${text}`,
+                        model: selectedModel
+})
+});
+loadingDiv.remove();
+if (response.ok) {
+const data = await response.json();
+let aiReply = data.code || data.gpt || "สวัสดีครับ ผม KLA ยินดีที่ได้บริการครับ!";
+// ควบคุมตัวตนชื่อ KLA
+aiReply = aiReply.replace(/ChatGPT/g, 'KLA').replace(/OpenAI/g, 'KLA-Team').replace(/Gemini/g, 'KLA');
+appendMessage(aiReply, 'ai', 'KLA AI');
+} else {
+throw new Error("API Error");
+}
+} catch (error) {
+loadingDiv.remove();
+const fallbackReply = สวัสดีครับผมคือ KLA ระบบได้รับข้อความ "${text}" เรียบร้อยแล้วครับ แต่ขณะนี้การเชื่อมต่อหนาแน่นชั่วคราว ลองส่งข้อความใหมอีกครั้งนะครับ!;
+appendMessage(fallbackReply, 'ai', 'KLA AI');
+}
+}
+function appendMessage(text, sender, name) {
+const msgDiv = document.createElement('div');
+msgDiv.classList.add('message', sender);
+const nameSpan = document.createElement('span');
+nameSpan.classList.add('sender-name');
+nameSpan.innerText = name;
+const textSpan = document.createElement('span');
+textSpan.innerHTML = text.replace(/**(.*?)**/g, '$1').replace(/\n/g, '
+');
+msgDiv.appendChild(nameSpan);
+msgDiv.appendChild(textSpan);
+chatMessages.appendChild(msgDiv);
+chatMessages.scrollTop = chatMessages.scrollHeight;
+}
+function resetChat() {
+chatMessages.innerHTML = '';
+chatMessages.appendChild(welcomeScreen);
+welcomeScreen.style.display = 'flex';
+}
